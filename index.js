@@ -14,22 +14,21 @@ const argv = require('yargs')
 if (!module.parent) {
     const package = argv._[0];
 
+    let computeMessage, fetchPromise, processFunction;
+
     if ('range' in argv && 'r' in argv) {
         const nversion = argv.range ? argv.range : (argv.range === undefined ? 8 : 'all');
-        const spinner = ora(`Fetching stats for ${c.cyan(nversion)} versions of package ${c.dim.underline(package)}`).start()
-        fetchPackageStatsByVersion(package, argv.range)
-            .finally(() => spinner.stop().clear())
-            .map(packageState => {
-                console.log(syntheticView(packageState));
-            })
-            .catch(err => console.error(c.red.bold('Error happened:'), err.message));
+        computeMessage = `Fetching stats for ${c.cyan(nversion)} versions of package ${c.dim.underline(package)}`;
+        fetchPromise = fetchPackageStatsByVersion(package, argv.range)
+        processFunction = packageStates => packageStates.map(packageState => console.log(syntheticView(packageState)));
     } else {
-        const spinner = ora(`Fetching stats for package ${c.dim.underline(package)}`).start()
-        fetchPackageStats(package)
-            .finally(() => spinner.stop().clear())
-            .then(packageState => {
-                console.log(syntheticView(packageState));
-            })
-            .catch(err => console.error(c.red.bold('Error happened:'), err.message));
+        computeMessage = `Fetching stats for package ${c.dim.underline(package)}`
+        fetchPromise = fetchPackageStats(package)
+        processFunction = packageState => console.log(syntheticView(packageState));
     }
+    const spinner = ora(computeMessage).start()
+    fetchPromise
+        .finally(() => spinner.stop().clear())
+        .then(processFunction)
+        .catch(err => console.error(c.red.bold('Error happened:'), err.message));
 }
