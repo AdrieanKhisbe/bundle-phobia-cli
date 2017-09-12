@@ -2,7 +2,7 @@
 
 const c = require('chalk')
 const ora = require('ora');
-const {fetchPackageStats} = require('./lib/fetch-package-stats');
+const {fetchPackageStats, fetchPackageStatsByVersion} = require('./lib/fetch-package-stats');
 const {syntheticView} = require('./lib/cli-views');
 
 if (!module.parent) {
