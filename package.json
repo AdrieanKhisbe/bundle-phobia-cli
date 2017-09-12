@@ -1,0 +1,23 @@
+{
+  "name": "bundle-phobia-cli",
+  "version": "0.1.0",
+  "description": "Cli for the node BundlePhobia Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AdrieanKhisbe/bundle-phobia-cli.git"
+  },
+  "keywords": [
+    "cli",
+    "bundle"
+  ],
+  "author": "Adriean Khisbe <adriean.khisbe@live.fr> (https://github.com/AdrieanKhisbe/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AdrieanKhisbe/bundle-phobia-cli/issues"
+  },
+  "homepage": "https://github.com/AdrieanKhisbe/bundle-phobia-cli#readme"
+}
