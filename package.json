@@ -4,7 +4,7 @@
   "description": "Cli for the node BundlePhobia Service",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,9 @@
   "homepage": "https://github.com/AdrieanKhisbe/bundle-phobia-cli#readme",
   "dependencies": {
     "node-fetch": "^1.7.3"
+  },
+  "devDependencies": {
+    "jest": "^21.0.2",
+    "jest-fetch-mock": "^1.2.1"
   }
 }

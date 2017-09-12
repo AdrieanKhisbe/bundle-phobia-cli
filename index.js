@@ -1,8 +1,4 @@
-const fetch = require('node-fetch');
-
-const fetchPackageStats = name =>
-    fetch(`https://bundlephobia.com/api/size?package=${name}`)
-        .then(res => res.json());
+const fetchPackageStats = require('./lib/fetch-package-stats');
 
 if(!module.parent)
     fetchPackageStats(process.argv[2])
