@@ -1,7 +1,7 @@
 const fetch = require('jest-fetch-mock');
 jest.setMock('node-fetch', fetch);
 
-const {fetchPackageStats, getVersionList} = require('../lib/fetch-package-stats');
+const {fetchPackageStats, getVersionList, selectVersions} = require('../lib/fetch-package-stats');
 const {lodashStats, errorStats} = require('./fixtures');
 
 describe('fetchPackageStats', () => {
@@ -39,6 +39,26 @@ describe('getVersionList', () => {
     it('get the version list of an unknown package', () => {
         return getVersionList('nonmaiscaexistepas')
             .catch(err => expect(err.message).toEqual('Unknown Package nonmaiscaexistepas'));
-    })
+    });
 
 });
+
+
+describe('selectVersions', () => {
+
+    it('select all the list implicitely', () => {
+        const list = ['1', '2', '3']
+        expect(selectVersions(list, 4)).toEqual(['3', '2', '1'])
+    });
+
+    it('select all the list explicitely', () => {
+        const list = ['1', '2', '3']
+        expect(selectVersions(list, 0)).toEqual(['3', '2', '1'])
+    });
+
+    it('select just the first elements', () => {
+        const list = ['1', '2', '3']
+        expect(selectVersions(list, 2)).toEqual(['3', '2'])
+    });
+
+})
