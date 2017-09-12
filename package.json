@@ -1,6 +1,6 @@
 {
   "name": "bundle-phobia-cli",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Cli for the node BundlePhobia Service",
   "main": "index.js",
   "bin": {
