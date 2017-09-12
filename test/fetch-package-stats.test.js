@@ -12,6 +12,14 @@ const lodashStats = {
     version: '4.17.4'
 };
 
+const errorStats = {
+    error: {
+        code: 'PackageNotFoundError',
+        message: 'The package you were looking for doesn\'t exist.',
+        details: {}
+    }
+}
+
 const fetchPackageStats = require('../lib/fetch-package-stats')
 
 describe('fetchPackageStats', () => {
@@ -23,8 +31,15 @@ describe('fetchPackageStats', () => {
         })
     });
 
-    it('undefined package name');
+    it('undefined package name', () => {
+        return fetchPackageStats()
+            .catch(err => expect(err.message).toEqual('Empty name given as argument'))
+    });
 
-    it('unexisting package name');
+    it('unexisting package name', () => {
+        fetch.mockResponse(JSON.stringify(errorStats));
+        return fetchPackageStats('yolodonotexist')
+            .catch(err => expect(err.message).toEqual('The package you were looking for doesn\'t exist.'))
+    });
 
 });
