@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Cli for the node BundlePhobia Service",
   "main": "index.js",
+  "bin": {
+    "bundle-phobia": "index.js"
+  },
   "scripts": {
     "test": "jest"
   },
