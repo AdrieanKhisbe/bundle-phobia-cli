@@ -1,8 +1,11 @@
 const fetch = require('jest-fetch-mock');
 jest.setMock('node-fetch', fetch);
 
-const {fetchPackageStats, getVersionList, selectVersions} = require('../lib/fetch-package-stats');
+const {fetchPackageStats, selectVersions, fetchPackageStatsByVersion} = require('../lib/fetch-package-stats');
 const {lodashStats, errorStats} = require('./fixtures');
+
+jest.mock('../lib/npm-utils');
+const {getVersionList} = require('../lib/npm-utils');
 
 describe('fetchPackageStats', () => {
 
@@ -10,7 +13,7 @@ describe('fetchPackageStats', () => {
         fetch.mockResponse(JSON.stringify(lodashStats));
         return fetchPackageStats('lodash').then(stats => {
             expect(stats).toEqual(lodashStats)
-        })
+        });
     });
 
     it('undefined package name', () => {
@@ -25,24 +28,6 @@ describe('fetchPackageStats', () => {
     });
 
 });
-
-describe('getVersionList', () => {
-
-    it('get the version list of an existing package', () => {
-        return getVersionList('lodash')
-            .then(versionList => {
-                expect(versionList.length > 50).toBeTruthy()
-                expect(versionList).toEqual(expect.arrayContaining(['0.1.0', '0.2.0', '4.12.0', '4.16.4']));
-            });
-    });
-
-    it('get the version list of an unknown package', () => {
-        return getVersionList('nonmaiscaexistepas')
-            .catch(err => expect(err.message).toEqual('Unknown Package nonmaiscaexistepas'));
-    });
-
-});
-
 
 describe('selectVersions', () => {
 
@@ -62,3 +47,16 @@ describe('selectVersions', () => {
     });
 
 })
+
+
+describe('fetchPackageStatsByVersion', () => {
+
+    it('simple get package with all version', () => {
+        getVersionList.mockImplementation(() => Promise.resolve(['4.16.4', '4.12.0']));
+        fetch.mockResponse(JSON.stringify(lodashStats));
+        return fetchPackageStatsByVersion('lodash', 2).then(stats => {
+            expect(stats).toEqual([lodashStats, lodashStats])
+        });
+    });
+
+});
