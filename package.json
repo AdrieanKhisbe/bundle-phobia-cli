@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/AdrieanKhisbe/bundle-phobia-cli/issues"
   },
-  "homepage": "https://github.com/AdrieanKhisbe/bundle-phobia-cli#readme"
+  "homepage": "https://github.com/AdrieanKhisbe/bundle-phobia-cli#readme",
+  "dependencies": {
+    "node-fetch": "^1.7.3"
+  }
 }
