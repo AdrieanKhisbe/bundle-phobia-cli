@@ -1,6 +1,3 @@
-const fetch = require('jest-fetch-mock');
-jest.setMock('node-fetch', fetch);
-
 const {getVersionList} = require('../lib/npm-utils');
 
 describe('getVersionList', () => {

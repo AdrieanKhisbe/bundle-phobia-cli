@@ -11,20 +11,21 @@ describe('fetchPackageStats', () => {
 
     it('simple get package', () => {
         fetch.mockResponse(JSON.stringify(lodashStats));
-        return fetchPackageStats('lodash').then(stats => {
-            expect(stats).toEqual(lodashStats)
+        return fetchPackageStats('lodash')
+            .then(stats => {
+            expect(stats).toEqual(lodashStats);
         });
     });
 
     it('undefined package name', () => {
         return fetchPackageStats()
-            .catch(err => expect(err.message).toEqual('Empty name given as argument'))
+            .catch(err => expect(err.message).toEqual('Empty name given as argument'));
     });
 
     it('unexisting package name', () => {
         fetch.mockResponse(JSON.stringify(errorStats));
         return fetchPackageStats('yolodonotexist')
-            .catch(err => expect(err.message).toEqual('The package you were looking for doesn\'t exist.'))
+            .catch(err => expect(err.message).toEqual('The package you were looking for doesn\'t exist.'));
     });
 
 });
@@ -46,7 +47,7 @@ describe('selectVersions', () => {
         expect(selectVersions(list, 2)).toEqual(['3', '2'])
     });
 
-})
+});
 
 
 describe('fetchPackageStatsByVersion', () => {
@@ -54,9 +55,10 @@ describe('fetchPackageStatsByVersion', () => {
     it('simple get package with all version', () => {
         getVersionList.mockImplementation(() => Promise.resolve(['4.16.4', '4.12.0']));
         fetch.mockResponse(JSON.stringify(lodashStats));
-        return fetchPackageStatsByVersion('lodash', 2).then(stats => {
-            expect(stats).toEqual([lodashStats, lodashStats])
-        });
+        return fetchPackageStatsByVersion('lodash', 2)
+            .then(stats => {
+                expect(stats).toEqual([lodashStats, lodashStats]);
+            });
     });
 
 });

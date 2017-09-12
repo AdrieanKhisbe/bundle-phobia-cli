@@ -9,4 +9,4 @@
 
 ## Usage
 
-For now, just `bundle-phobia <package-name` and you will get it's stats.
+For now, just `bundle-phobia <package-name>` and you will get it's stats.
