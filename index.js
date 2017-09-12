@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const c = require('chalk');
 const fetchPackageStats = require('./lib/fetch-package-stats');
 const {syntheticView} = require('./lib/cli-views');
