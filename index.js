@@ -7,7 +7,7 @@ const {syntheticView} = require('./lib/cli-views');
 
 const argv = require('yargs')
     .usage('Usage: $0 <package-name>')
-    .describe('range', 'specify a range of version you want').alias('range', 'r').number('range')
+    .describe('range', 'Get a range of version (0 for all, 8 by default)').alias('range', 'r').number('range')
     .help('h').alias('h', 'help')
     .argv;
 

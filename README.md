@@ -20,7 +20,7 @@ For now, just `bundle-phobia <package-name>` and you will get it's stats.
 Usage: bundle-phobia <package-name>
 
 Options:
-  --range, -r  specify a range of version you want                      [number]
+  --range, -r  Get a range of version (0 for all, 8 by default)         [number]
   -h, --help   Show help                                               [boolean]
 
 ```
