@@ -11,6 +11,7 @@ const argv = require('yargs')
     .describe('json', 'Output json rather than a formater string').alias('json', 'j').boolean('j')
     .describe('size', 'Output just the module size').alias('size', 's').boolean('s')
     .describe('gzip-size', 'Output just the module gzip size').alias('gzip-size', 'g').boolean('g')
+    .describe('dependencies', 'Output just thenumber of dependencies').alias('dependencies', 'd').boolean('d')
     .help('h').alias('h', 'help')
     .argv;
 
