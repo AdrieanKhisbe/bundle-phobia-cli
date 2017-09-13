@@ -3,12 +3,14 @@
 const c = require('chalk')
 const ora = require('ora');
 const {fetchPackageStats, fetchPackageStatsByVersion} = require('./lib/fetch-package-stats');
-const {syntheticView, jsonView} = require('./lib/cli-views');
+const {getView} = require('./lib/cli-views');
 
 const argv = require('yargs')
     .usage('Usage: $0 <package-name>')
     .describe('range', 'Get a range of version (0 for all, 8 by default)').alias('range', 'r').number('range')
     .describe('json', 'Output json rather than a formater string').alias('json', 'j').boolean('j')
+    .describe('size', 'Output just the module size').alias('size', 's').boolean('s')
+    .describe('gzip-size', 'Output just the module gzip size').alias('gzip-size', 'g').boolean('g')
     .help('h').alias('h', 'help')
     .argv;
 
@@ -22,7 +24,7 @@ if (!module.parent) {
             .then(processFunction)
             .catch(err => console.error(c.red.bold('Error happened:'), err.message));
     }
-    const view = argv.json ? jsonView : syntheticView;
+    const view = getView(argv);
 
     if ('range' in argv && 'r' in argv) {
         const nversion = argv.range ? argv.range : (argv.range === undefined ? 8 : 'all');
