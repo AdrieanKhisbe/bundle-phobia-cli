@@ -25,7 +25,11 @@ For now, just `bundle-phobia <package-name>` and you will get it's stats.
 Usage: bundle-phobia <package-name>
 
 Options:
-  --range, -r  Get a range of version (0 for all, 8 by default)         [number]
-  -h, --help   Show help                                               [boolean]
+  --range, -r         Get a range of version (0 for all, 8 by default)  [number]
+  --json, -j          Output json rather than a formater string        [boolean]
+  --size, -s          Output just the module size                      [boolean]
+  --gzip-size, -g     Output just the module gzip size                 [boolean]
+  --dependencies, -d  Output just thenumber of dependencies            [boolean]
+  -h, --help          Show help                                        [boolean]
 
 ```
