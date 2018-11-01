@@ -1,20 +1,22 @@
 const fetch = require('jest-fetch-mock');
+const Bromise = require('bluebird');
 
 jest.setMock('node-fetch', fetch);
 
 const {fetchPackageStats, selectVersions} = require('../lib/fetch-package-stats');
-const {lodashStats, errorStats} = require('./fixtures');
 
 jest.mock('../lib/npm-utils');
-const {getVersionList, resolveVersionRange} = require('../lib/npm-utils');
+const {resolveVersionRange} = require('../lib/npm-utils');
+
+const {lodashStats, errorStats} = require('./fixtures');
 
 describe('fetchPackageStats', () => {
-  resolveVersionRange.mockImplementation(name => Promise.resolve(name));
+  resolveVersionRange.mockImplementation(name => Bromise.resolve(name));
 
   it('simple get package', () => {
     fetch.mockResponse(JSON.stringify(lodashStats));
     return fetchPackageStats('lodash').then(stats => {
-      expect(stats).toEqual(lodashStats);
+      return expect(stats).toEqual(lodashStats);
     });
   });
 

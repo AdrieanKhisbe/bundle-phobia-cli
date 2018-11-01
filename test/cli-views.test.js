@@ -1,5 +1,4 @@
 const stripAnsi = require('strip-ansi');
-const {lodashStats} = require('./fixtures');
 const {
   getView,
   syntheticView,
@@ -8,6 +7,7 @@ const {
   gzipsizeView,
   dependenciesView
 } = require('../lib/cli-views');
+const {lodashStats} = require('./fixtures');
 
 describe('syntheticView', () => {
   it('basic lodash stats', () => {
