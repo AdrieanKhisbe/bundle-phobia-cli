@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+const updateNotifier = require('update-notifier');
+const pkg = require('./package.json');
+
 const c = require('chalk')
 const ora = require('ora');
 const {fetchPackageStats, fetchPackageStatsByVersion} = require('./lib/fetch-package-stats');
@@ -41,4 +44,5 @@ if (!module.parent) {
             packageState => console.log(view(packageState))
         );
     }
+    updateNotifier({pkg}).notify();
 }
