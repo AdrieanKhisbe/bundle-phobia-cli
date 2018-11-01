@@ -15,7 +15,7 @@ const main = argv => {
   }
   const noSpin = isSingleOutput(argv);
   const Spinner = noSpin ? fakeSpinner : ora;
-  const spinner = Spinner(`Fetching stats for package${argv._.length > 1 ? 's list' : ''}`).start();
+  const spinner = Spinner();
   const range = argv.range || (argv.range === undefined ? null : -1);
   const packages =
     'range' in argv && 'r' in argv
@@ -24,10 +24,12 @@ const main = argv => {
   const view = getView(argv);
 
   return packages
-    .each(paquage =>
-      fetchPackageStats(paquage)
+    .each(paquage => {
+      spinner.text = `Fetching stats for package ${c.dim.bold(paquage)}`;
+      spinner.start();
+      return fetchPackageStats(paquage)
         .then(stats => {
-          spinner.info(view(stats)).start();
+          spinner.info(view(stats));
           return stats;
         })
         .catch(err => {
@@ -37,8 +39,8 @@ const main = argv => {
             throw wrapError;
           }
           spinner.fail(c.red(`resolving ${c.bold.underline(paquage)} failed: `) + err.message);
-        })
-    )
+        });
+    })
     .finally(() => spinner.stop());
 };
 
