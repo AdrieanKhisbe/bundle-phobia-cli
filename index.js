@@ -18,9 +18,9 @@ const argv = require('yargs')
     .help('h').alias('h', 'help')
     .argv;
 
-if (!module.parent) {
-    const package = argv._[0];
+const main = argv => {
 
+    const package = argv._[0];
     const fetchAndPresent = (computeMessage, fetchPromise, processFunction) => {
         const spinner = ora(computeMessage).start()
         return fetchPromise
@@ -31,6 +31,7 @@ if (!module.parent) {
     const view = getView(argv);
     if ('range' in argv && 'r' in argv) {
         // Probably to Deprecate, not that usefull. Prefer a list version
+
         const nversion = argv.range ? argv.range : (argv.range === undefined ? 8 : 'all');
         fetchAndPresent(
             `Fetching stats for ${c.cyan(nversion)} last versions of package ${c.dim.underline(package)}`,
@@ -44,5 +45,11 @@ if (!module.parent) {
             packageState => console.log(view(packageState))
         );
     }
+}
+
+module.exports.main = main;
+
+if (!module.parent) {
+    main(argv)
     updateNotifier({pkg}).notify();
 }
