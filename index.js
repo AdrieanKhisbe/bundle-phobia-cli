@@ -7,9 +7,9 @@ const c = require('chalk')
 const Bromise = require('bluebird');
 const _ = require('lodash');
 const ora = require('ora');
-const {fetchPackageStats, getPackageVersionList} = require('./lib/fetch-package-stats');
-const {getView} = require('./lib/cli-views');
-const fakeSpinner = require('./lib/fake-spinner')
+const {fetchPackageStats, getPackageVersionList} = require('./src/fetch-package-stats');
+const {getView} = require('./src/cli-views');
+const fakeSpinner = require('./src/fake-spinner')
 
 const argv = require('yargs')
     .usage('Usage: $0 <package-names...>')

@@ -1,4 +1,4 @@
-const {getVersionList} = require('../lib/npm-utils');
+const {getVersionList} = require('../src/npm-utils');
 
 describe('getVersionList', () => {
   it('get the version list of an existing package', () => {

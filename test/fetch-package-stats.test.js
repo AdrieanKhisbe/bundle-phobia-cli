@@ -3,10 +3,10 @@ const Bromise = require('bluebird');
 
 jest.setMock('node-fetch', fetch);
 
-const {fetchPackageStats, selectVersions} = require('../lib/fetch-package-stats');
+const {fetchPackageStats, selectVersions} = require('../src/fetch-package-stats');
 
-jest.mock('../lib/npm-utils');
-const {resolveVersionRange} = require('../lib/npm-utils');
+jest.mock('../src/npm-utils');
+const {resolveVersionRange} = require('../src/npm-utils');
 
 const {lodashStats, errorStats} = require('./fixtures');
 
