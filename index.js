@@ -19,22 +19,29 @@ const argv = require('yargs')
     .help('h').alias('h', 'help')
     .argv;
 
-const main = argv => {
-
-    const package = argv._[0];
+const main = argv => {;
     const fetchAndPresent = (computeMessage, fetchPromise, processFunction) => {
-        const spinner = ora(computeMessage).start()
+        
         return fetchPromise
             .finally(() => spinner.stop().clear())
             .then(processFunction)
             .catch(err => console.error(c.red.bold('Error happened:'), err.message));
     }
     const view = getView(argv);
+    const spinner = ora(`Fetching stats for package${argv._.length > 1 ? 's': ''}: ${
+        argv._.map(package =>
+        c.dim.bold(package)).join(', ')
+    }`).start()
     const packages = ('range' in argv && 'r' in argv)
       ? getPackageVersionList(argv._[0], argv.range ? argv.range : (argv.range === undefined ? 8 : 'all'))
-      : Bromise.resolve(argv._)
+      : Bromise.resolve(argv._);
 
-    packages.map(fetchPackageStats).map(console.log)
+    packages
+      .map(fetchPackageStats)
+      .map(stats => {
+        spinner.info(view(stats))
+       })
+      .finally(() => spinner.stop())
 
         // `Fetching stats for ${c.cyan(nversion)} last versions of package ${c.dim.underline(package)}`,
     // fetchAndPresent(
