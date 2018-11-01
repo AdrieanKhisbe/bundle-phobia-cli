@@ -5,9 +5,10 @@ const {fetchPackageStats, selectVersions, fetchPackageStatsByVersion} = require(
 const {lodashStats, errorStats} = require('./fixtures');
 
 jest.mock('../lib/npm-utils');
-const {getVersionList} = require('../lib/npm-utils');
+const {getVersionList, resolveVersionRange} = require('../lib/npm-utils');
 
 describe('fetchPackageStats', () => {
+   resolveVersionRange.mockImplementation(name => Promise.resolve(name));
 
     it('simple get package', () => {
         fetch.mockResponse(JSON.stringify(lodashStats));
