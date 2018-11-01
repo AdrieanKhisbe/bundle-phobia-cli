@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.7.0] - 2018-11-01
+### Added
+- Support for version range specifier
+
 ## [0.6.4] - 2018-11-01
 ### Changed
 - Upgrade all dependencies
@@ -26,6 +30,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Older changes have to be documented
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.6.2...master
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.7.0...master
+[0.7.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.6.4...v0.7.0
+[0.6.4]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.6.3...v0.6.4
+[0.6.3]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.6.2...v0.6.3
 [0.6.2]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.6.1...v0.6.2
 [0.6.1]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.6.0...v0.6.1
