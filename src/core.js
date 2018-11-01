@@ -16,7 +16,7 @@ const main = argv => {
   const noSpin = isSingleOutput(argv);
   const Spinner = noSpin ? fakeSpinner : ora;
   const spinner = Spinner(`Fetching stats for package${argv._.length > 1 ? 's list' : ''}`).start();
-  const range = argv.range || argv.range === undefined ? null : 'all';
+  const range = argv.range || (argv.range === undefined ? null : -1);
   const packages =
     'range' in argv && 'r' in argv
       ? getPackageVersionList(argv._[0], range || 8)
