@@ -28,19 +28,17 @@ const main = argv => {;
             .catch(err => console.error(c.red.bold('Error happened:'), err.message));
     }
     const view = getView(argv);
-    const spinner = ora(`Fetching stats for package${argv._.length > 1 ? 's': ''}: ${
-        argv._.map(package =>
-        c.dim.bold(package)).join(', ')
-    }`).start()
+    const spinner = ora(`Fetching stats for package${argv._.length > 1 ? 's list': ''}`).start()
     const packages = ('range' in argv && 'r' in argv)
       ? getPackageVersionList(argv._[0], argv.range ? argv.range : (argv.range === undefined ? 8 : 'all'))
       : Bromise.resolve(argv._);
 
     packages
-      .map(fetchPackageStats)
-      .map(stats => {
-        spinner.info(view(stats))
-       })
+      .each(package =>
+        fetchPackageStats(package)
+          .then(stats => {
+            spinner.info(view(stats)).start()
+          }))
       .finally(() => spinner.stop())
 
         // `Fetching stats for ${c.cyan(nversion)} last versions of package ${c.dim.underline(package)}`,
