@@ -7,6 +7,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.6.3] - 2018-11-01
+### Changed
+- replace `yarn` by vanilla `npm`
+- Change supported node version
+
 ## [0.6.2] - 2018-11-01
 ### Added
 - update-notifier set up to have notification of new releases
