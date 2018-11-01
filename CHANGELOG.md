@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.6.4] - 2018-11-01
+### Changed
+- Upgrade all dependencies
+
 ## [0.6.3] - 2018-11-01
 ### Changed
 - replace `yarn` by vanilla `npm`
