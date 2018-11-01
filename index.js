@@ -12,7 +12,7 @@ const {getView} = require('./lib/cli-views');
 const fakeSpinner = require('./lib/fake-spinner')
 
 const argv = require('yargs')
-    .usage('Usage: $0 <package-name>')
+    .usage('Usage: $0 <package-names...>')
     .describe('range', 'Get a range of version (0 for all, 8 by default)').alias('range', 'r').number('range')
     .describe('json', 'Output json rather than a formater string').alias('json', 'j').boolean('j')
     .describe('size', 'Output just the module size').alias('size', 's').boolean('s')
@@ -23,23 +23,20 @@ const argv = require('yargs')
 
 const isSingleOutput = argv => _.some(['size', 'json', 'gzip-size', 'dependencies'], opt => opt in argv);
 
-const main = argv => {;
-    const fetchAndPresent = (computeMessage, fetchPromise, processFunction) => {
-        
-        return fetchPromise
-            .finally(() => spinner.stop().clear())
-            .then(processFunction)
-            .catch(err => console.error(c.red.bold('Error happened:'), err.message));
+const main = argv => {
+    if(('range' in argv && 'r' in argv) && argv._.length > 1) {
+        return Bromise.reject(new Error("Can't use both --range option and list of packages"));
     }
-    const view = getView(argv);
     const noSpin = isSingleOutput(argv);
     const Spinner = noSpin ? fakeSpinner : ora;
     const spinner = Spinner(`Fetching stats for package${argv._.length > 1 ? 's list': ''}`).start()
+    const range = argv.range ? argv.range : (argv.range === undefined ? null : 'all')
     const packages = ('range' in argv && 'r' in argv)
-      ? getPackageVersionList(argv._[0], argv.range ? argv.range : (argv.range === undefined ? 8 : 'all'))
+      ? getPackageVersionList(argv._[0], range || 8)
       : Bromise.resolve(argv._);
+    const view = getView(argv);
 
-    packages
+    return packages
       .each(package =>
         fetchPackageStats(package)
           .then(stats => {
@@ -54,16 +51,14 @@ const main = argv => {;
               spinner.fail(c.red(`resolving ${c.bold.underline(package)} failed: `) + err.message)
           }))
       .finally(() => spinner.stop())
-      .catch(err => {
-         // case of noSpin
-          console.log(c.red(err.message))
-          process.exit(1);
-      })
 }
 
 module.exports = {main, isSingleOutput};
 
 if (!module.parent) {
-    main(argv)
+    main(argv).catch(err => {
+        console.log(c.red(err.message))
+        process.exit(1);
+    })
     updateNotifier({pkg}).notify();
 }
