@@ -37,18 +37,18 @@ const main = argv => {
     const view = getView(argv);
 
     return packages
-      .each(package =>
-        fetchPackageStats(package)
+      .each(paquage =>
+        fetchPackageStats(paquage)
           .then(stats => {
             spinner.info(view(stats)).start()
           })
           .catch(err => {
               if(noSpin) {
-                  const wrapError = new Error(`${package}: ${err.message}`)
+                  const wrapError = new Error(`${paquage}: ${err.message}`)
                   wrapError.error = err;
                   throw wrapError;
               }
-              spinner.fail(c.red(`resolving ${c.bold.underline(package)} failed: `) + err.message)
+              spinner.fail(c.red(`resolving ${c.bold.underline(paquage)} failed: `) + err.message)
           }))
       .finally(() => spinner.stop())
 }
