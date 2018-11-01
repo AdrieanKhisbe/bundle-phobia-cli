@@ -4,8 +4,9 @@ const updateNotifier = require('update-notifier');
 const pkg = require('./package.json');
 
 const c = require('chalk')
+const Bromise = require('bluebird');
 const ora = require('ora');
-const {fetchPackageStats, fetchPackageStatsByVersion} = require('./lib/fetch-package-stats');
+const {fetchPackageStats, getPackageVersionList} = require('./lib/fetch-package-stats');
 const {getView} = require('./lib/cli-views');
 
 const argv = require('yargs')
@@ -29,22 +30,18 @@ const main = argv => {
             .catch(err => console.error(c.red.bold('Error happened:'), err.message));
     }
     const view = getView(argv);
-    if ('range' in argv && 'r' in argv) {
-        // Probably to Deprecate, not that usefull. Prefer a list version
+    const packages = ('range' in argv && 'r' in argv)
+      ? getPackageVersionList(argv._[0], argv.range ? argv.range : (argv.range === undefined ? 8 : 'all'))
+      : Bromise.resolve(argv._)
 
-        const nversion = argv.range ? argv.range : (argv.range === undefined ? 8 : 'all');
-        fetchAndPresent(
-            `Fetching stats for ${c.cyan(nversion)} last versions of package ${c.dim.underline(package)}`,
-            fetchPackageStatsByVersion(package, argv.range),
-            packageStates => packageStates.map(packageState => console.log(view(packageState)))
-        );
-    } else {
-        fetchAndPresent(
-            `Fetching stats for package ${c.dim.underline(package)}`,
-            fetchPackageStats(package),
-            packageState => console.log(view(packageState))
-        );
-    }
+    packages.map(fetchPackageStats).map(console.log)
+
+        // `Fetching stats for ${c.cyan(nversion)} last versions of package ${c.dim.underline(package)}`,
+    // fetchAndPresent(
+    //     `Fetching stats for package ${c.dim.underline(package)}`,
+    //     fetchPackageStats(package),
+    //     packageState => console.log(view(packageState))
+    // );
 }
 
 module.exports.main = main;
