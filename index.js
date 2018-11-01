@@ -43,6 +43,9 @@ const main = argv => {;
         fetchPackageStats(package)
           .then(stats => {
             spinner.info(view(stats)).start()
+          })
+          .catch(err => {
+              spinner.fail(c.red(`resolving ${c.bold.underline(package)} failed: `) + err.message)
           }))
       .finally(() => spinner.stop())
 }
