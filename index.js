@@ -21,7 +21,7 @@ const argv = require('yargs')
     .help('h').alias('h', 'help')
     .argv;
 
-const singleOutput = argv => _.some(['size', 'json', 'gzip-size', 'dependencies'], opt => opt in argv);
+const isSingleOutput = argv => _.some(['size', 'json', 'gzip-size', 'dependencies'], opt => opt in argv);
 
 const main = argv => {;
     const fetchAndPresent = (computeMessage, fetchPromise, processFunction) => {
@@ -32,7 +32,8 @@ const main = argv => {;
             .catch(err => console.error(c.red.bold('Error happened:'), err.message));
     }
     const view = getView(argv);
-    const Spinner = singleOutput(argv) ? fakeSpinner : ora;
+    const noSpin = isSingleOutput(argv);
+    const Spinner = noSpin ? fakeSpinner : ora;
     const spinner = Spinner(`Fetching stats for package${argv._.length > 1 ? 's list': ''}`).start()
     const packages = ('range' in argv && 'r' in argv)
       ? getPackageVersionList(argv._[0], argv.range ? argv.range : (argv.range === undefined ? 8 : 'all'))
@@ -45,12 +46,22 @@ const main = argv => {;
             spinner.info(view(stats)).start()
           })
           .catch(err => {
+              if(noSpin) {
+                  const wrapError = new Error(`${package}: ${err.message}`)
+                  wrapError.error = err;
+                  throw wrapError;
+              }
               spinner.fail(c.red(`resolving ${c.bold.underline(package)} failed: `) + err.message)
           }))
       .finally(() => spinner.stop())
+      .catch(err => {
+         // case of noSpin
+          console.log(c.red(err.message))
+          process.exit(1);
+      })
 }
 
-module.exports = {main, singleOutput};
+module.exports = {main, isSingleOutput};
 
 if (!module.parent) {
     main(argv)
