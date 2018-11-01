@@ -8,6 +8,7 @@ const Bromise = require('bluebird');
 const ora = require('ora');
 const {fetchPackageStats, getPackageVersionList} = require('./lib/fetch-package-stats');
 const {getView} = require('./lib/cli-views');
+const fakeSpinner = require('./lib/fake-spinner')
 
 const argv = require('yargs')
     .usage('Usage: $0 <package-name>')
@@ -28,7 +29,8 @@ const main = argv => {;
             .catch(err => console.error(c.red.bold('Error happened:'), err.message));
     }
     const view = getView(argv);
-    const spinner = ora(`Fetching stats for package${argv._.length > 1 ? 's list': ''}`).start()
+    const Spinner = fakeSpinner;
+    const spinner = Spinner(`Fetching stats for package${argv._.length > 1 ? 's list': ''}`).start()
     const packages = ('range' in argv && 'r' in argv)
       ? getPackageVersionList(argv._[0], argv.range ? argv.range : (argv.range === undefined ? 8 : 'all'))
       : Bromise.resolve(argv._);
@@ -40,13 +42,6 @@ const main = argv => {;
             spinner.info(view(stats)).start()
           }))
       .finally(() => spinner.stop())
-
-        // `Fetching stats for ${c.cyan(nversion)} last versions of package ${c.dim.underline(package)}`,
-    // fetchAndPresent(
-    //     `Fetching stats for package ${c.dim.underline(package)}`,
-    //     fetchPackageStats(package),
-    //     packageState => console.log(view(packageState))
-    // );
 }
 
 module.exports.main = main;
