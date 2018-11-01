@@ -29,8 +29,8 @@ if (!module.parent) {
             .catch(err => console.error(c.red.bold('Error happened:'), err.message));
     }
     const view = getView(argv);
-
     if ('range' in argv && 'r' in argv) {
+        // Probably to Deprecate, not that usefull. Prefer a list version
         const nversion = argv.range ? argv.range : (argv.range === undefined ? 8 : 'all');
         fetchAndPresent(
             `Fetching stats for ${c.cyan(nversion)} last versions of package ${c.dim.underline(package)}`,
