@@ -1,7 +1,7 @@
 const fetch = require('jest-fetch-mock');
 jest.setMock('node-fetch', fetch);
 
-const {fetchPackageStats, selectVersions, fetchPackageStatsByVersion} = require('../lib/fetch-package-stats');
+const {fetchPackageStats, selectVersions} = require('../lib/fetch-package-stats');
 const {lodashStats, errorStats} = require('./fixtures');
 
 jest.mock('../lib/npm-utils');
@@ -46,20 +46,6 @@ describe('selectVersions', () => {
     it('select just the first elements', () => {
         const list = ['1', '2', '3']
         expect(selectVersions(list, 2)).toEqual(['3', '2'])
-    });
-
-});
-
-
-describe('fetchPackageStatsByVersion', () => {
-
-    it('simple get package with all version', () => {
-        getVersionList.mockImplementation(() => Promise.resolve(['4.16.4', '4.12.0']));
-        fetch.mockResponse(JSON.stringify(lodashStats));
-        return fetchPackageStatsByVersion('lodash', 2)
-            .then(stats => {
-                expect(stats).toEqual([lodashStats, lodashStats]);
-            });
     });
 
 });
