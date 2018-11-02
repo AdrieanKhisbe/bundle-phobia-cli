@@ -1,7 +1,7 @@
 /* eslint-disable no-console, fp/no-class */
 class fakeSpinner {
   constructor(message) {
-    this.message;
+    this.text = message;
   }
 
   info(message) {
