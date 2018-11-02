@@ -7,6 +7,21 @@ const inquirer = require('inquirer');
 const {fetchPackageStats} = require('./fetch-package-stats');
 const fakeSpinner = require('./fake-spinner');
 
+const npmOptionsFromArgv = argv => {
+  const output = _.reduce(
+    _.omit(argv, ['i', 'interactive', '$0', 'warn', 'w', '_']),
+    (memo, value, key) => {
+      const val = _.isBoolean(value) ? '' : ` ${value}`;
+      return [...memo, (_.size(key) === 1 ? '-' : '--') + key + val];
+    },
+    []
+  );
+  return output.join(' ');
+};
+const installCommand = (packages, argv) => {
+  return `npm install ${packages.join(' ')} ${npmOptionsFromArgv(argv)}`;
+};
+
 const main = ({argv, stream = process.stdout, noOra = false}) => {
   if ('range' in argv && 'r' in argv && argv._.length > 1) {
     return Bromise.reject(new Error("Can't use both --range option and list of packages"));
@@ -25,6 +40,11 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
     }
   };
   const packages = argv._;
+
+  const performInstall = () => {
+    return shelljs.exec(installCommand(packages, argv));
+  };
+
   spinner.text = `Fetching stats for packages ${packages}`;
   spinner.start();
   return Bromise.map(packages, paquage => {
@@ -47,8 +67,7 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
       spinner.clear();
       if (_.every(statuses, {canInstall: true})) {
         spinner.info(`Proceed to installation of packages ${c.bold.dim(packages.join(', '))}`);
-        return shelljs.exec(`npm install ${packages.join(' ')}`);
-        // §TODO: handle options & protect against injections (using shell-quote)
+        return performInstall();
         // §TODO: handle failure exit. and eventually add status message .succeed
       } else if (argv.warn) {
         spinner.info(
@@ -63,7 +82,7 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
             }`
           );
         });
-        return shelljs.exec(`npm install ${packages.join(' ')}`); // §TODO handle options & protect against injections (using shell-quote)
+        return performInstall();
       } else if (argv.interactive) {
         spinner.info(
           `Packages ${packages.map(p => c.bold.dim(p)).join(', ')} raised following warnings:`
@@ -88,7 +107,7 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
           .then(answer => {
             if (answer.proceed) {
               spinner.succeed('Proceeding with installation as you requested');
-              return shelljs.exec(`npm install ${packages.join(' ')}`); // §TODO handle options & protect against injections (using shell-quote)
+              return performInstall();
             } else {
               return spinner.fail('Installation is canceled on your demand');
             }
