@@ -30,7 +30,8 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
     return fetchPackageStats(paquage)
       .then(stats => {
         // PREDICATE HERE
-        // return {canInstall: false, reason: 'NO GO'};
+        if (stats.size > 10000)
+          return {package: paquage, canInstall: false, reason: 'size over threshold'};
         return {package: paquage, canInstall: true};
       })
       .catch(handleError(paquage));
