@@ -27,7 +27,7 @@ const {main} = require('./src/core');
 
 if (!module.parent) {
   /* eslint-disable no-console */
-  main(argv).catch(err => {
+  main({argv}).catch(err => {
     console.log(c.red(err.message));
     process.exit(1);
   });

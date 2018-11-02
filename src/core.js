@@ -9,13 +9,14 @@ const fakeSpinner = require('./fake-spinner');
 const isSingleOutput = argv =>
   _.some(['size', 'json', 'gzip-size', 'dependencies'], opt => opt in argv);
 
-const main = argv => {
+const main = ({argv, stream = process.stdout}) => {
   if ('range' in argv && 'r' in argv && argv._.length > 1) {
     return Bromise.reject(new Error("Can't use both --range option and list of packages"));
   }
   const noSpin = isSingleOutput(argv);
   const Spinner = noSpin ? fakeSpinner : ora;
-  const spinner = Spinner({stream: process.stdout});
+  const spinner = Spinner({stream});
+
   const range = argv.range || (argv.range === undefined ? null : -1);
   const packages =
     'range' in argv && 'r' in argv
