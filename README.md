@@ -13,11 +13,13 @@ It enables you to query package sizes.
 
 ## Installation
 
-Just use `npm install -g bundle-phobia-cli` and you're good to go
+Just use `npm install -g bundle-phobia-cli` and you're good to go!
 
 ## Usage
 
-For now, just `bundle-phobia <package-name>` and you will get it's stats.
+For now, just `bundle-phobia <package-name>` and you will get its stats.
+You can also query a list of packages, or precise the package version you want to query.
+For instance exact version `lodash@4.12.0` or range version `ora@^3.0.0`.
 
 ### Detailed Usage
 

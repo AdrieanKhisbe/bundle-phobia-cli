@@ -7,6 +7,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.8.0] - 2018-11-01
+### Added
+- Support for a list of packages to query
+
+### Changed
+- Various refactors
+
 ## [0.7.0] - 2018-11-01
 ### Added
 - Support for version range specifier
