@@ -1,6 +1,6 @@
 {
   "name": "bundle-phobia-cli",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Cli for the node BundlePhobia Service",
   "main": "index.js",
   "bin": {
@@ -46,7 +46,9 @@
   },
   "jest": {
     "coverageDirectory": "./coverage/",
-    "collectCoverageFrom" : ["src/**/*.js"],
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
     "collectCoverage": true
   }
 }
