@@ -28,7 +28,7 @@ const {main} = require('./src/core');
 if (!module.parent) {
   /* eslint-disable no-console */
   main({argv}).catch(err => {
-    console.log(c.red(err.message));
+    console.log(c.red.bold('bundle-phobia failed: ') + err.message);
     process.exit(1);
   });
   updateNotifier({pkg}).notify();
