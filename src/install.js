@@ -30,8 +30,14 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
     return fetchPackageStats(paquage)
       .then(stats => {
         // PREDICATE HERE
-        if (stats.size > 10000)
-          return {package: paquage, canInstall: false, reason: 'size over threshold'};
+        const THRESOLD = 10000;
+        if (stats.size > THRESOLD)
+          return {
+            package: paquage,
+            canInstall: false,
+            reason: 'size over threshold',
+            details: `${stats.size} > ${THRESOLD}`
+          };
         return {package: paquage, canInstall: true};
       })
       .catch(handleError(paquage));
@@ -46,7 +52,12 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
         _.forEach(statuses, status => {
           if (status.canInstall)
             spinner.succeed(`${c.green.bold(status.package)}: was ok to install`);
-          else spinner.fail(`${c.red.bold(status.package)}: ${status.reason}`);
+          else
+            spinner.fail(
+              `${c.red.bold(status.package)}: ${status.reason}${
+                status.details ? ` (${c.dim(status.details)})` : ''
+              }`
+            );
         });
         throw new Error('Install was canceled.');
       }
