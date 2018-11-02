@@ -32,7 +32,12 @@ const main = ({argv, stream = process.stdout}) => {
     'range' in argv && 'r' in argv
       ? getPackageVersionList(argv._[0], range || 8).catch(handleError(argv._[0], true))
       : Bromise.resolve(argv._);
-  const view = getView(argv);
+  let view;
+  try {
+    view = getView(argv);
+  } catch (err) {
+    return Bromise.reject(err);
+  }
 
   return packages
     .each(paquage => {
