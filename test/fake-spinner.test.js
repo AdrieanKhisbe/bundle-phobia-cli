@@ -13,9 +13,24 @@ describe('fake-spinner', () => {
     }
   });
   it('methods logging method just log returns the instance', () => {
-    const spinner = fakeSpinner('test');
+    let ncall = 0;
+    const testGenerator = (function*() {
+      for (const method of ['info', 'succeed', 'fail', 'warn']) {
+        expect(yield).toEqual(method);
+        expect(yield).toEqual('\n');
+        ncall++;
+      }
+    })();
+    testGenerator.next();
+    const fakeStream = {
+      write(content) {
+        testGenerator.next(content);
+      }
+    };
+    const spinner = fakeSpinner({text: 'test', stream: fakeStream});
     for (const method of ['info', 'succeed', 'fail', 'warn']) {
       expect(spinner[method](method)).toBe(spinner);
     }
+    expect(ncall).toBe(4);
   });
 });

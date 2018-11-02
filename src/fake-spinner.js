@@ -1,26 +1,18 @@
 /* eslint-disable no-console, fp/no-class */
 class fakeSpinner {
-  constructor(message) {
-    this.text = message;
+  constructor(options) {
+    const {text, stream} = options;
+    this.text = text || options;
+    this.stream = stream || process.stdout;
+    this.fail = this.log;
+    this.succeed = this.log;
+    this.info = this.log;
+    this.warn = this.log;
   }
 
-  info(message) {
-    console.log(message);
-    return this;
-  }
-
-  warn(message) {
-    console.log(message);
-    return this;
-  }
-
-  succeed(message) {
-    console.log(message);
-    return this;
-  }
-
-  fail(message) {
-    console.log(message);
+  log(message) {
+    this.stream.write(message.toString());
+    this.stream.write('\n');
     return this;
   }
 
