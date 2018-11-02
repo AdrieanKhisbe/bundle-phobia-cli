@@ -24,9 +24,6 @@ const installCommand = argv => {
 };
 
 const main = ({argv, stream = process.stdout, noOra = false, exec = shelljs.exec}) => {
-  if ('range' in argv && 'r' in argv && argv._.length > 1) {
-    return Bromise.reject(new Error("Can't use both --range option and list of packages"));
-  }
   const noSpin = noOra;
   const Spinner = noSpin ? fakeSpinner : ora;
   const spinner = Spinner({stream});
@@ -63,7 +60,7 @@ const main = ({argv, stream = process.stdout, noOra = false, exec = shelljs.exec
           };
         return {package: paquage, canInstall: true};
       })
-      .catch(handleError(paquage));
+      .catch(handleError(paquage, true));
   })
     .then(statuses => {
       spinner.clear();
