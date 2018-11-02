@@ -77,8 +77,19 @@ describe('Integrations tests', () => {
 `
         );
       })
+      .asCallback(done);
+  });
+  it('fetch a package that does not exist at all with range', done => {
+    const stream = fakeStream();
+    // had to pin version for test stability
+    return main({
+      argv: {_: ['sorry-but-i-really-do-not-exist'], range: 2, r: 2},
+      stream
+    })
       .catch(err => {
-        expect(err.message).toEqual("Can't use both --range option and list of packages");
+        expect(err.message).toEqual(
+          'sorry-but-i-really-do-not-exist: Unknown Package sorry-but-i-really-do-not-exist'
+        );
       })
       .asCallback(done);
   });

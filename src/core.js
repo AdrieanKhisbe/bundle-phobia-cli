@@ -17,10 +17,20 @@ const main = ({argv, stream = process.stdout}) => {
   const Spinner = noSpin ? fakeSpinner : ora;
   const spinner = Spinner({stream});
 
+  const handleError = (paquage, forceThrow) => err => {
+    if (!noSpin)
+      spinner.fail(c.red(`resolving ${c.bold.underline(paquage)} failed: `) + err.message);
+    if (forceThrow || noSpin) {
+      const wrapError = new Error(`${paquage}: ${err.message}`);
+      wrapError.error = err;
+      throw wrapError;
+    }
+  };
+
   const range = argv.range || (argv.range === undefined ? null : -1);
   const packages =
     'range' in argv && 'r' in argv
-      ? getPackageVersionList(argv._[0], range || 8)
+      ? getPackageVersionList(argv._[0], range || 8).catch(handleError(argv._[0], true))
       : Bromise.resolve(argv._);
   const view = getView(argv);
 
@@ -33,14 +43,7 @@ const main = ({argv, stream = process.stdout}) => {
           spinner.info(view(stats));
           return stats;
         })
-        .catch(err => {
-          if (noSpin) {
-            const wrapError = new Error(`${paquage}: ${err.message}`);
-            wrapError.error = err;
-            throw wrapError;
-          }
-          spinner.fail(c.red(`resolving ${c.bold.underline(paquage)} failed: `) + err.message);
-        });
+        .catch(handleError(paquage));
     })
     .finally(() => spinner.stop());
 };
