@@ -23,28 +23,32 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
       throw wrapError;
     }
   };
-
-  const packages = Bromise.resolve(argv._);
-
-  return packages
-    .each(paquage => {
-      spinner.text = `Fetching stats for package ${c.dim.bold(paquage)}`;
-      spinner.start();
-      return fetchPackageStats(paquage)
-        .then(stats => {
-          // PREDICATE HERE
-          return {canInstall: false, reason: 'NO GO'};
-        })
-        .catch(handleError(paquage));
-    })
+  const packages = argv._;
+  spinner.text = `Fetching stats for packages ${packages}`;
+  spinner.start();
+  return Bromise.map(packages, paquage => {
+    return fetchPackageStats(paquage)
+      .then(stats => {
+        // PREDICATE HERE
+        // return {canInstall: false, reason: 'NO GO'};
+        return {package: paquage, canInstall: true};
+      })
+      .catch(handleError(paquage));
+  })
     .then(statuses => {
       spinner.clear();
       if (_.every(statuses, {canInstall: true})) {
-        shelljs.exec('echo yo npm install');
+        spinner.info(`Proceed to installation of packages ${c.bold.dim(packages.join(', '))}`);
+        return shelljs.exec(`npm install ${packages}`); // §TODO handle options
       } else {
-        console.log('could not install');
+        spinner.info('Could not install for following reasons:');
+        _.forEach(statuses, status => {
+          if (status.canInstall)
+            spinner.succeed(`${c.green.bold(status.package)}: was ok to install`);
+          else spinner.fail(`${c.red.bold(status.package)}: ${status.reason}`);
+        });
+        throw new Error('Install was canceled.');
       }
-      return;
     })
     .finally(() => spinner.stop());
 };

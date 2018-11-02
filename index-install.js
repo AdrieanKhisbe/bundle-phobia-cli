@@ -13,7 +13,7 @@ const {main} = require('./src/install');
 if (!module.parent) {
   /* eslint-disable no-console */
   main({argv}).catch(err => {
-    console.log(c.red.bold('bundle-phobia failed: ') + err.message);
+    console.log(c.red.bold('bundle-phobia-install failed: ') + err.message);
     process.exit(1);
   });
   updateNotifier({pkg}).notify();
