@@ -15,7 +15,7 @@ const main = argv => {
   }
   const noSpin = isSingleOutput(argv);
   const Spinner = noSpin ? fakeSpinner : ora;
-  const spinner = Spinner();
+  const spinner = Spinner({stream: process.stdout});
   const range = argv.range || (argv.range === undefined ? null : -1);
   const packages =
     'range' in argv && 'r' in argv
