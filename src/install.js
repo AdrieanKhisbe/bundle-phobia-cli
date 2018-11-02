@@ -19,10 +19,11 @@ const npmOptionsFromArgv = argv => {
   return output.join(' ');
 };
 const installCommand = (packages, argv) => {
-  return `npm install ${packages.join(' ')} ${npmOptionsFromArgv(argv)}`;
+  const options = npmOptionsFromArgv(argv);
+  return `npm install ${packages.join(' ')}${(options && ` ${options}`) || ''}`;
 };
 
-const main = ({argv, stream = process.stdout, noOra = false}) => {
+const main = ({argv, stream = process.stdout, noOra = false, exec = shelljs.exec}) => {
   if ('range' in argv && 'r' in argv && argv._.length > 1) {
     return Bromise.reject(new Error("Can't use both --range option and list of packages"));
   }
@@ -40,12 +41,13 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
     }
   };
   const packages = argv._;
+  const pluralSuffix = packages.lenght > 1 ? 's' : '';
 
   const performInstall = () => {
-    return shelljs.exec(installCommand(packages, argv));
+    return exec(installCommand(packages, argv));
   };
 
-  spinner.text = `Fetching stats for packages ${packages}`;
+  spinner.text = `Fetching stats for package${pluralSuffix} ${packages}`;
   spinner.start();
   return Bromise.map(packages, paquage => {
     return fetchPackageStats(paquage)
@@ -66,7 +68,9 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
     .then(statuses => {
       spinner.clear();
       if (_.every(statuses, {canInstall: true})) {
-        spinner.info(`Proceed to installation of packages ${c.bold.dim(packages.join(', '))}`);
+        spinner.info(
+          `Proceed to installation of package${pluralSuffix} ${c.bold.dim(packages.join(', '))}`
+        );
         return performInstall();
         // §TODO: handle failure exit. and eventually add status message .succeed
       } else if (argv.warn) {
@@ -130,4 +134,4 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
     .finally(() => spinner.stop());
 };
 
-module.exports = {main};
+module.exports = {main, npmOptionsFromArgv, installCommand};
