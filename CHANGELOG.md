@@ -7,7 +7,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
-## [0.8.0] - 2018-11-01
+## [0.8.1] - 2018-11-02
+### Fixed
+- Logging is now performed on stdout
+
+## [0.8.0] - 2018-11-02
 ### Added
 - Support for a list of packages to query
 
@@ -37,7 +41,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Older changes have to be documented
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.7.0...master
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.8.1...master
+[0.8.1]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.8.0...v0.8.1
+[0.8.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.7.0...v0.8.0
 [0.7.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.6.4...v0.7.0
 [0.6.4]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.6.3...v0.6.4
 [0.6.3]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.6.2...v0.6.3
