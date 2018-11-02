@@ -18,9 +18,9 @@ const npmOptionsFromArgv = argv => {
   );
   return output.join(' ');
 };
-const installCommand = (packages, argv) => {
+const installCommand = argv => {
   const options = npmOptionsFromArgv(argv);
-  return `npm install ${packages.join(' ')}${(options && ` ${options}`) || ''}`;
+  return `npm install ${argv._.join(' ')}${(options && ` ${options}`) || ''}`;
 };
 
 const main = ({argv, stream = process.stdout, noOra = false, exec = shelljs.exec}) => {
@@ -44,7 +44,7 @@ const main = ({argv, stream = process.stdout, noOra = false, exec = shelljs.exec
   const pluralSuffix = packages.lenght > 1 ? 's' : '';
 
   const performInstall = () => {
-    return exec(installCommand(packages, argv));
+    return exec(installCommand(argv));
   };
 
   spinner.text = `Fetching stats for package${pluralSuffix} ${packages}`;
