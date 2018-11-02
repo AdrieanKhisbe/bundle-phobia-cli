@@ -46,7 +46,7 @@ const main = ({argv, stream = process.stdout, noOra = false}) => {
       spinner.clear();
       if (_.every(statuses, {canInstall: true})) {
         spinner.info(`Proceed to installation of packages ${c.bold.dim(packages.join(', '))}`);
-        return shelljs.exec(`npm install ${packages}`); // §TODO handle options
+        return shelljs.exec(`npm install ${packages}`); // §TODO handle options & protect against injections (using shell-quote)
       } else {
         spinner.info('Could not install for following reasons:');
         _.forEach(statuses, status => {

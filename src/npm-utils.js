@@ -8,7 +8,7 @@ const getVersionList = name => {
     exec(`npm show ${name} versions --json`, (err, stdout, stderr) => {
       if (err) {
         if (/Registry returned 404 for GET on/.test(stderr) || /404 Not found/.test(stderr)) {
-          return callback(new Error(`Unknown Package ${name}`));
+          return callback(new Error(`The package you were looking for doesn't exist.`));
         } else {
           return callback(err);
         }
@@ -22,7 +22,7 @@ const getVersionList = name => {
 const shouldResolve = pkg => /.*@([~^]|.*x)/.test(pkg);
 
 const resolveVersionRange = pkg => {
-  if (!shouldResolve(pkg)) return Promise.resolve(pkg);
+  if (!shouldResolve(pkg)) return getVersionList(pkg).return(pkg);
   return Promise.fromCallback(cb => {
     const [packageName, version] = pkg.split('@');
     resolver({[packageName]: version}, function(err, result) {

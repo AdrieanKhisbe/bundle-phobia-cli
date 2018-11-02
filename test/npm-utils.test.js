@@ -12,7 +12,7 @@ describe('getVersionList', () => {
 
   it('get the version list of an unknown package', () => {
     return getVersionList('nonmaiscaexistepas').catch(err =>
-      expect(err.message).toEqual('Unknown Package nonmaiscaexistepas')
+      expect(err.message).toEqual("The package you were looking for doesn't exist.")
     );
   });
 });

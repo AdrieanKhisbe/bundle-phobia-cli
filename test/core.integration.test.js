@@ -62,6 +62,7 @@ describe('Integrations tests', () => {
       })
       .asCallback(done);
   });
+
   it('fetch a package that does not exist at all', done => {
     const stream = fakeStream();
     // had to pin version for test stability
@@ -79,6 +80,7 @@ describe('Integrations tests', () => {
       })
       .asCallback(done);
   });
+
   it('fetch a package that does not exist at all with range', done => {
     const stream = fakeStream();
     // had to pin version for test stability
@@ -88,7 +90,7 @@ describe('Integrations tests', () => {
     })
       .catch(err => {
         expect(err.message).toEqual(
-          'sorry-but-i-really-do-not-exist: Unknown Package sorry-but-i-really-do-not-exist'
+          "sorry-but-i-really-do-not-exist: The package you were looking for doesn't exist."
         );
       })
       .asCallback(done);
