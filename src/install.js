@@ -64,8 +64,9 @@ const main = ({
       throw wrapError;
     }
   };
-  // §TODO: no package case
+
   const packages = argv._;
+  if (_.isEmpty(packages)) return Bromise.reject(new Error('No packages to install was given'));
   const pluralSuffix = packages.lenght > 1 ? 's' : '';
 
   const performInstall = () => {
