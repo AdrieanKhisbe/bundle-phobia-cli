@@ -29,7 +29,7 @@ const fakePrompt = (result = true) => {
   };
   prompt.retrieveArgs = () => sendArgs;
   return prompt;
-}
+};
 describe('Integrations tests', () => {
   it('install just a single package and fail', done => {
     const stream = fakeStream();
