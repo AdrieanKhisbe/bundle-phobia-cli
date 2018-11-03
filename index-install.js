@@ -10,6 +10,30 @@ const argv = require('yargs')
   .describe('interactive', 'Ask for override in case of predicate violation')
   .alias('interactive', 'i')
   .boolean('interactive')
+  .describe('max-size', 'Size threeshold of individual library to install')
+  .alias('max-size', 'm')
+  .string('max-size')
+  .describe('max-gzip-size', 'Gzip Size threeshold of individual library to install')
+  .alias('max-gzip-size', 'M')
+  .string('max-gzip-size')
+  // List of npm install flags
+  .boolean([
+    's',
+    'S',
+    'save',
+    'P',
+    'save-prod',
+    'D',
+    'save-dev',
+    'O',
+    'save-optional',
+    'E',
+    'save-exact',
+    '-B',
+    'save-bundle',
+    'no-save',
+    'dry-run'
+  ])
   .help('h')
   .alias('h', 'help').argv;
 const pkg = require('./package.json');

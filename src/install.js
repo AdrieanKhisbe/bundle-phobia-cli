@@ -6,10 +6,24 @@ const shelljs = require('shelljs');
 const inquirer = require('inquirer');
 const {fetchPackageStats} = require('./fetch-package-stats');
 const fakeSpinner = require('./fake-spinner');
+const {sizePredicate, gzipSizePredicate} = require('./install-predicates');
+
+const DEFAULT_MAX_SIZE = '100kB';
 
 const npmOptionsFromArgv = argv => {
   const output = _.reduce(
-    _.omit(argv, ['i', 'interactive', '$0', 'warn', 'w', '_']),
+    _.omit(argv, [
+      'i',
+      'interactive',
+      '$0',
+      'warn',
+      'w',
+      '_',
+      'm',
+      'M',
+      'max-size',
+      'max-gzip-size'
+    ]),
     (memo, value, key) => {
       const val = _.isBoolean(value) ? '' : ` ${value}`;
       return [...memo, (_.size(key) === 1 ? '-' : '--') + key + val];
@@ -18,9 +32,16 @@ const npmOptionsFromArgv = argv => {
   );
   return output.join(' ');
 };
+
 const installCommand = argv => {
   const options = npmOptionsFromArgv(argv);
   return `npm install ${argv._.join(' ')}${(options && ` ${options}`) || ''}`;
+};
+
+const getSizePredicate = argv => {
+  if (argv['max-size']) return sizePredicate(argv['max-size']);
+  if (argv['max-gzip-size']) return gzipSizePredicate(argv['max-gzip-size']);
+  return sizePredicate(DEFAULT_MAX_SIZE);
 };
 
 const main = ({
@@ -43,28 +64,24 @@ const main = ({
       throw wrapError;
     }
   };
+  // §TODO: no package case
   const packages = argv._;
   const pluralSuffix = packages.lenght > 1 ? 's' : '';
 
   const performInstall = () => {
     return exec(installCommand(argv));
   };
+  const predicate = getSizePredicate(argv);
 
   spinner.text = `Fetching stats for package${pluralSuffix} ${packages}`;
   spinner.start();
+  spinner.info(`Applying a ${predicate.description}`);
   return Bromise.map(packages, paquage => {
     return fetchPackageStats(paquage)
       .then(stats => {
-        // PREDICATE HERE
-        const THRESOLD = 10000;
-        if (stats.size > THRESOLD)
-          return {
-            package: paquage,
-            canInstall: false,
-            reason: 'size over threshold',
-            details: `${stats.size} > ${THRESOLD}`
-          };
-        return {package: paquage, canInstall: true};
+        const status = predicate(stats);
+        status.package = paquage;
+        return status;
       })
       .catch(handleError(paquage, true));
   })
