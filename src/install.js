@@ -23,7 +23,13 @@ const installCommand = argv => {
   return `npm install ${argv._.join(' ')}${(options && ` ${options}`) || ''}`;
 };
 
-const main = ({argv, stream = process.stdout, noOra = false, exec = shelljs.exec}) => {
+const main = ({
+  argv,
+  stream = process.stdout,
+  noOra = false,
+  exec = shelljs.exec,
+  prompt = inquirer.prompt
+}) => {
   const noSpin = noOra;
   const Spinner = noSpin ? fakeSpinner : ora;
   const spinner = Spinner({stream});
@@ -96,23 +102,21 @@ const main = ({argv, stream = process.stdout, noOra = false, exec = shelljs.exec
           );
         });
         // eslint-disable-next-line promise/no-nesting
-        return inquirer
-          .prompt([
-            {
-              type: 'confirm',
-              name: 'proceed',
-              message: 'Do you still want to proceed with installation?',
-              default: 'N'
-            }
-          ])
-          .then(answer => {
-            if (answer.proceed) {
-              spinner.succeed('Proceeding with installation as you requested');
-              return performInstall();
-            } else {
-              return spinner.fail('Installation is canceled on your demand');
-            }
-          });
+        return prompt([
+          {
+            type: 'confirm',
+            name: 'proceed',
+            message: 'Do you still want to proceed with installation?',
+            default: 'N'
+          }
+        ]).then(answer => {
+          if (answer.proceed) {
+            spinner.succeed('Proceeding with installation as you requested');
+            return performInstall();
+          } else {
+            return spinner.fail('Installation is canceled on your demand');
+          }
+        });
       } else {
         spinner.info('Could not install for following reasons:');
         _.forEach(statuses, status => {

@@ -1,4 +1,5 @@
 const stripAnsi = require('strip-ansi');
+const Bromise = require('bluebird');
 const {main} = require('../src/install');
 
 const fakeStream = () => {
@@ -20,7 +21,15 @@ const fakeExec = () => {
   exec.retrieveCmd = () => runCommand;
   return exec;
 };
-
+const fakePrompt = (result = true) => {
+  let sendArgs;
+  const prompt = args => {
+    sendArgs = args;
+    return Bromise.resolve({[args[0].name]: result});
+  };
+  prompt.retrieveArgs = () => sendArgs;
+  return prompt;
+}
 describe('Integrations tests', () => {
   it('install just a single package and fail', done => {
     const stream = fakeStream();
@@ -77,6 +86,48 @@ describe('Integrations tests', () => {
       })
       .catch(done);
   });
+
+  it('ask to install a package and accept', done => {
+    const stream = fakeStream();
+    const exec = fakeExec();
+    const prompt = fakePrompt();
+    // had to pin version for test stability
+    return main({argv: {_: ['lodash@4.12.0'], i: true, interactive: true}, stream, exec, prompt})
+      .then(() => {
+        const output = stream.getContent();
+        expect(stripAnsi(output)).toEqual(
+          `- Fetching stats for package lodash@4.12.0
+ℹ Packages lodash@4.12.0 raised following warnings:
+⚠ lodash@4.12.0: size over threshold (64652 > 10000)
+✔ Proceeding with installation as you requested
+`
+        );
+        expect(exec.retrieveCmd()).toEqual('npm install lodash@4.12.0');
+        return done();
+      })
+      .catch(done);
+  });
+  it('ask to install a package and deny', done => {
+    const stream = fakeStream();
+    const exec = fakeExec();
+    const prompt = fakePrompt(false);
+    // had to pin version for test stability
+    return main({argv: {_: ['lodash@4.12.0'], i: true, interactive: true}, stream, exec, prompt})
+      .then(() => {
+        const output = stream.getContent();
+        expect(stripAnsi(output)).toEqual(
+          `- Fetching stats for package lodash@4.12.0
+ℹ Packages lodash@4.12.0 raised following warnings:
+⚠ lodash@4.12.0: size over threshold (64652 > 10000)
+✖ Installation is canceled on your demand
+`
+        );
+        expect(exec.retrieveCmd()).toBeUndefined();
+        return done();
+      })
+      .catch(done);
+  });
+
   it('try to install package that does not exist', done => {
     const stream = fakeStream();
     const exec = fakeExec();
