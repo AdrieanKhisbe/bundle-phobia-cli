@@ -38,10 +38,10 @@ const installCommand = argv => {
   return `npm install ${argv._.join(' ')}${(options && ` ${options}`) || ''}`;
 };
 
-const getSizePredicate = argv => {
+const getSizePredicate = (argv, defaultSize) => {
   if (argv['max-size']) return sizePredicate(argv['max-size']);
   if (argv['max-gzip-size']) return gzipSizePredicate(argv['max-gzip-size']);
-  return sizePredicate(DEFAULT_MAX_SIZE);
+  return sizePredicate(defaultSize);
 };
 
 const main = ({
@@ -49,7 +49,8 @@ const main = ({
   stream = process.stdout,
   noOra = false,
   exec = shelljs.exec,
-  prompt = inquirer.prompt
+  prompt = inquirer.prompt,
+  defaultMaxSize = DEFAULT_MAX_SIZE
 }) => {
   const noSpin = noOra;
   const Spinner = noSpin ? fakeSpinner : ora;
@@ -70,9 +71,10 @@ const main = ({
   const pluralSuffix = packages.lenght > 1 ? 's' : '';
 
   const performInstall = () => {
-    return exec(installCommand(argv));
+    const res = exec(installCommand(argv));
+    if (res.code !== 0) throw new Error(`npm install returned with status code ${res.code}`);
   };
-  const predicate = getSizePredicate(argv);
+  const predicate = getSizePredicate(argv, defaultMaxSize);
 
   spinner.text = `Fetching stats for package${pluralSuffix} ${packages}`;
   spinner.start();

@@ -12,7 +12,7 @@ const sizePredicate = threshold => {
       details: `${bytes(stats.size)} > ${bytes(realThreshold)}`
     };
   };
-  predicate.description = `size limit of ${threshold}`;
+  predicate.description = `size limit of ${bytes(realThreshold)}`;
   predicate.threshold = realThreshold;
   return predicate;
 };
@@ -29,7 +29,7 @@ const gzipSizePredicate = threshold => {
       details: `${bytes(stats.gzip)} > ${bytes(realThreshold)}`
     };
   };
-  predicate.description = `gzip size limit of ${threshold}`;
+  predicate.description = `gzip size limit of ${bytes(realThreshold)}`;
   predicate.threshold = realThreshold;
   return predicate;
 };
