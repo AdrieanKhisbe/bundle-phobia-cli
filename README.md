@@ -17,11 +17,38 @@ Just use `npm install -g bundle-phobia-cli` and you're good to go!
 
 ## Usage
 
-For now, just `bundle-phobia <package-name>` and you will get its stats.
-You can also query a list of packages, or precise the package version you want to query.
-For instance exact version `lodash@4.12.0` or range version `ora@^3.0.0`.
+Once installed you will have access to different executables:
+- `bundle-phobia`: to query package size.
+   Just invoke it with a list of package names and some options.
+- `bundle-phobia-install`: to conditionally install package if weight constraint are respected. This is a wrapper on `npm install` 
+
+Note that you can specify a version along with the package range such as an
+instance exact version `lodash@4.12.0` or range version `ora@^3.0.0`.
+
+### Examples
+```bash
+# Query package size of lodash and react
+$ bundle-phobia lodash react
+ℹ lodash (4.17.11) has 0 dependencies for a weight of 68.51KB (24.05KB gzipped)
+ℹ react (16.6.0) has 4 dependencies for a weight of 5.86KB (2.48KB gzipped)
+
+# Perform conditional install of lodash
+$ bundle-phobia-install lodash
+ℹ Applying a size limit of 100KB
+ℹ Proceed to installation of package lodash
++ lodash@4.17.11
+added 1 package from 2 contributors and audited 1 package in 1.377s
+found 0 vulnerabilities
+```
+
 
 ### Detailed Usage
+#### `bundle-phobia`
+
+Some option are available to control what stats are outputed by `bundle-phobia`.
+Dy default an humain friendly output is provided, otherwise you can have a json output
+with the `--json` flag. In case you need just the size (or gzip) in a script, you can
+use the `--[gzip]-size` flag.
 
 ```
 Usage: bundle-phobia <package-name>
@@ -33,5 +60,33 @@ Options:
   --gzip-size, -g     Output just the module gzip size                 [boolean]
   --dependencies, -d  Output just thenumber of dependencies            [boolean]
   -h, --help          Show help                                        [boolean]
+```
+#### `bundle-phobia-install`
 
+`bundle-phobia-install` offer three kind of flags:
+- flags to specify the size constraints
+- flags to specify behavior when constraints are not respected
+- npm install flags to control it's behavior
+
+To control the size constraint: `--max-size` and `--max-gzip-size` aliases to `-m` and `-M`.
+They expect a size argument that can be either a number or a number followed by a `kB`, `mB` unit
+
+By default if constraint is not respected, install with failed.
+If you want to perform anyway with just a warning use the `--warn`/`-w` flag.
+If you want to be asked what to do, use the `--interactive`/`-i`.
+
+All other options will be conveyed to `npm`.
+
+```
+Usage: bundle-phobia-install <package-names...>
+
+Options:
+  --version            Show version number                             [boolean]
+  --warn, -w           Install despite of negative check but warn about
+                       predicate violation                             [boolean]
+  --interactive, -i    Ask for override in case of predicate violation [boolean]
+  --max-size, -m       Size threeshold of individual library to install [string]
+  --max-gzip-size, -M  Gzip Size threeshold of individual library to install
+                                                                        [string]
+  -h, --help           Show help                                       [boolean]
 ```
