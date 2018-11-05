@@ -60,6 +60,6 @@
     "camel-case-expansion": false,
     "dot-notation": false,
     "parse-numbers": true,
-    "boolean-negation": true
+    "boolean-negation": false
   }
 }
