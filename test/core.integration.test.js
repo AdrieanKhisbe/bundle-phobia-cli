@@ -43,6 +43,8 @@ describe('Integrations tests', () => {
 ℹ lodash (2.0.0) has 0 dependencies for a weight of 26.17KB (9.52KB gzipped)
 - Fetching stats for package moment@1.2.0
 ℹ moment (1.2.0) has 0 dependencies for a weight of 114.1KB (14.83KB gzipped)
+
+ℹ total (3 packages) has 3 dependencies for a weight of 160.23KB (30.81KB gzipped)
 `
         );
 

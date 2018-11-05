@@ -39,16 +39,34 @@ const main = ({argv, stream = process.stdout}) => {
     return Bromise.reject(err);
   }
 
-  return packages
-    .each(paquage => {
-      spinner.text = `Fetching stats for package ${c.dim.bold(paquage)}`;
-      spinner.start();
-      return fetchPackageStats(paquage)
-        .then(stats => {
-          spinner.info(view(stats));
-          return stats;
-        })
-        .catch(handleError(paquage));
+  return Bromise.mapSeries(packages, paquage => {
+    spinner.text = `Fetching stats for package ${c.dim.bold(paquage)}`;
+    spinner.start();
+    return fetchPackageStats(paquage)
+      .then(stats => {
+        spinner.info(view(stats));
+        return stats;
+      })
+      .catch(handleError(paquage));
+  })
+    .tap(allStats => {
+      const nLibs = _.size(allStats);
+      if (nLibs > 1) {
+        spinner.clear();
+        stream.write('\n');
+        const dependencyCount = _.sumBy(allStats, 'dependencyCount');
+        const gzip = _.sumBy(allStats, 'gzip');
+        const size = _.sumBy(allStats, 'size');
+        spinner.info(
+          view({
+            name: c.magenta('total'),
+            version: `${nLibs} packages`,
+            gzip,
+            size,
+            dependencyCount
+          })
+        );
+      }
     })
     .finally(() => spinner.stop());
 };
