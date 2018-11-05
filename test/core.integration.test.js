@@ -33,7 +33,7 @@ describe('Integrations tests', () => {
   it('fetch just a list of package', done => {
     const stream = fakeStream();
     // had to pin version for test stability
-    return main({argv: {_: ['react@15', 'lodash@2', 'moment@1.2']}, stream})
+    return main({argv: {_: ['react@15', 'lodash@2', 'moment@1.2.0']}, stream})
       .then(() => {
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
@@ -41,8 +41,8 @@ describe('Integrations tests', () => {
 ℹ react (15.0.0) has 3 dependencies for a weight of 19.96KB (6.46KB gzipped)
 - Fetching stats for package lodash@2
 ℹ lodash (2.0.0) has 0 dependencies for a weight of 26.17KB (9.52KB gzipped)
-- Fetching stats for package moment@1.2
-ℹ moment (1.2.0) has 0 dependencies for a weight of 113.98KB (14.77KB gzipped)
+- Fetching stats for package moment@1.2.0
+ℹ moment (1.2.0) has 0 dependencies for a weight of 114.1KB (14.83KB gzipped)
 `
         );
 
