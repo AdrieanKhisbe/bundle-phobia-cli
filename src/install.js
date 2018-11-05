@@ -4,6 +4,7 @@ const _ = require('lodash');
 const ora = require('ora');
 const shelljs = require('shelljs');
 const inquirer = require('inquirer');
+const readPkgUp = require('read-pkg-up');
 const {fetchPackageStats} = require('./fetch-package-stats');
 const fakeSpinner = require('./fake-spinner');
 const {sizePredicate, gzipSizePredicate} = require('./install-predicates');
@@ -39,9 +40,16 @@ const installCommand = argv => {
 };
 
 const getSizePredicate = (argv, defaultSize) => {
-  if (argv['max-size']) return sizePredicate(argv['max-size']);
-  if (argv['max-gzip-size']) return gzipSizePredicate(argv['max-gzip-size']);
-  return sizePredicate(defaultSize);
+  if (argv['max-size']) return sizePredicate(argv['max-size'], 'argv');
+  if (argv['max-gzip-size']) return gzipSizePredicate(argv['max-gzip-size'], 'argv');
+  const packageConfig = readPkgUp.sync();
+  if (_.has(packageConfig, 'pkg')) {
+    const maxSizeConfig = _.get(packageConfig, ['pkg', 'bundle-phobia', 'max-size']);
+    if (maxSizeConfig) return sizePredicate(maxSizeConfig, 'package-config');
+    const maxGzipSizeConfig = _.get(packageConfig, ['pkg', 'bundle-phobia', 'max-gzip-size']);
+    if (maxGzipSizeConfig) return gzipSizePredicate(maxGzipSizeConfig, 'argv');
+  }
+  return sizePredicate(defaultSize, 'default');
 };
 
 const main = ({
@@ -78,7 +86,7 @@ const main = ({
 
   spinner.text = `Fetching stats for package${pluralSuffix} ${packages}`;
   spinner.start();
-  spinner.info(`Applying a ${predicate.description}`);
+  spinner.info(`Applying a ${predicate.description} from ${predicate.source}`);
   return Bromise.map(packages, paquage => {
     return fetchPackageStats(paquage)
       .then(stats => {

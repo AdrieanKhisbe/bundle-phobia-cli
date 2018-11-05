@@ -50,7 +50,7 @@ describe('Integrations tests', () => {
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
           `- Fetching stats for package lodash@4.12.0
-ℹ Applying a size limit of 9.77KB
+ℹ Applying a size limit of 9.77KB from default
 ℹ Could not install for following reasons:
 ✖ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
 `
@@ -74,7 +74,7 @@ describe('Integrations tests', () => {
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
           `- Fetching stats for package bytes@3.0.0
-ℹ Applying a size limit of 9.77KB
+ℹ Applying a size limit of 9.77KB from default
 ℹ Proceed to installation of package bytes@3.0.0
 `
         );
@@ -98,7 +98,7 @@ describe('Integrations tests', () => {
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
           `- Fetching stats for package lodash@4.12.0
-ℹ Applying a size limit of 9.77KB
+ℹ Applying a size limit of 9.77KB from default
 ℹ Proceed to installation of packages lodash@4.12.0 despite following warnings:
 ⚠ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
 `
@@ -125,7 +125,7 @@ describe('Integrations tests', () => {
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
           `- Fetching stats for package lodash@4.12.0
-ℹ Applying a size limit of 9.77KB
+ℹ Applying a size limit of 9.77KB from default
 ℹ Packages lodash@4.12.0 raised following warnings:
 ⚠ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
 ✔ Proceeding with installation as you requested
@@ -152,7 +152,7 @@ describe('Integrations tests', () => {
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
           `- Fetching stats for package lodash@4.12.0
-ℹ Applying a size limit of 9.77KB
+ℹ Applying a size limit of 9.77KB from default
 ℹ Packages lodash@4.12.0 raised following warnings:
 ⚠ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
 ✖ Installation is canceled on your demand

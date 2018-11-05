@@ -1,6 +1,6 @@
 const bytes = require('bytes');
 
-const sizePredicate = threshold => {
+const sizePredicate = (threshold, source) => {
   const realThreshold = bytes(threshold.toString());
 
   const predicate = stats => {
@@ -14,10 +14,11 @@ const sizePredicate = threshold => {
   };
   predicate.description = `size limit of ${bytes(realThreshold)}`;
   predicate.threshold = realThreshold;
+  predicate.source = source;
   return predicate;
 };
 
-const gzipSizePredicate = threshold => {
+const gzipSizePredicate = (threshold, source) => {
   const realThreshold = bytes(threshold.toString());
 
   const predicate = stats => {
@@ -31,6 +32,7 @@ const gzipSizePredicate = threshold => {
   };
   predicate.description = `gzip size limit of ${bytes(realThreshold)}`;
   predicate.threshold = realThreshold;
+  predicate.source = source;
   return predicate;
 };
 
