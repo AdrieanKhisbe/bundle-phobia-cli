@@ -50,8 +50,9 @@ Dy default an humain friendly output is provided, otherwise you can have a json 
 with the `--json` flag. In case you need just the size (or gzip) in a script, you can
 use the `--[gzip]-size` flag.
 
+##### Options Summary
 ```
-Usage: bundle-phobia <package-name>
+Usage: bundle-phobia <package-name> [other-package-names...]
 
 Options:
   --range, -r         Get a range of version (0 for all, 8 by default)  [number]
@@ -77,8 +78,21 @@ If you want to be asked what to do, use the `--interactive`/`-i`.
 
 All other options will be conveyed to `npm`.
 
+Limits can also be configured in the `package.json` by adding a `bundle-phobia` section with a `max-[gzip-]size` key. 
+```json
+{
+  "name": "bundle-phobia-install-test",
+  "dependencies": {},
+  "bundle-phobia": {
+    "max-size": "12kB"
+  }
+}
 ```
-Usage: bundle-phobia-install <package-names...>
+
+##### Options Summary
+
+```
+Usage: bundle-phobia-install <package-name> [other-package-names...]
 
 Options:
   --version            Show version number                             [boolean]

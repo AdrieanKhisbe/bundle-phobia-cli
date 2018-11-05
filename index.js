@@ -3,7 +3,7 @@
 const updateNotifier = require('update-notifier');
 const c = require('chalk');
 const argv = require('yargs')
-  .usage('Usage: $0 <package-names...>')
+  .usage('Usage: $0  <package-name> [other-package-names...]')
   .describe('range', 'Get a range of version (0 for all, 8 by default)')
   .alias('range', 'r')
   .number('range')

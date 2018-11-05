@@ -3,7 +3,7 @@
 const updateNotifier = require('update-notifier');
 const c = require('chalk');
 const argv = require('yargs')
-  .usage('Usage: $0 <package-names...>')
+  .usage('Usage: $0  <package-name> [other-package-names...]')
   .describe('warn', 'Install despite of negative check but warn about predicate violation')
   .alias('warn', 'w')
   .boolean('warn') // no force, use npm instead ;)
