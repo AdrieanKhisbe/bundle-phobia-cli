@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const Promise = require('bluebird');
 
 fetch.Promise = Promise;
-const {getVersionList, resolveVersionRange} = require('./npm-utils');
+const {getVersionList, resolveVersionRange, getDependencyList} = require('./npm-utils');
 
 const fetchPackageStats = name => {
   if (!name) return Promise.reject(new Error('Empty name given as argument'));
@@ -18,6 +18,9 @@ const fetchPackageStats = name => {
       return json;
     });
 };
+const fetchPackagesStats = names => Promise.map(names, fetchPackageStats);
+const fetchPackageJsonStats = packageDetails =>
+  fetchPackagesStats(getDependencyList(packageDetails));
 
 const selectVersions = (versionList, limit) => {
   versionList.reverse();
@@ -31,6 +34,4 @@ const getPackageVersionList = (name, limit = 8) => {
     .map(version => `${name}@${version}`);
 };
 
-module.exports.fetchPackageStats = fetchPackageStats;
-module.exports.selectVersions = selectVersions;
-module.exports.getPackageVersionList = getPackageVersionList;
+module.exports = {fetchPackageStats, fetchPackageJsonStats, selectVersions, getPackageVersionList};

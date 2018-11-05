@@ -1,7 +1,7 @@
 const {exec} = require('child_process');
 const Promise = require('bluebird');
 const {resolver} = require('resolve-package-json');
-const has = require('lodash/has');
+const _ = require('lodash');
 
 const getVersionList = name => {
   if (!name) return Promise.reject(new Error('Empty name given as argument'));
@@ -30,11 +30,19 @@ const resolveVersionRange = pkg => {
     resolver({[packageName]: version}, function(err, result) {
       /* istanbul ignore if*/
       if (err) return cb(err);
-      if (!has(result, `dependencies.${packageName}`))
+      if (!_.has(result, `dependencies.${packageName}`))
         return cb(new Error(`Specified version range '${version}' is not resolvable`));
       return cb(null, `${packageName}@${result.dependencies[packageName].version}`);
     });
   });
 };
 
-module.exports = {getVersionList, shouldResolve, resolveVersionRange};
+const getDependencyList = packageDetails =>
+  _.reduce(
+    packageDetails.dependencies,
+    (memo, value, key) => {
+      return [...memo, `${key}@${value}`];
+    },
+    []
+  );
+module.exports = {getVersionList, shouldResolve, resolveVersionRange, getDependencyList};
