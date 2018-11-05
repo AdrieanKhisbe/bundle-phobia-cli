@@ -92,13 +92,18 @@ const main = ({
       .then(stats => {
         const status = predicate(stats);
         status.package = paquage;
-        return status;
+        return _.assign({}, status, stats);
       })
       .catch(handleError(paquage, true));
   })
     .then(statuses => {
+      const globalStatus = {canInstall: true};
+      // §TODO: retrieve information on already installed package
+      return {statuses, globalStatus};
+    })
+    .then(({statuses, globalStatus}) => {
       spinner.clear();
-      if (_.every(statuses, {canInstall: true})) {
+      if (globalStatus.canInstall && _.every(statuses, {canInstall: true})) {
         spinner.info(
           `Proceed to installation of package${pluralSuffix} ${c.bold.dim(packages.join(', '))}`
         );
@@ -110,6 +115,7 @@ const main = ({
             .map(p => c.bold.dim(p))
             .join(', ')} despite following warnings:`
         );
+        // §TODO insert global status
         _.forEach(_.filter(statuses, {canInstall: false}), status => {
           spinner.warn(
             `${c.red.yellow(status.package)}: ${status.reason}${
@@ -122,6 +128,7 @@ const main = ({
         spinner.info(
           `Packages ${packages.map(p => c.bold.dim(p)).join(', ')} raised following warnings:`
         );
+        // §TODO insert global status
         _.forEach(_.filter(statuses, {canInstall: false}), status => {
           spinner.warn(
             `${c.red.yellow(status.package)}: ${status.reason}${
