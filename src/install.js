@@ -7,7 +7,12 @@ const inquirer = require('inquirer');
 const readPkgUp = require('read-pkg-up');
 const {fetchPackageStats, fetchPackageJsonStats} = require('./fetch-package-stats');
 const fakeSpinner = require('./fake-spinner');
-const {sizePredicate, gzipSizePredicate} = require('./install-predicates');
+const {
+  sizePredicate,
+  gzipSizePredicate,
+  globalSizePredicate,
+  globalGzipSizePredicate
+} = require('./install-predicates');
 
 const DEFAULT_MAX_SIZE = '100kB';
 
@@ -50,6 +55,18 @@ const getSizePredicate = (argv, defaultSize, packageConfig) => {
 
   return sizePredicate(defaultSize, 'default');
 };
+const getGlobalSizePredicate = (argv, packageConfig) => {
+  if (argv['max-global-size']) return globalSizePredicate(argv['max-global-size'], 'argv');
+  if (argv['max-global-gzip-size'])
+    return globalGzipSizePredicate(argv['max-global-gzip-size'], 'argv');
+
+  const maxGlobalSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-global-size']);
+  if (maxGlobalSizeConfig) return globalSizePredicate(maxGlobalSizeConfig, 'package-config');
+  const maxGlobalGzipSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-global-gzip-size']);
+  if (maxGlobalGzipSizeConfig) return globalGzipSizePredicate(maxGlobalGzipSizeConfig, 'argv');
+
+  return () => ({canInstall: true});
+};
 
 const main = ({
   argv,
@@ -83,6 +100,7 @@ const main = ({
     if (res.code !== 0) throw new Error(`npm install returned with status code ${res.code}`);
   };
   const predicate = getSizePredicate(argv, defaultMaxSize, currentPkg);
+  const globalPredicate = getGlobalSizePredicate(argv, currentPkg);
 
   spinner.text = `Fetching stats for package${pluralSuffix} ${packages}`;
   spinner.start();
@@ -97,14 +115,18 @@ const main = ({
       .catch(handleError(paquage, true));
   })
     .then(statuses => {
-      const globalStatus = {canInstall: true};
+      const aggregateStats = statsList => {
+        const dependencyCount = _.sumBy(statsList, 'dependencyCount');
+        const gzip = _.sumBy(statsList, 'gzip');
+        const size = _.sumBy(statsList, 'size');
+        return {size, gzip, dependencyCount};
+      };
+      const toInstallStats = aggregateStats(statuses);
       // §TODO: retrieve information on already installed package
       // eslint-disable-next-line promise/no-nesting
       return fetchPackageJsonStats(currentPkg).then(allStats => {
-        const dependencyCount = _.sumBy(allStats, 'dependencyCount');
-        const gzip = _.sumBy(allStats, 'gzip');
-        const size = _.sumBy(allStats, 'size');
-        const globalStats = {size, gzip, dependencyCount};
+        const installedStats = aggregateStats(allStats);
+        const globalStatus = globalPredicate(installedStats, toInstallStats);
 
         return {statuses, globalStatus};
       });
