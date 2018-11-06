@@ -104,7 +104,13 @@ const main = ({
 
   spinner.text = `Fetching stats for package${pluralSuffix} ${packages}`;
   spinner.start();
-  spinner.info(`Applying a ${predicate.description} from ${predicate.source}`);
+  spinner.info(
+    `Applying a ${c.underline(predicate.description)} from ${predicate.source}${
+      globalPredicate.description
+        ? ` and ${c.underline(globalPredicate.description)} from ${globalPredicate.source}`
+        : ''
+    }\n`
+  );
   return Bromise.map(packages, paquage => {
     return fetchPackageStats(paquage)
       .then(stats => {
@@ -140,12 +146,17 @@ const main = ({
         return performInstall();
         // §TODO: handle failure exit. and eventually add status message .succeed
       } else if (argv.warn) {
-        spinner.info(
+        spinner.warn(
           `Proceed to installation of packages ${packages
             .map(p => c.bold.dim(p))
             .join(', ')} despite following warnings:`
         );
-        // §TODO insert global status
+        if (!globalStatus.canInstall)
+          spinner.warn(
+            `${c.yellow.bold('global constraint')} is not respected: ${
+              globalStatus.reason
+            } (${c.dim(globalStatus.details)})`
+          );
         _.forEach(_.filter(statuses, {canInstall: false}), status => {
           spinner.warn(
             `${c.red.yellow(status.package)}: ${status.reason}${
@@ -155,10 +166,15 @@ const main = ({
         });
         return performInstall();
       } else if (argv.interactive) {
-        spinner.info(
-          `Packages ${packages.map(p => c.bold.dim(p)).join(', ')} raised following warnings:`
+        spinner.warn(
+          `Packages ${packages.map(p => c.bold.dim(p)).join(', ')} raised following ${c.yellow.bold('warnings')}:`
         );
-        // §TODO insert global status
+        if (!globalStatus.canInstall)
+          spinner.warn(
+            `${c.yellow.bold('global constraint')} is not respected: ${
+              globalStatus.reason
+            } (${c.dim(globalStatus.details)})`
+          );
         _.forEach(_.filter(statuses, {canInstall: false}), status => {
           spinner.warn(
             `${c.red.yellow(status.package)}: ${status.reason}${
@@ -183,10 +199,20 @@ const main = ({
           }
         });
       } else {
-        spinner.info('Could not install for following reasons:');
+        spinner.fail(c.bold('Could not install for following reasons:'));
+        if (globalStatus.canInstall)
+          spinner.succeed(`${c.green.bold('global constraint')} is respected`);
+        else
+          spinner.fail(
+            `${c.red.bold('global constraint')} is not respected: ${globalStatus.reason} (${c.dim(
+              globalStatus.details
+            )})`
+          );
         _.forEach(statuses, status => {
           if (status.canInstall)
-            spinner.succeed(`${c.green.bold(status.package)}: was ok to install`);
+            spinner.succeed(
+              `${c.green.bold(status.package)}: was individually ${c.bold('ok')} to install`
+            );
           else
             spinner.fail(
               `${c.red.bold(status.package)}: ${status.reason}${
