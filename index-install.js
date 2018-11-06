@@ -16,6 +16,12 @@ const argv = require('yargs')
   .describe('max-gzip-size', 'Gzip Size threeshold of individual library to install')
   .alias('max-gzip-size', 'M')
   .string('max-gzip-size')
+  .describe('max-overall-size', 'Overall size threeshold of dependencies')
+  .alias('max-overall-size', 'o')
+  .string('max-overall-size')
+  .describe('max-overall-gzip-size', 'Overall Gzip size threeshold of dependencies')
+  .alias('max-overall-gzip-size', 'O')
+  .string('max-overall-gzip-size')
   // List of npm install flags
   .boolean([
     's',

@@ -28,7 +28,11 @@ const npmOptionsFromArgv = argv => {
       'm',
       'M',
       'max-size',
-      'max-gzip-size'
+      'max-gzip-size',
+      'o',
+      'O',
+      'max-overall-size',
+      'max-overall-gzip-size'
     ]),
     (memo, value, key) => {
       const val = _.isBoolean(value) ? '' : ` ${value}`;
@@ -56,14 +60,15 @@ const getSizePredicate = (argv, defaultSize, packageConfig) => {
   return sizePredicate(defaultSize, 'default');
 };
 const getGlobalSizePredicate = (argv, packageConfig) => {
-  if (argv['max-global-size']) return globalSizePredicate(argv['max-global-size'], 'argv');
-  if (argv['max-global-gzip-size'])
-    return globalGzipSizePredicate(argv['max-global-gzip-size'], 'argv');
+  if (argv['max-overall-size']) return globalSizePredicate(argv['max-overall-size'], 'argv');
+  if (argv['max-overall-gzip-size'])
+    return globalGzipSizePredicate(argv['max-overall-gzip-size'], 'argv');
 
-  const maxGlobalSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-global-size']);
+  const maxGlobalSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-overall-size']);
   if (maxGlobalSizeConfig) return globalSizePredicate(maxGlobalSizeConfig, 'package-config');
-  const maxGlobalGzipSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-global-gzip-size']);
-  if (maxGlobalGzipSizeConfig) return globalGzipSizePredicate(maxGlobalGzipSizeConfig, 'package-config');
+  const maxGlobalGzipSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-overall-gzip-size']);
+  if (maxGlobalGzipSizeConfig)
+    return globalGzipSizePredicate(maxGlobalGzipSizeConfig, 'package-config');
 
   return () => ({canInstall: true});
 };

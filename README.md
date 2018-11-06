@@ -69,8 +69,9 @@ Options:
 - flags to specify behavior when constraints are not respected
 - npm install flags to control it's behavior
 
-To control the size constraint: `--max-size` and `--max-gzip-size` aliases to `-m` and `-M`.
-They expect a size argument that can be either a number or a number followed by a `kB`, `mB` unit
+To control the size constraint of a single package: `--max-size` and `--max-gzip-size` aliases to `-m` and `-M`.
+To control the overall size of dependencies: `--max-overall-size` and `--max-overall-gzip-size` aliases to `-o` and `-O`.
+They expect a size argument that can be either a number or a number followed by a `kB`, `mB` unit.
 
 By default if constraint is not respected, install with failed.
 If you want to perform anyway with just a warning use the `--warn`/`-w` flag.

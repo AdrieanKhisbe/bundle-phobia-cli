@@ -58,24 +58,24 @@ describe('getGlobalSizePredicate', () => {
     expect(predicate.description).toBeUndefined();
   });
   it('returns predicate request by argv', () => {
-    const predicate = getGlobalSizePredicate({'max-global-size': '124kB'}, {});
+    const predicate = getGlobalSizePredicate({'max-overall-size': '124kB'}, {});
     expect(predicate.description).toEqual('overall size limit of 124KB');
     expect(predicate.source).toEqual('argv');
   });
   it('returns predicate request by argv', () => {
-    const predicate = getGlobalSizePredicate({'max-global-gzip-size': '12kB'}, {});
+    const predicate = getGlobalSizePredicate({'max-overall-gzip-size': '12kB'}, {});
     expect(predicate.description).toEqual('gzip size limit of 12KB');
     expect(predicate.source).toEqual('argv');
   });
   it('returns predicate request by package.json', () => {
-    const predicate = getGlobalSizePredicate({}, {'bundle-phobia': {'max-global-size': '124kB'}});
+    const predicate = getGlobalSizePredicate({}, {'bundle-phobia': {'max-overall-size': '124kB'}});
     expect(predicate.description).toEqual('overall size limit of 124KB');
     expect(predicate.source).toEqual('package-config');
   });
   it('returns predicate request by package.json', () => {
     const predicate = getGlobalSizePredicate(
       {},
-      {'bundle-phobia': {'max-global-gzip-size': '12kB'}}
+      {'bundle-phobia': {'max-overall-gzip-size': '12kB'}}
     );
     expect(predicate.description).toEqual('gzip size limit of 12KB');
     expect(predicate.source).toEqual('package-config');
