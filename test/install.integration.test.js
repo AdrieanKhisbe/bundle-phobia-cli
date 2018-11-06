@@ -22,6 +22,7 @@ const fakeExec = (statusCode = 0) => {
   exec.retrieveCmd = () => runCommand;
   return exec;
 };
+const fakePkg = () => ({dependencies: {ora: '^3.0.0'}});
 
 const fakePrompt = (result = true) => {
   let sendArgs;
@@ -43,16 +44,19 @@ describe('Integrations tests', () => {
       argv: {_: ['lodash@4.12.0']},
       stream,
       exec,
-      defaultMaxSize
+      defaultMaxSize,
+      readPkg: fakePkg
     })
       .catch(err => {
         expect(err.message).toEqual('Install was canceled.');
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
-          `- Fetching stats for package lodash@4.12.0
-ℹ Applying a size limit of 9.77KB from default
-ℹ Could not install for following reasons:
+          `ℹ Applying a size limit of 9.77KB from default
+
+- Fetching stats for package lodash@4.12.0
+✖ Could not install for following reasons:
 ✖ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
+✔ global constraint is respected
 `
         );
 
@@ -68,13 +72,15 @@ describe('Integrations tests', () => {
       argv: {_: ['bytes@3.0.0']},
       stream,
       exec,
-      defaultMaxSize
+      defaultMaxSize,
+      readPkg: fakePkg
     })
       .then(() => {
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
-          `- Fetching stats for package bytes@3.0.0
-ℹ Applying a size limit of 9.77KB from default
+          `ℹ Applying a size limit of 9.77KB from default
+
+- Fetching stats for package bytes@3.0.0
 ℹ Proceed to installation of package bytes@3.0.0
 `
         );
@@ -92,14 +98,16 @@ describe('Integrations tests', () => {
       argv: {_: ['lodash@4.12.0'], w: true, warn: true, 'save-dev': true},
       stream,
       exec,
-      defaultMaxSize
+      defaultMaxSize,
+      readPkg: fakePkg
     })
       .then(() => {
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
-          `- Fetching stats for package lodash@4.12.0
-ℹ Applying a size limit of 9.77KB from default
-ℹ Proceed to installation of packages lodash@4.12.0 despite following warnings:
+          `ℹ Applying a size limit of 9.77KB from default
+
+- Fetching stats for package lodash@4.12.0
+⚠ Proceed to installation of packages lodash@4.12.0 despite following warnings:
 ⚠ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
 `
         );
@@ -119,14 +127,16 @@ describe('Integrations tests', () => {
       stream,
       exec,
       prompt,
-      defaultMaxSize
+      defaultMaxSize,
+      readPkg: fakePkg
     })
       .then(() => {
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
-          `- Fetching stats for package lodash@4.12.0
-ℹ Applying a size limit of 9.77KB from default
-ℹ Packages lodash@4.12.0 raised following warnings:
+          `ℹ Applying a size limit of 9.77KB from default
+
+- Fetching stats for package lodash@4.12.0
+⚠ Packages lodash@4.12.0 raised following warnings:
 ⚠ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
 ✔ Proceeding with installation as you requested
 `
@@ -146,14 +156,16 @@ describe('Integrations tests', () => {
       stream,
       exec,
       prompt,
-      defaultMaxSize
+      defaultMaxSize,
+      readPkg: fakePkg
     })
       .then(() => {
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
-          `- Fetching stats for package lodash@4.12.0
-ℹ Applying a size limit of 9.77KB from default
-ℹ Packages lodash@4.12.0 raised following warnings:
+          `ℹ Applying a size limit of 9.77KB from default
+
+- Fetching stats for package lodash@4.12.0
+⚠ Packages lodash@4.12.0 raised following warnings:
 ⚠ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
 ✖ Installation is canceled on your demand
 `
@@ -172,7 +184,8 @@ describe('Integrations tests', () => {
       argv: {_: ['no-sorry-but-i-do-not-exist']},
       stream,
       exec,
-      defaultMaxSize
+      defaultMaxSize,
+      readPkg: fakePkg
     })
       .then(() => {
         throw new Error('Exception was not triggered');

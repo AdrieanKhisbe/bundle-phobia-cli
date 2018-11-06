@@ -65,7 +65,7 @@ const globalGzipSizePredicate = (threshold, source) => {
     return {
       canInstall: false,
       reason: 'overall gzip size after install would be over threshold',
-      details: `${bytes(installedStats.gzip)} installed + ${bytes(toInstallStats.gzip)}> ${bytes(
+      details: `${bytes(installedStats.gzip)} installed + ${bytes(toInstallStats.gzip)} > ${bytes(
         realThreshold
       )}`
     };

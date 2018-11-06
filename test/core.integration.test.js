@@ -30,14 +30,16 @@ describe('Integrations tests', () => {
       })
       .catch(done);
   });
-  it('fetch just a list of package', done => {
-    const stream = fakeStream();
-    // had to pin version for test stability
-    return main({argv: {_: ['react@15', 'lodash@2', 'moment@1.2.0']}, stream})
-      .then(() => {
-        const output = stream.getContent();
-        expect(stripAnsi(output)).toEqual(
-          `- Fetching stats for package react@15
+  it(
+    'fetch just a list of package',
+    done => {
+      const stream = fakeStream();
+      // had to pin version for test stability
+      return main({argv: {_: ['react@15', 'lodash@2', 'moment@1.2.0']}, stream})
+        .then(() => {
+          const output = stream.getContent();
+          expect(stripAnsi(output)).toEqual(
+            `- Fetching stats for package react@15
 ℹ react (15.0.0) has 3 dependencies for a weight of 19.96KB (6.46KB gzipped)
 - Fetching stats for package lodash@2
 ℹ lodash (2.0.0) has 0 dependencies for a weight of 26.17KB (9.52KB gzipped)
@@ -46,12 +48,14 @@ describe('Integrations tests', () => {
 
 ℹ total (3 packages) has 3 dependencies for a weight of 160.23KB (30.81KB gzipped)
 `
-        );
+          );
 
-        return done();
-      })
-      .catch(done);
-  });
+          return done();
+        })
+        .catch(done);
+    },
+    10000
+  );
   it('fetch just a list of package', done => {
     const stream = fakeStream();
     // had to pin version for test stability

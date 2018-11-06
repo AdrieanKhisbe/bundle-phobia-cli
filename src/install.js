@@ -51,7 +51,7 @@ const getSizePredicate = (argv, defaultSize, packageConfig) => {
   const maxSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-size']);
   if (maxSizeConfig) return sizePredicate(maxSizeConfig, 'package-config');
   const maxGzipSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-gzip-size']);
-  if (maxGzipSizeConfig) return gzipSizePredicate(maxGzipSizeConfig, 'argv');
+  if (maxGzipSizeConfig) return gzipSizePredicate(maxGzipSizeConfig, 'package-config');
 
   return sizePredicate(defaultSize, 'default');
 };
@@ -63,7 +63,7 @@ const getGlobalSizePredicate = (argv, packageConfig) => {
   const maxGlobalSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-global-size']);
   if (maxGlobalSizeConfig) return globalSizePredicate(maxGlobalSizeConfig, 'package-config');
   const maxGlobalGzipSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-global-gzip-size']);
-  if (maxGlobalGzipSizeConfig) return globalGzipSizePredicate(maxGlobalGzipSizeConfig, 'argv');
+  if (maxGlobalGzipSizeConfig) return globalGzipSizePredicate(maxGlobalGzipSizeConfig, 'package-config');
 
   return () => ({canInstall: true});
 };
@@ -128,14 +128,13 @@ const main = ({
         return {size, gzip, dependencyCount};
       };
       const toInstallStats = aggregateStats(statuses);
-      // §TODO: retrieve information on already installed package
+
       spinner.text = 'Fetching stats for already installed packages';
       spinner.color = 'blue';
       // eslint-disable-next-line promise/no-nesting
       return fetchPackageJsonStats(currentPkg).then(allStats => {
         const installedStats = aggregateStats(allStats);
         const globalStatus = globalPredicate(installedStats, toInstallStats);
-
         return {statuses, globalStatus};
       });
     })
@@ -232,4 +231,10 @@ const main = ({
     .finally(() => spinner.stop());
 };
 
-module.exports = {main, npmOptionsFromArgv, installCommand};
+module.exports = {
+  main,
+  npmOptionsFromArgv,
+  installCommand,
+  getGlobalSizePredicate,
+  getSizePredicate
+};
