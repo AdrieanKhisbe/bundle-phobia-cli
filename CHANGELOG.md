@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.10.0] - 2018-11-06
+### Added
+- global predicates for `bundle-phobia-install`
+
 ## [0.9.1] - 2018-11-05
 ### Added
 - `bundle-phobia-install` configuration through `package.json`
@@ -49,7 +53,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Older changes have to be documented
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.9.1...master
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.10.0...master
+[0.10.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.9.1...v0.10.0
 [0.9.1]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.9.0...v0.9.1
 [0.9.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.8.1...v0.9.0
 [0.8.1]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.8.0...v0.8.1

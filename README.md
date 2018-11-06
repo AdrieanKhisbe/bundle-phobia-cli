@@ -85,7 +85,8 @@ Limits can also be configured in the `package.json` by adding a `bundle-phobia` 
   "name": "bundle-phobia-install-test",
   "dependencies": {},
   "bundle-phobia": {
-    "max-size": "12kB"
+    "max-size": "12kB",
+    "max-overall-size": "1MB"
   }
 }
 ```
