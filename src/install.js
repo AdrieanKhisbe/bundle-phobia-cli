@@ -93,7 +93,7 @@ const main = ({
   const currentPkg = readPkg();
   const packages = argv._;
   if (_.isEmpty(packages)) return Bromise.reject(new Error('No packages to install was given'));
-  const pluralSuffix = packages.lenght > 1 ? 's' : '';
+  const pluralSuffix = _.size(packages) > 1 ? 's' : '';
 
   const performInstall = () => {
     const res = exec(installCommand(argv));
@@ -102,8 +102,7 @@ const main = ({
   const predicate = getSizePredicate(argv, defaultMaxSize, currentPkg);
   const globalPredicate = getGlobalSizePredicate(argv, currentPkg);
 
-  spinner.text = `Fetching stats for package${pluralSuffix} ${packages}`;
-  spinner.start();
+  spinner.text = `Fetching stats for package${pluralSuffix} ${packages.join(', ')}`;
   spinner.info(
     `Applying a ${c.underline(predicate.description)} from ${predicate.source}${
       globalPredicate.description
@@ -111,6 +110,7 @@ const main = ({
         : ''
     }\n`
   );
+  spinner.start();
   return Bromise.map(packages, paquage => {
     return fetchPackageStats(paquage)
       .then(stats => {
@@ -129,6 +129,8 @@ const main = ({
       };
       const toInstallStats = aggregateStats(statuses);
       // §TODO: retrieve information on already installed package
+      spinner.text = 'Fetching stats for already installed packages';
+      spinner.color = 'blue';
       // eslint-disable-next-line promise/no-nesting
       return fetchPackageJsonStats(currentPkg).then(allStats => {
         const installedStats = aggregateStats(allStats);
@@ -151,12 +153,7 @@ const main = ({
             .map(p => c.bold.dim(p))
             .join(', ')} despite following warnings:`
         );
-        if (!globalStatus.canInstall)
-          spinner.warn(
-            `${c.yellow.bold('global constraint')} is not respected: ${
-              globalStatus.reason
-            } (${c.dim(globalStatus.details)})`
-          );
+
         _.forEach(_.filter(statuses, {canInstall: false}), status => {
           spinner.warn(
             `${c.red.yellow(status.package)}: ${status.reason}${
@@ -164,17 +161,20 @@ const main = ({
             }`
           );
         });
+        if (!globalStatus.canInstall)
+          spinner.warn(
+            `${c.yellow.bold('global constraint')} is not respected: ${
+              globalStatus.reason
+            } (${c.dim(globalStatus.details)})`
+          );
         return performInstall();
       } else if (argv.interactive) {
         spinner.warn(
-          `Packages ${packages.map(p => c.bold.dim(p)).join(', ')} raised following ${c.yellow.bold('warnings')}:`
+          `Packages ${packages.map(p => c.bold.dim(p)).join(', ')} raised following ${c.yellow.bold(
+            'warnings'
+          )}:`
         );
-        if (!globalStatus.canInstall)
-          spinner.warn(
-            `${c.yellow.bold('global constraint')} is not respected: ${
-              globalStatus.reason
-            } (${c.dim(globalStatus.details)})`
-          );
+
         _.forEach(_.filter(statuses, {canInstall: false}), status => {
           spinner.warn(
             `${c.red.yellow(status.package)}: ${status.reason}${
@@ -182,6 +182,12 @@ const main = ({
             }`
           );
         });
+        if (!globalStatus.canInstall)
+          spinner.warn(
+            `${c.yellow.bold('global constraint')} is not respected: ${
+              globalStatus.reason
+            } (${c.dim(globalStatus.details)})`
+          );
         // eslint-disable-next-line promise/no-nesting
         return prompt([
           {
@@ -200,14 +206,6 @@ const main = ({
         });
       } else {
         spinner.fail(c.bold('Could not install for following reasons:'));
-        if (globalStatus.canInstall)
-          spinner.succeed(`${c.green.bold('global constraint')} is respected`);
-        else
-          spinner.fail(
-            `${c.red.bold('global constraint')} is not respected: ${globalStatus.reason} (${c.dim(
-              globalStatus.details
-            )})`
-          );
         _.forEach(statuses, status => {
           if (status.canInstall)
             spinner.succeed(
@@ -220,6 +218,14 @@ const main = ({
               }`
             );
         });
+        if (globalStatus.canInstall)
+          spinner.succeed(`${c.green.bold('global constraint')} is respected`);
+        else
+          spinner.fail(
+            `${c.red.bold('global constraint')} is not respected: ${globalStatus.reason} (${c.dim(
+              globalStatus.details
+            )})`
+          );
         throw new Error('Install was canceled.');
       }
     })
