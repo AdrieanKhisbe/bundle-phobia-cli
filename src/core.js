@@ -13,6 +13,9 @@ const main = ({argv, stream = process.stdout}) => {
   if ('range' in argv && 'r' in argv && argv._.length > 1) {
     return Bromise.reject(new Error("Can't use both --range option and list of packages"));
   }
+  if ('self' in argv && argv._.length > 0) {
+    return Bromise.reject(new Error("Can't use both --self and list of packages"));
+  }
   const noSpin = isSingleOutput(argv);
   const Spinner = noSpin ? fakeSpinner : ora;
   const spinner = Spinner({stream});
@@ -31,7 +34,7 @@ const main = ({argv, stream = process.stdout}) => {
   const packages =
     'range' in argv && 'r' in argv
       ? getPackageVersionList(argv._[0], range || 8).catch(handleError(argv._[0], true))
-      : Bromise.resolve(argv._);
+      : Bromise.resolve(argv.self ? ['bundle-phobia-cli'] : argv._);
   let view;
   try {
     view = getView(argv);

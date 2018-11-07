@@ -19,6 +19,8 @@ const argv = require('yargs')
   .describe('dependencies', 'Output just the number of dependencies')
   .alias('dependencies', 'd')
   .boolean('d')
+  .describe('self', 'Output bundle-phobia stats')
+  .boolean('self')
   .help('h')
   .alias('h', 'help').argv;
 const pkg = require('./package.json');
