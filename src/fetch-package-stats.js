@@ -14,7 +14,16 @@ const fetchPackageStats = name => {
     )
     .then(res => res.json())
     .then(json => {
-      if (json.error) throw new Error(json.error.message);
+      if (json.error) {
+        if (
+          json.error.message.startsWith(
+            'This package has not been published with this particular version.'
+          )
+        ) {
+          throw new Error(json.error.message.replace(/`<code>/g, '').replace(/<\/code>`/g, ''));
+        }
+        throw new Error(json.error.message);
+      }
       return json;
     });
 };
