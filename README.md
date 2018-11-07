@@ -60,6 +60,7 @@ Options:
   --size, -s          Output just the module size                      [boolean]
   --gzip-size, -g     Output just the module gzip size                 [boolean]
   --dependencies, -d  Output just thenumber of dependencies            [boolean]
+  --self              Output bundle-phobia stats                       [boolean]
   -h, --help          Show help                                        [boolean]
 ```
 #### `bundle-phobia-install`
