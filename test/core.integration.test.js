@@ -22,7 +22,7 @@ describe('Integrations tests', () => {
         const output = stream.getContent();
         expect(stripAnsi(output)).toEqual(
           `- Fetching stats for package lodash@4.12.0
-ℹ lodash (4.12.0) has 0 dependencies for a weight of 63.14KB (22.01KB gzipped)
+ℹ lodash (4.12.0) has 0 dependencies for a weight of 63.65KB (22.11KB gzipped)
 `
         );
 
@@ -40,13 +40,13 @@ describe('Integrations tests', () => {
           const output = stream.getContent();
           expect(stripAnsi(output)).toEqual(
             `- Fetching stats for package react@15
-ℹ react (15.0.0) has 3 dependencies for a weight of 19.96KB (6.46KB gzipped)
+ℹ react (15.0.0) has 3 dependencies for a weight of 20.04KB (6.49KB gzipped)
 - Fetching stats for package lodash@2
-ℹ lodash (2.0.0) has 0 dependencies for a weight of 26.17KB (9.52KB gzipped)
+ℹ lodash (2.0.0) has 0 dependencies for a weight of 26.42KB (9.5KB gzipped)
 - Fetching stats for package moment@1.2.0
 ℹ moment (1.2.0) has 0 dependencies for a weight of 114.1KB (14.83KB gzipped)
 
-ℹ total (3 packages) has 3 dependencies for a weight of 160.23KB (30.81KB gzipped)
+ℹ total (3 packages) has 3 dependencies for a weight of 160.56KB (30.82KB gzipped)
 `
           );
 

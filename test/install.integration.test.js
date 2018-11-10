@@ -55,7 +55,7 @@ describe('Integrations tests', () => {
 
 - Fetching stats for package lodash@4.12.0
 ✖ Could not install for following reasons:
-✖ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
+✖ lodash@4.12.0: size over threshold (63.65KB > 9.77KB)
 ✔ global constraint is respected
 `
         );
@@ -108,7 +108,7 @@ describe('Integrations tests', () => {
 
 - Fetching stats for package lodash@4.12.0
 ⚠ Proceed to installation of packages lodash@4.12.0 despite following warnings:
-⚠ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
+⚠ lodash@4.12.0: size over threshold (63.65KB > 9.77KB)
 `
         );
         expect(exec.retrieveCmd()).toEqual('npm install lodash@4.12.0 --save-dev');
@@ -137,7 +137,7 @@ describe('Integrations tests', () => {
 
 - Fetching stats for package lodash@4.12.0
 ⚠ Packages lodash@4.12.0 raised following warnings:
-⚠ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
+⚠ lodash@4.12.0: size over threshold (63.65KB > 9.77KB)
 ✔ Proceeding with installation as you requested
 `
         );
@@ -166,7 +166,7 @@ describe('Integrations tests', () => {
 
 - Fetching stats for package lodash@4.12.0
 ⚠ Packages lodash@4.12.0 raised following warnings:
-⚠ lodash@4.12.0: size over threshold (63.14KB > 9.77KB)
+⚠ lodash@4.12.0: size over threshold (63.65KB > 9.77KB)
 ✖ Installation is canceled on your demand
 `
         );
