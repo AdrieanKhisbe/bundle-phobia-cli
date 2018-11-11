@@ -1,5 +1,7 @@
+const fs = require('fs');
 const fetch = require('node-fetch');
 const Promise = require('bluebird');
+const _ = require('lodash');
 
 fetch.Promise = Promise;
 const {getVersionList, resolveVersionRange, getDependencyList} = require('./npm-utils');
@@ -43,4 +45,28 @@ const getPackageVersionList = (name, limit = 8) => {
     .map(version => `${name}@${version}`);
 };
 
-module.exports = {fetchPackageStats, fetchPackageJsonStats, selectVersions, getPackageVersionList};
+const getPackagesFromPackageJson = pkg => {
+  try {
+    const packageContent = JSON.parse(fs.readFileSync(pkg));
+    return Promise.resolve(
+      _.reduce(
+        packageContent.dependencies,
+        (memo, value, key) => {
+          memo.push(`${key}@${value}`);
+          return memo;
+        },
+        []
+      )
+    );
+  } catch (err) {
+    return Promise.reject(err);
+  }
+};
+
+module.exports = {
+  fetchPackageStats,
+  fetchPackageJsonStats,
+  selectVersions,
+  getPackageVersionList,
+  getPackagesFromPackageJson
+};

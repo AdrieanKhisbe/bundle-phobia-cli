@@ -2,9 +2,21 @@ const c = require('chalk');
 const Bromise = require('bluebird');
 const _ = require('lodash');
 const ora = require('ora');
-const {fetchPackageStats, getPackageVersionList} = require('./fetch-package-stats');
+const {
+  fetchPackageStats,
+  getPackageVersionList,
+  getPackagesFromPackageJson
+} = require('./fetch-package-stats');
 const {getView} = require('./cli-views');
 const fakeSpinner = require('./fake-spinner');
+
+const getPackages = argv => {
+  const range = argv.range || (argv.range === undefined ? null : -1);
+  if ('range' in argv && 'r' in argv) return getPackageVersionList(argv._[0], range || 8);
+  if ('package' in argv && 'p' in argv) return getPackagesFromPackageJson(argv.package);
+
+  return Bromise.resolve(argv.self ? ['bundle-phobia-cli'] : argv._);
+};
 
 const isSingleOutput = argv =>
   _.some(['size', 'json', 'gzip-size', 'dependencies'], opt => opt in argv);
@@ -12,6 +24,9 @@ const isSingleOutput = argv =>
 const main = ({argv, stream = process.stdout}) => {
   if ('range' in argv && 'r' in argv && argv._.length > 1) {
     return Bromise.reject(new Error("Can't use both --range option and list of packages"));
+  }
+  if ('package' in argv && 'p' in argv && argv._.length > 0) {
+    return Bromise.reject(new Error("Can't use both --package option and list of packages"));
   }
   if ('self' in argv && argv._.length > 0) {
     return Bromise.reject(new Error("Can't use both --self and list of packages"));
@@ -29,12 +44,9 @@ const main = ({argv, stream = process.stdout}) => {
       throw wrapError;
     }
   };
-
-  const range = argv.range || (argv.range === undefined ? null : -1);
-  const packages =
-    'range' in argv && 'r' in argv
-      ? getPackageVersionList(argv._[0], range || 8).catch(handleError(argv._[0], true))
-      : Bromise.resolve(argv.self ? ['bundle-phobia-cli'] : argv._);
+  const packages = getPackages(argv).catch(
+    handleError(argv._[0] || 'packages from packages.json', true)
+  );
   let view;
   try {
     view = getView(argv);
