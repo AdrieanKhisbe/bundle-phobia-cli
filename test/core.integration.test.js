@@ -1,5 +1,6 @@
 const stripAnsi = require('strip-ansi');
 const {main} = require('../src/core');
+const index = require('../src'); // eslint-disable-line no-unused-vars
 
 const fakeStream = () => {
   const content = [];

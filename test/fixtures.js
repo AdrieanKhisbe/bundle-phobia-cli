@@ -16,5 +16,13 @@ const errorStats = {
     details: {}
   }
 };
+const missingVersionErrorStats = {
+  error: {
+    code: 'PackageNotFoundError',
+    message: `This package has not been published with this particular version.
+    Valid versions - latest, \`<code>0.2.2</code>\``,
+    details: {}
+  }
+};
 
-module.exports = {lodashStats, errorStats};
+module.exports = {lodashStats, errorStats, missingVersionErrorStats};
