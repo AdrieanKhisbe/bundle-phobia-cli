@@ -23,7 +23,8 @@ const getView = (argv = {}) => {
     'size',
     'dependencies'
   ]);
-  if (_.size(viewOpts) > 1) throw new Error(`Can't use in the same time options ${viewOpts.join(', ')}`);
+  if (_.size(viewOpts) > 1)
+    throw new Error(`Can't use in the same time options ${viewOpts.join(', ')}`);
 
   if (argv.json) return jsonView;
   if (argv['gzip-size']) return gzipsizeView;
