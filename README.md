@@ -20,7 +20,7 @@ Just use `npm install -g bundle-phobia-cli` and you're good to go!
 Once installed you will have access to different executables:
 - `bundle-phobia`: to query package size.
    Just invoke it with a list of package names and some options.
-- `bundle-phobia-install`: to conditionally install package if weight constraint are respected. This is a wrapper on `npm install` 
+- `bundle-phobia-install`: to conditionally install package if weight constraint are respected. This is a wrapper on `npm install`
 
 Note that you can specify a version along with the package range such as an
 instance exact version `lodash@4.12.0` or range version `ora@^3.0.0`.
@@ -46,15 +46,22 @@ found 0 vulnerabilities
 #### `bundle-phobia`
 
 Some option are available to control what stats are outputed by `bundle-phobia`.
-Dy default an humain friendly output is provided, otherwise you can have a json output
+
+By default an humain friendly output is provided, otherwise you can have a json output
 with the `--json` flag. In case you need just the size (or gzip) in a script, you can
 use the `--[gzip]-size` flag.
+
+To control the packages to be queried, you can either provide them as an argument list,
+or you can refer a `package.json` file with the `--package` option. This would read the
+packages as `dependencies`.
 
 ##### Options Summary
 ```
 Usage: bundle-phobia <package-name> [other-package-names...]
 
 Options:
+  --version           Show version number                              [boolean]
+  --package, -p       Provide a package.json to read dependencies       [string]
   --range, -r         Get a range of version (0 for all, 8 by default)  [number]
   --json, -j          Output json rather than a formater string        [boolean]
   --size, -s          Output just the module size                      [boolean]
@@ -80,7 +87,7 @@ If you want to be asked what to do, use the `--interactive`/`-i`.
 
 All other options will be conveyed to `npm`.
 
-Limits can also be configured in the `package.json` by adding a `bundle-phobia` section with a `max-[gzip-]size` key. 
+Limits can also be configured in the `package.json` by adding a `bundle-phobia` section with a `max-[gzip-]size` key.
 ```json
 {
   "name": "bundle-phobia-install-test",

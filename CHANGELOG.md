@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.11.0] - 2018-11-11
+### Added
+- Add a `--package` option to read package list from a package.json file
+
 ## [0.10.2] - 2018-11-08
 ### Fixed
 - Improve output of non available versions
@@ -61,7 +65,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Older changes have to be documented
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.10.2...master
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.11.0...master
+[0.11.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.10.2...v0.11.0
 [0.10.2]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.9.1...v0.10.0
