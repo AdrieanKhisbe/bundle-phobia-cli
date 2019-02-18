@@ -24,7 +24,11 @@ const getVersionList = name => {
 const shouldResolve = pkg => /.*@([~^]|.*x)/.test(pkg);
 
 const resolveVersionRange = pkg => {
-  const [packageName, version] = pkg.split('@');
+  // unfortunately no named capture groups in Node 6..
+  const match = pkg.match(/^(@?[^@]+)(?:@(.*?))?$/);
+  if (!match) return Promise.reject(new Error(`Unable to parse package name ${pkg}`));
+  const packageName = match[1];
+  const version = match[2];
   if (!shouldResolve(pkg)) return getVersionList(packageName).return(pkg);
   return Promise.fromCallback(cb => {
     resolver({[packageName]: version}, function(err, result) {

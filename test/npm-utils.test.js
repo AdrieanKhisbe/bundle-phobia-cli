@@ -24,6 +24,12 @@ describe('getVersionList', () => {
 });
 
 describe('resolveVersionRange', () => {
+  it('rejects when package name is unparseable', () => {
+    return resolveVersionRange('@@foo@zzz').catch(err => {
+      return expect(err.message).toEqual('Unable to parse package name @@foo@zzz');
+    });
+  });
+
   it('simple package with no version', () => {
     return resolveVersionRange('whatever').then(version => {
       return expect(version).toEqual('whatever');
@@ -34,7 +40,7 @@ describe('resolveVersionRange', () => {
       return expect(version).toEqual('whatever@2.2.2');
     });
   });
-  it('simple package wich does not exist', () => {
+  it('simple package which does not exist', () => {
     return resolveVersionRange('publish-me-to-break-the-test').catch(err => {
       return expect(err.message).toEqual("The package you were looking for doesn't exist.");
     });
@@ -48,6 +54,32 @@ describe('resolveVersionRange', () => {
   it('simple package with version to be resolved', () => {
     return resolveVersionRange('lodash@~4.16.4').then(version => {
       return expect(version).toEqual('lodash@4.16.6');
+    });
+  });
+
+  it('scoped package with no version', () => {
+    return resolveVersionRange('@atlaskit/button').then(version => {
+      return expect(version).toEqual('@atlaskit/button');
+    });
+  });
+  it('scoped package with version not to be resolved', () => {
+    return resolveVersionRange('@atlaskit/button@10.1.2').then(version => {
+      return expect(version).toEqual('@atlaskit/button@10.1.2');
+    });
+  });
+  it('scoped package which does not exist', () => {
+    return resolveVersionRange('@atlaskit/publish-me-to-break-the-test').catch(err => {
+      return expect(err.message).toEqual("The package you were looking for doesn't exist.");
+    });
+  });
+  it('scoped package with version to be resolved but cant', () => {
+    return resolveVersionRange('@atlaskit/button@~2.2.2').catch(err => {
+      return expect(err.message).toEqual("Specified version range '~2.2.2' is not resolvable");
+    });
+  });
+  it('scoped package with version to be resolved', () => {
+    return resolveVersionRange('@atlaskit/button@^1.0.0').then(version => {
+      return expect(version).toEqual('@atlaskit/button@1.1.4');
     });
   });
 });
