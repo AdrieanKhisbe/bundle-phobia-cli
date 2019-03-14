@@ -7,6 +7,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.12.0] - 2019-03-14
+### Added
+- Support for Scoped packages, thanks to @marcins
+- MIT licence
+
 ## [0.11.0] - 2018-11-11
 ### Added
 - Add a `--package` option to read package list from a package.json file
