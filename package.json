@@ -7,6 +7,9 @@
     "bundle-phobia": "index.js",
     "bundle-phobia-install": "index-install.js"
   },
+  "engines": {
+    "node": ">=8.10"
+  },
   "scripts": {
     "test": "jest",
     "lint": "eslint src test *.js",
