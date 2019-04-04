@@ -9,7 +9,7 @@ const getVersionList = name => {
     exec(`npm show ${name} versions --json`, (err, stdout, stderr) => {
       if (err) {
         /* istanbul ignore else */
-        if (/Registry returned 404 for GET on/.test(stderr) || /404 Not found/.test(stderr)) {
+        if (/Registry returned 404 for GET on|404 Not found|code E404/.test(stderr)) {
           return callback(new Error(`The package you were looking for doesn't exist.`));
         } else {
           return callback(err);
