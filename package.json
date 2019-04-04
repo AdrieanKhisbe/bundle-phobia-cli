@@ -41,13 +41,13 @@
     "yargs": "^12.0.2"
   },
   "devDependencies": {
-    "@coorpacademy/eslint-plugin-coorpacademy": "^8.1.1",
-    "codecov": "^3.1.0",
-    "eslint": "^5.8.0",
-    "jest": "^23.6.0",
-    "jest-fetch-mock": "^1.6.6",
-    "strip-ansi": "^5.0.0",
-    "yargs-parser": "^11.0.0"
+    "@coorpacademy/eslint-plugin-coorpacademy": "^8.3.0",
+    "codecov": "^3.3.0",
+    "eslint": "^5.16.0",
+    "jest": "^24.7.1",
+    "jest-fetch-mock": "^2.1.1",
+    "strip-ansi": "^5.2.0",
+    "yargs-parser": "^13.0.0"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
