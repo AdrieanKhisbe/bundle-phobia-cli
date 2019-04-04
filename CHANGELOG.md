@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.12.1] - 2019-04-04
+### Fixed
+- Support of latest npm (the one shippped with node 11)
+
 ## [0.12.0] - 2019-03-14
 ### Added
 - Support for Scoped packages, thanks to @marcins
