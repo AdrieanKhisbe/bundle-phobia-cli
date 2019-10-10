@@ -58,12 +58,5 @@
       "src/**/*.js"
     ],
     "collectCoverage": true
-  },
-  "yargs": {
-    "short-option-groups": true,
-    "camel-case-expansion": false,
-    "dot-notation": false,
-    "parse-numbers": true,
-    "boolean-negation": false
   }
 }
