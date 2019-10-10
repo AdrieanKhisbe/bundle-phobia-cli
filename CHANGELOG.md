@@ -7,6 +7,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.14.0] - 2019-10-10
+### Changed
+- Upgraded all dependencies (except eslint)
+- Extract yargs config from package.json thanks to @romellem in #16
+
 ## [0.13.0] - 2019-04-04
 ### Changed
 - Drop support of node 6
@@ -78,7 +83,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Older changes have to be documented
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.11.0...master
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.0...master
+[0.14.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.13.0...v0.14.0
+[0.13.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.12.1...v0.13.0
+[0.12.1]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.12.0...v0.12.1
+[0.12.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.10.2...v0.11.0
 [0.10.2]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.10.0...v0.10.1
