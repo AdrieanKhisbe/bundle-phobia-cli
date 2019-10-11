@@ -1,23 +1,7 @@
 {
+  "extends": "plugin:@-k/base",
+  "plugins": ["@-k"],
   "env": {
-    "commonjs": true,
-    "es6": true,
-    "node": true,
     "jest": true
-  },
-  "extends": [
-    "plugin:@coorpacademy/coorpacademy/core",
-    "plugin:@coorpacademy/coorpacademy/es20XX",
-    "plugin:@coorpacademy/coorpacademy/prettier"
-  ],
-  "parserOptions": {
-    "ecmaVersion": 2017,
-    "sourceType": "module"
-  },
-  "plugins": [
-    "@coorpacademy/coorpacademy"
-  ],
-  "rules": {
-    "strict": "off"
   }
 }

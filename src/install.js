@@ -136,7 +136,6 @@ const main = ({
 
       spinner.text = 'Fetching stats for already installed packages';
       spinner.color = 'blue';
-      // eslint-disable-next-line promise/no-nesting
       return fetchPackageJsonStats(currentPkg).then(allStats => {
         const installedStats = aggregateStats(allStats);
         const globalStatus = globalPredicate(installedStats, toInstallStats);
@@ -192,7 +191,6 @@ const main = ({
               globalStatus.reason
             } (${c.dim(globalStatus.details)})`
           );
-        // eslint-disable-next-line promise/no-nesting
         return prompt([
           {
             type: 'confirm',

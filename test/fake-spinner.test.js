@@ -1,4 +1,3 @@
-/* eslint-disable fp/no-loops */
 const fakeSpinner = require('../src/fake-spinner');
 
 describe('fake-spinner', () => {

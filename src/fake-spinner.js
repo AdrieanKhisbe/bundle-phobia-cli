@@ -1,4 +1,3 @@
-/* eslint-disable no-console, fp/no-class */
 class fakeSpinner {
   constructor(options) {
     const {text, stream} = options;
