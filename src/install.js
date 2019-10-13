@@ -1,7 +1,7 @@
 const c = require('chalk');
-const Bromise = require('bluebird');
 const _ = require('lodash');
 const ora = require('ora');
+const pMap = require('p-map');
 const shelljs = require('shelljs');
 const inquirer = require('inquirer');
 const readPkgUp = require('read-pkg-up');
@@ -15,25 +15,25 @@ const {
 } = require('./install-predicates');
 
 const DEFAULT_MAX_SIZE = '100kB';
-
+const BUNLE_PHOBIA_ARGS = [
+  'i',
+  'interactive',
+  '$0',
+  'warn',
+  'w',
+  '_',
+  'm',
+  'M',
+  'max-size',
+  'max-gzip-size',
+  'o',
+  'O',
+  'max-overall-size',
+  'max-overall-gzip-size'
+];
 const npmOptionsFromArgv = argv => {
   const output = _.reduce(
-    _.omit(argv, [
-      'i',
-      'interactive',
-      '$0',
-      'warn',
-      'w',
-      '_',
-      'm',
-      'M',
-      'max-size',
-      'max-gzip-size',
-      'o',
-      'O',
-      'max-overall-size',
-      'max-overall-gzip-size'
-    ]),
+    _.omit(argv, BUNLE_PHOBIA_ARGS),
     (memo, value, key) => {
       const val = _.isBoolean(value) ? '' : ` ${value}`;
       return [...memo, (_.size(key) === 1 ? '-' : '--') + key + val];
@@ -59,13 +59,16 @@ const getSizePredicate = (argv, defaultSize, packageConfig) => {
 
   return sizePredicate(defaultSize, 'default');
 };
+
 const getGlobalSizePredicate = (argv, packageConfig) => {
   if (argv['max-overall-size']) return globalSizePredicate(argv['max-overall-size'], 'argv');
+
   if (argv['max-overall-gzip-size'])
     return globalGzipSizePredicate(argv['max-overall-gzip-size'], 'argv');
 
   const maxGlobalSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-overall-size']);
   if (maxGlobalSizeConfig) return globalSizePredicate(maxGlobalSizeConfig, 'package-config');
+
   const maxGlobalGzipSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-overall-gzip-size']);
   if (maxGlobalGzipSizeConfig)
     return globalGzipSizePredicate(maxGlobalGzipSizeConfig, 'package-config');
@@ -73,7 +76,14 @@ const getGlobalSizePredicate = (argv, packageConfig) => {
   return () => ({canInstall: true});
 };
 
-const main = ({
+const aggregateStats = statsList => {
+  const dependencyCount = _.sumBy(statsList, 'dependencyCount');
+  const gzip = _.sumBy(statsList, 'gzip');
+  const size = _.sumBy(statsList, 'size');
+  return {size, gzip, dependencyCount};
+};
+
+const main = async ({
   argv,
   stream = process.stdout,
   noOra = false,
@@ -97,7 +107,7 @@ const main = ({
   };
   const currentPkg = readPkg();
   const packages = argv._;
-  if (_.isEmpty(packages)) return Bromise.reject(new Error('No packages to install was given'));
+  if (_.isEmpty(packages)) throw new Error('No packages to install was given');
   const pluralSuffix = _.size(packages) > 1 ? 's' : '';
 
   const performInstall = () => {
@@ -108,6 +118,7 @@ const main = ({
   const globalPredicate = getGlobalSizePredicate(argv, currentPkg);
 
   spinner.text = `Fetching stats for package${pluralSuffix} ${packages.join(', ')}`;
+
   spinner.info(
     `Applying a ${c.underline(predicate.description)} from ${predicate.source}${
       globalPredicate.description
@@ -116,122 +127,112 @@ const main = ({
     }\n`
   );
   spinner.start();
-  return Bromise.map(packages, paquage => {
-    return fetchPackageStats(paquage)
-      .then(stats => {
-        const status = predicate(stats);
-        status.package = paquage;
-        return _.assign({}, status, stats);
-      })
-      .catch(handleError(paquage, true));
-  })
-    .then(statuses => {
-      const aggregateStats = statsList => {
-        const dependencyCount = _.sumBy(statsList, 'dependencyCount');
-        const gzip = _.sumBy(statsList, 'gzip');
-        const size = _.sumBy(statsList, 'size');
-        return {size, gzip, dependencyCount};
-      };
-      const toInstallStats = aggregateStats(statuses);
 
-      spinner.text = 'Fetching stats for already installed packages';
-      spinner.color = 'blue';
-      return fetchPackageJsonStats(currentPkg).then(allStats => {
-        const installedStats = aggregateStats(allStats);
-        const globalStatus = globalPredicate(installedStats, toInstallStats);
-        return {statuses, globalStatus};
-      });
-    })
-    .then(({statuses, globalStatus}) => {
-      spinner.clear();
-      if (globalStatus.canInstall && _.every(statuses, {canInstall: true})) {
-        spinner.info(
-          `Proceed to installation of package${pluralSuffix} ${c.bold.dim(packages.join(', '))}`
-        );
-        return performInstall();
-        // §TODO: handle failure exit. and eventually add status message .succeed
-      } else if (argv.warn) {
-        spinner.warn(
-          `Proceed to installation of packages ${packages
-            .map(p => c.bold.dim(p))
-            .join(', ')} despite following warnings:`
-        );
+  const statuses = await pMap(packages, async paquage => {
+    const stats = await fetchPackageStats(paquage).catch(handleError(paquage, true));
 
-        _.forEach(_.filter(statuses, {canInstall: false}), status => {
-          spinner.warn(
-            `${c.red.yellow(status.package)}: ${status.reason}${
-              status.details ? ` (${c.dim(status.details)})` : ''
-            }`
-          );
-        });
-        if (!globalStatus.canInstall)
-          spinner.warn(
-            `${c.yellow.bold('global constraint')} is not respected: ${
-              globalStatus.reason
-            } (${c.dim(globalStatus.details)})`
-          );
-        return performInstall();
-      } else if (argv.interactive) {
-        spinner.warn(
-          `Packages ${packages.map(p => c.bold.dim(p)).join(', ')} raised following ${c.yellow.bold(
-            'warnings'
-          )}:`
-        );
+    const status = predicate(stats);
+    status.package = paquage;
+    return _.assign({}, status, stats);
+  });
 
-        _.forEach(_.filter(statuses, {canInstall: false}), status => {
-          spinner.warn(
-            `${c.red.yellow(status.package)}: ${status.reason}${
-              status.details ? ` (${c.dim(status.details)})` : ''
-            }`
-          );
-        });
-        if (!globalStatus.canInstall)
-          spinner.warn(
-            `${c.yellow.bold('global constraint')} is not respected: ${
-              globalStatus.reason
-            } (${c.dim(globalStatus.details)})`
-          );
-        return prompt([
-          {
-            type: 'confirm',
-            name: 'proceed',
-            message: 'Do you still want to proceed with installation?',
-            default: 'N'
-          }
-        ]).then(answer => {
-          if (answer.proceed) {
-            spinner.succeed('Proceeding with installation as you requested');
-            return performInstall();
-          } else {
-            return spinner.fail('Installation is canceled on your demand');
-          }
-        });
-      } else {
-        spinner.fail(c.bold('Could not install for following reasons:'));
-        _.forEach(statuses, status => {
-          if (status.canInstall)
-            spinner.succeed(
-              `${c.green.bold(status.package)}: was individually ${c.bold('ok')} to install`
-            );
-          else
-            spinner.fail(
-              `${c.red.bold(status.package)}: ${status.reason}${
-                status.details ? ` (${c.dim(status.details)})` : ''
-              }`
-            );
-        });
-        if (globalStatus.canInstall)
-          spinner.succeed(`${c.green.bold('global constraint')} is respected`);
-        else
-          spinner.fail(
-            `${c.red.bold('global constraint')} is not respected: ${globalStatus.reason} (${c.dim(
-              globalStatus.details
-            )})`
-          );
-        throw new Error('Install was canceled.');
+  const toInstallStats = aggregateStats(statuses);
+
+  spinner.text = 'Fetching stats for already installed packages';
+  spinner.color = 'blue';
+
+  const allStats = await fetchPackageJsonStats(currentPkg);
+  const installedStats = aggregateStats(allStats);
+  const globalStatus = globalPredicate(installedStats, toInstallStats);
+
+  spinner.clear();
+  if (globalStatus.canInstall && _.every(statuses, {canInstall: true})) {
+    spinner.info(
+      `Proceed to installation of package${pluralSuffix} ${c.bold.dim(packages.join(', '))}`
+    );
+    await performInstall();
+    // §TODO: handle failure exit. and eventually add status message .succeed
+  } else if (argv.warn) {
+    spinner.warn(
+      `Proceed to installation of packages ${packages
+        .map(p => c.bold.dim(p))
+        .join(', ')} despite following warnings:`
+    );
+
+    _.forEach(_.filter(statuses, {canInstall: false}), status => {
+      spinner.warn(
+        `${c.red.yellow(status.package)}: ${status.reason}${
+          status.details ? ` (${c.dim(status.details)})` : ''
+        }`
+      );
+    });
+    if (!globalStatus.canInstall)
+      spinner.warn(
+        `${c.yellow.bold('global constraint')} is not respected: ${globalStatus.reason} (${c.dim(
+          globalStatus.details
+        )})`
+      );
+    await performInstall();
+  } else if (argv.interactive) {
+    spinner.warn(
+      `Packages ${packages.map(p => c.bold.dim(p)).join(', ')} raised following ${c.yellow.bold(
+        'warnings'
+      )}:`
+    );
+
+    _.forEach(_.filter(statuses, {canInstall: false}), status => {
+      spinner.warn(
+        `${c.red.yellow(status.package)}: ${status.reason}${
+          status.details ? ` (${c.dim(status.details)})` : ''
+        }`
+      );
+    });
+    if (!globalStatus.canInstall)
+      spinner.warn(
+        `${c.yellow.bold('global constraint')} is not respected: ${globalStatus.reason} (${c.dim(
+          globalStatus.details
+        )})`
+      );
+    const {proceed} = await prompt([
+      {
+        type: 'confirm',
+        name: 'proceed',
+        message: 'Do you still want to proceed with installation?',
+        default: 'N'
       }
-    })
-    .finally(() => spinner.stop());
+    ]);
+    if (proceed) {
+      spinner.succeed('Proceeding with installation as you requested');
+      await performInstall();
+    } else {
+      spinner.fail('Installation is canceled on your demand');
+    }
+  } else {
+    spinner.fail(c.bold('Could not install for following reasons:'));
+    _.forEach(statuses, status => {
+      if (status.canInstall)
+        spinner.succeed(
+          `${c.green.bold(status.package)}: was individually ${c.bold('ok')} to install`
+        );
+      else
+        spinner.fail(
+          `${c.red.bold(status.package)}: ${status.reason}${
+            status.details ? ` (${c.dim(status.details)})` : ''
+          }`
+        );
+    });
+    if (globalStatus.canInstall)
+      spinner.succeed(`${c.green.bold('global constraint')} is respected`);
+    else
+      spinner.fail(
+        `${c.red.bold('global constraint')} is not respected: ${globalStatus.reason} (${c.dim(
+          globalStatus.details
+        )})`
+      );
+    throw new Error('Install was canceled.');
+  }
+
+  spinner.stop();
 };
 
 module.exports = {

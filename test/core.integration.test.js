@@ -61,7 +61,7 @@ describe('Integrations tests', () => {
     await main({
       argv: {_: ['sorry-but-i-really-do-not-exist']},
       stream
-    });
+    }).catch(err => expect(err.message).toEqual("The package you were looking for doesn't exist."));
     const output = stream.getContent();
     expect(stripAnsi(output)).toEqual(
       `- Fetching stats for package sorry-but-i-really-do-not-exist

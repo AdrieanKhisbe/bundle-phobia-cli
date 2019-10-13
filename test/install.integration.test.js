@@ -1,5 +1,4 @@
 const stripAnsi = require('strip-ansi');
-const Bromise = require('bluebird');
 const {main} = require('../src/install');
 
 const fakeStream = () => {
@@ -28,7 +27,7 @@ const fakePrompt = (result = true) => {
   let sendArgs;
   const prompt = args => {
     sendArgs = args;
-    return Bromise.resolve({[args[0].name]: result});
+    return Promise.resolve({[args[0].name]: result});
   };
   prompt.retrieveArgs = () => sendArgs;
   return prompt;

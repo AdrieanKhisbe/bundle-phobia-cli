@@ -26,7 +26,7 @@ describe('main', () => {
     expect.assertions(1);
     const res = main({argv: {_: ['lodash'], size: 'true', 'gzip-size': true}});
     return res.catch(err =>
-      expect(err.message).toEqual("Can't use in the same time options size, gzip-size")
+      expect(err.message).toEqual("Can't use in the same time options gzip-size, size")
     );
   });
 });

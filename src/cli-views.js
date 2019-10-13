@@ -1,5 +1,5 @@
 const c = require('chalk');
-const _ = require('lodash');
+const _ = require('lodash/fp');
 const bytes = require('bytes');
 
 const syntheticView = stat => {
@@ -24,7 +24,7 @@ const getView = (argv = {}) => {
     'dependencies'
   ]);
   if (_.size(viewOpts) > 1)
-    throw new Error(`Can't use in the same time options ${viewOpts.join(', ')}`);
+    throw new Error(`Can't use in the same time options ${[...viewOpts].sort().join(', ')}`);
 
   if (argv.json) return jsonView;
   if (argv['gzip-size']) return gzipsizeView;

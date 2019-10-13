@@ -1,6 +1,5 @@
 const path = require('path');
 const fetch = require('jest-fetch-mock');
-const Bromise = require('bluebird');
 
 jest.setMock('node-fetch', fetch);
 const {
@@ -17,7 +16,7 @@ const {lodashStats, errorStats, missingVersionErrorStats} = require('./fixtures'
 // §FIXME : see fixtures, schema updated, have a look into that
 
 describe('fetchPackageStats', () => {
-  resolveVersionRange.mockImplementation(name => Bromise.resolve(name));
+  resolveVersionRange.mockImplementation(name => Promise.resolve(name));
 
   it('simple get package', () => {
     fetch.mockResponse(JSON.stringify(lodashStats));
@@ -67,12 +66,12 @@ describe('selectVersions', () => {
 
 describe('getVersionList', () => {
   it('returns Package Version list', () => {
-    getVersionList.mockReturnValue(Bromise.resolve(['0.1', '0.2', '1']));
+    getVersionList.mockReturnValue(Promise.resolve(['0.1', '0.2', '1']));
     const versionList = getPackageVersionList('lodash');
     return expect(versionList).resolves.toEqual(['lodash@1', 'lodash@0.2', 'lodash@0.1']);
   });
   it('returns partial Package Version list', () => {
-    getVersionList.mockReturnValue(Bromise.resolve(['0.1', '0.2', '1']));
+    getVersionList.mockReturnValue(Promise.resolve(['0.1', '0.2', '1']));
     const versionList = getPackageVersionList('lodash', 2);
     return expect(versionList).resolves.toEqual(['lodash@1', 'lodash@0.2']);
   });

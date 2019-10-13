@@ -1,35 +1,25 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
-const Promise = require('bluebird');
 const _ = require('lodash');
 
-fetch.Promise = Promise;
 const {getVersionList, resolveVersionRange, getDependencyList} = require('./npm-utils');
 
-const fetchPackageStats = name => {
-  if (!name) return Promise.reject(new Error('Empty name given as argument'));
-  return resolveVersionRange(name)
-    .then(pkg =>
-      fetch(`https://bundlephobia.com/api/size?package=${pkg}`, {
-        headers: {'User-Agent': 'bundle-phobia-cli', 'X-Bundlephobia-User': 'bundle-phobia-cli'}
-      })
-    )
-    .then(res => res.json())
-    .then(json => {
-      if (json.error) {
-        if (
-          json.error.message.startsWith(
-            'This package has not been published with this particular version.'
-          )
-        ) {
-          throw new Error(json.error.message.replace(/`<code>/g, '').replace(/<\/code>`/g, ''));
-        }
-        throw new Error(json.error.message);
-      }
-      return json;
-    });
+const fetchPackageStats = async name => {
+  if (!name) throw new Error('Empty name given as argument');
+  const pkg = await resolveVersionRange(name);
+  const res = (await fetch(`https://bundlephobia.com/api/size?package=${pkg}`, {
+    headers: {'User-Agent': 'bundle-phobia-cli', 'X-Bundlephobia-User': 'bundle-phobia-cli'}
+  })).json();
+
+  if (!res.error) return res;
+
+  const errMessage = res.error.message;
+  if (errMessage.startsWith('This package has not been published with this particular version.'))
+    throw new Error(errMessage.replace(/`<code>|<\/code>`/g, ''));
+
+  throw new Error(errMessage);
 };
-const fetchPackagesStats = names => Promise.map(names, fetchPackageStats);
+const fetchPackagesStats = names => Promise.all(names.map(fetchPackageStats));
 const fetchPackageJsonStats = packageDetails =>
   fetchPackagesStats(getDependencyList(packageDetails));
 
@@ -39,28 +29,21 @@ const selectVersions = (versionList, limit) => {
   else return versionList.slice(0, limit);
 };
 
-const getPackageVersionList = (name, limit = 8) => {
-  return getVersionList(name)
-    .then(versionList => selectVersions(versionList, limit))
-    .map(version => `${name}@${version}`);
+const getPackageVersionList = async (name, limit = 8) => {
+  const versionList = await getVersionList(name);
+  return selectVersions(versionList, limit).map(version => `${name}@${version}`);
 };
 
-const getPackagesFromPackageJson = pkg => {
-  try {
-    const packageContent = JSON.parse(fs.readFileSync(pkg));
-    return Promise.resolve(
-      _.reduce(
-        packageContent.dependencies,
-        (memo, value, key) => {
-          memo.push(`${key}@${value}`);
-          return memo;
-        },
-        []
-      )
-    );
-  } catch (err) {
-    return Promise.reject(err);
-  }
+const getPackagesFromPackageJson = async pkg => {
+  const packageContent = JSON.parse(fs.readFileSync(pkg));
+  return _.reduce(
+    packageContent.dependencies,
+    (memo, value, key) => {
+      memo.push(`${key}@${value}`);
+      return memo;
+    },
+    []
+  );
 };
 
 module.exports = {
