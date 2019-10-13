@@ -1,5 +1,5 @@
 const c = require('chalk');
-const _ = require('lodash');
+const _ = require('lodash/fp');
 const ora = require('ora');
 const pMap = require('p-map');
 const {
@@ -19,7 +19,7 @@ const getPackages = async argv => {
 };
 
 const isSingleOutput = argv =>
-  _.some(['size', 'json', 'gzip-size', 'dependencies'], opt => opt in argv);
+  _.some(opt => opt in argv, ['size', 'json', 'gzip-size', 'dependencies']);
 
 const main = async ({argv, stream = process.stdout}) => {
   if ('range' in argv && 'r' in argv && argv._.length > 1)
@@ -66,16 +66,13 @@ const main = async ({argv, stream = process.stdout}) => {
   if (nLibs > 1) {
     spinner.clear();
     stream.write('\n');
-    const dependencyCount = _.sumBy(allStats, 'dependencyCount');
-    const gzip = _.sumBy(allStats, 'gzip');
-    const size = _.sumBy(allStats, 'size');
     spinner.info(
       view({
         name: c.magenta('total'),
         version: `${nLibs} packages`,
-        gzip,
-        size,
-        dependencyCount
+        gzip: _.sumBy('gzip', allStats),
+        size: _.sumBy('size', allStats),
+        dependencyCount: _.sumBy('dependencyCount', allStats)
       })
     );
   }

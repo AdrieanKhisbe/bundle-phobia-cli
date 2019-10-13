@@ -1,5 +1,5 @@
 const c = require('chalk');
-const _ = require('lodash');
+const _ = require('lodash/fp');
 const ora = require('ora');
 const pMap = require('p-map');
 const shelljs = require('shelljs');
@@ -32,15 +32,16 @@ const BUNLE_PHOBIA_ARGS = [
   'max-overall-gzip-size'
 ];
 const npmOptionsFromArgv = argv => {
-  const output = _.reduce(
-    _.omit(argv, BUNLE_PHOBIA_ARGS),
-    (memo, value, key) => {
-      const val = _.isBoolean(value) ? '' : ` ${value}`;
-      return [...memo, (_.size(key) === 1 ? '-' : '--') + key + val];
-    },
-    []
-  );
-  return output.join(' ');
+  return _.pipe(
+    _.omit(BUNLE_PHOBIA_ARGS),
+    _.toPairs,
+    _.map(([key, value]) => {
+      const val = _.isBoolean(value) ? '' : ` ${value}`; // FIXME: check handling of false
+      const leadingDash = _.size(key) === 1 ? '-' : '--';
+      return leadingDash + key + val;
+    }),
+    _.join(' ')
+  )(argv);
 };
 
 const installCommand = argv => {
@@ -52,9 +53,9 @@ const getSizePredicate = (argv, defaultSize, packageConfig) => {
   if (argv['max-size']) return sizePredicate(argv['max-size'], 'argv');
   if (argv['max-gzip-size']) return gzipSizePredicate(argv['max-gzip-size'], 'argv');
 
-  const maxSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-size']);
+  const maxSizeConfig = _.get(['bundle-phobia', 'max-size'], packageConfig);
   if (maxSizeConfig) return sizePredicate(maxSizeConfig, 'package-config');
-  const maxGzipSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-gzip-size']);
+  const maxGzipSizeConfig = _.get(['bundle-phobia', 'max-gzip-size'], packageConfig);
   if (maxGzipSizeConfig) return gzipSizePredicate(maxGzipSizeConfig, 'package-config');
 
   return sizePredicate(defaultSize, 'default');
@@ -66,22 +67,21 @@ const getGlobalSizePredicate = (argv, packageConfig) => {
   if (argv['max-overall-gzip-size'])
     return globalGzipSizePredicate(argv['max-overall-gzip-size'], 'argv');
 
-  const maxGlobalSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-overall-size']);
+  const maxGlobalSizeConfig = _.get(['bundle-phobia', 'max-overall-size'], packageConfig);
   if (maxGlobalSizeConfig) return globalSizePredicate(maxGlobalSizeConfig, 'package-config');
 
-  const maxGlobalGzipSizeConfig = _.get(packageConfig, ['bundle-phobia', 'max-overall-gzip-size']);
+  const maxGlobalGzipSizeConfig = _.get(['bundle-phobia', 'max-overall-gzip-size'], packageConfig);
   if (maxGlobalGzipSizeConfig)
     return globalGzipSizePredicate(maxGlobalGzipSizeConfig, 'package-config');
 
   return () => ({canInstall: true});
 };
 
-const aggregateStats = statsList => {
-  const dependencyCount = _.sumBy(statsList, 'dependencyCount');
-  const gzip = _.sumBy(statsList, 'gzip');
-  const size = _.sumBy(statsList, 'size');
-  return {size, gzip, dependencyCount};
-};
+const aggregateStats = statsList => ({
+  size: _.sumBy('size', statsList),
+  gzip: _.sumBy('gzip', statsList),
+  dependencyCount: _.sumBy('dependencyCount', statsList)
+});
 
 const main = async ({
   argv,
@@ -90,7 +90,7 @@ const main = async ({
   exec = shelljs.exec,
   prompt = inquirer.prompt,
   defaultMaxSize = DEFAULT_MAX_SIZE,
-  readPkg = () => _.get(readPkgUp.sync(), 'pkg')
+  readPkg = () => _.get('pkg', readPkgUp.sync())
 }) => {
   const noSpin = noOra;
   const Spinner = noSpin ? fakeSpinner : ora;
@@ -130,10 +130,7 @@ const main = async ({
 
   const statuses = await pMap(packages, async paquage => {
     const stats = await fetchPackageStats(paquage).catch(handleError(paquage, true));
-
-    const status = predicate(stats);
-    status.package = paquage;
-    return _.assign({}, status, stats);
+    return _.set('package', paquage, predicate(stats));
   });
 
   const toInstallStats = aggregateStats(statuses);
@@ -146,7 +143,7 @@ const main = async ({
   const globalStatus = globalPredicate(installedStats, toInstallStats);
 
   spinner.clear();
-  if (globalStatus.canInstall && _.every(statuses, {canInstall: true})) {
+  if (globalStatus.canInstall && _.every({canInstall: true}, statuses)) {
     spinner.info(
       `Proceed to installation of package${pluralSuffix} ${c.bold.dim(packages.join(', '))}`
     );
@@ -159,7 +156,7 @@ const main = async ({
         .join(', ')} despite following warnings:`
     );
 
-    _.forEach(_.filter(statuses, {canInstall: false}), status => {
+    _.filter({canInstall: false}, statuses).forEach(status => {
       spinner.warn(
         `${c.red.yellow(status.package)}: ${status.reason}${
           status.details ? ` (${c.dim(status.details)})` : ''
@@ -180,7 +177,7 @@ const main = async ({
       )}:`
     );
 
-    _.forEach(_.filter(statuses, {canInstall: false}), status => {
+    _.filter({canInstall: false}, statuses).forEach(status => {
       spinner.warn(
         `${c.red.yellow(status.package)}: ${status.reason}${
           status.details ? ` (${c.dim(status.details)})` : ''
@@ -209,7 +206,7 @@ const main = async ({
     }
   } else {
     spinner.fail(c.bold('Could not install for following reasons:'));
-    _.forEach(statuses, status => {
+    _.forEach(status => {
       if (status.canInstall)
         spinner.succeed(
           `${c.green.bold(status.package)}: was individually ${c.bold('ok')} to install`
@@ -220,7 +217,7 @@ const main = async ({
             status.details ? ` (${c.dim(status.details)})` : ''
           }`
         );
-    });
+    }, statuses);
     if (globalStatus.canInstall)
       spinner.succeed(`${c.green.bold('global constraint')} is respected`);
     else

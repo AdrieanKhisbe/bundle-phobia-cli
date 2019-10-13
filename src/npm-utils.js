@@ -1,6 +1,6 @@
 const {exec} = require('child_process');
 const {resolver} = require('resolve-package-json');
-const _ = require('lodash');
+const _ = require('lodash/fp');
 
 const getVersionList = name => {
   if (!name) return Promise.reject(new Error('Empty name given as argument'));
@@ -34,19 +34,17 @@ const resolveVersionRange = async pkg => {
     resolver({[packageName]: version}, function(err, result) {
       /* istanbul ignore if*/
       if (err) return reject(err);
-      if (!_.has(result, `dependencies.${packageName}`))
+      if (!_.has(`dependencies.${packageName}`, result))
         return reject(new Error(`Specified version range '${version}' is not resolvable`));
       return resolve(`${packageName}@${result.dependencies[packageName].version}`);
     });
   });
 };
 
-const getDependencyList = packageDetails =>
-  _.reduce(
-    packageDetails.dependencies,
-    (memo, value, key) => {
-      return [...memo, `${key}@${value}`];
-    },
-    []
-  );
+const getDependencyList = _.pipe(
+  _.getOr({}, 'dependencies'),
+  _.toPairs,
+  _.map(([key, value]) => `${key}@${value}`)
+);
+
 module.exports = {getVersionList, shouldResolve, resolveVersionRange, getDependencyList};

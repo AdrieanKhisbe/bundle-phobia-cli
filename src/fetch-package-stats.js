@@ -1,6 +1,5 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
-const _ = require('lodash');
 
 const {getVersionList, resolveVersionRange, getDependencyList} = require('./npm-utils');
 
@@ -36,14 +35,7 @@ const getPackageVersionList = async (name, limit = 8) => {
 
 const getPackagesFromPackageJson = async pkg => {
   const packageContent = JSON.parse(fs.readFileSync(pkg));
-  return _.reduce(
-    packageContent.dependencies,
-    (memo, value, key) => {
-      memo.push(`${key}@${value}`);
-      return memo;
-    },
-    []
-  );
+  return getDependencyList(packageContent);
 };
 
 module.exports = {
