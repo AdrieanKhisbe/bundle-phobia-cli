@@ -6,13 +6,14 @@ const {getVersionList, resolveVersionRange, getDependencyList} = require('./npm-
 const fetchPackageStats = async name => {
   if (!name) throw new Error('Empty name given as argument');
   const pkg = await resolveVersionRange(name);
-  const res = (await fetch(`https://bundlephobia.com/api/size?package=${pkg}`, {
+  const res = await fetch(`https://bundlephobia.com/api/size?package=${pkg}`, {
     headers: {'User-Agent': 'bundle-phobia-cli', 'X-Bundlephobia-User': 'bundle-phobia-cli'}
-  })).json();
+  });
+  const json = await res.json();
 
-  if (!res.error) return res;
+  if (!json.error) return json;
 
-  const errMessage = res.error.message;
+  const errMessage = json.error.message;
   if (errMessage.startsWith('This package has not been published with this particular version.'))
     throw new Error(errMessage.replace(/`<code>|<\/code>`/g, ''));
 

@@ -38,7 +38,6 @@ describe('Integrations tests', () => {
   it('install just a single package and fail', async () => {
     const stream = fakeStream();
     const exec = fakeExec();
-    //
     try {
       await main({
         argv: {_: ['lodash@4.12.0']},
@@ -61,7 +60,8 @@ describe('Integrations tests', () => {
 `
       );
     }
-  });
+  }, 10000);
+
   it('install just a single package and succeed', async () => {
     const stream = fakeStream();
     const exec = fakeExec();
