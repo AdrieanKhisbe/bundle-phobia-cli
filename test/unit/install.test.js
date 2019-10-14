@@ -1,5 +1,5 @@
 const yargs = require('yargs-parser');
-const {npmOptionsFromArgv, getGlobalSizePredicate, getSizePredicate} = require('../src/install');
+const {npmOptionsFromArgv, getGlobalSizePredicate, getSizePredicate} = require('../../src/install');
 
 const parse = cmd => yargs(cmd, {configuration: {'camel-case-expansion': false}});
 

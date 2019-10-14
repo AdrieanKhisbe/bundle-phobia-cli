@@ -1,4 +1,4 @@
-const fakeSpinner = require('../src/fake-spinner');
+const fakeSpinner = require('../../src/fake-spinner');
 
 describe('fake-spinner', () => {
   it('should be instantied with an initial message', () => {

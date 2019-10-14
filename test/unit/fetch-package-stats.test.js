@@ -7,10 +7,10 @@ const {
   selectVersions,
   getPackagesFromPackageJson,
   getPackageVersionList
-} = require('../src/fetch-package-stats');
+} = require('../../src/fetch-package-stats');
 
-jest.mock('../src/npm-utils');
-const npmUtils = require('../src/npm-utils');
+jest.mock('../../src/npm-utils');
+const npmUtils = require('../../src/npm-utils');
 
 const {lodashStats, errorStats, missingVersionErrorStats} = require('./fixtures');
 // §FIXME : see fixtures, schema updated, have a look into that
@@ -74,9 +74,9 @@ describe('getVersionList', () => {
 describe('getPackagesFromPackageJson', () => {
   it('fetch data from an existing package.json', async () => {
     npmUtils.getDependencyList.mockImplementation(
-      jest.requireActual('../src/npm-utils').getDependencyList
+      jest.requireActual('../../src/npm-utils').getDependencyList
     ); // jest is magic... 😑
-    const packageJsonPath = path.join(__dirname, 'test-package.json');
+    const packageJsonPath = path.join(__dirname, 'package.fixture.json');
     const res = await getPackagesFromPackageJson(packageJsonPath);
     expect(res).toEqual([
       'bluebird@^3.5.2',

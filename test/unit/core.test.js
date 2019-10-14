@@ -1,4 +1,4 @@
-const {main} = require('../src/core');
+const {main} = require('../../src/core');
 
 describe('main', () => {
   it('fails when range is used with package list', async () => {

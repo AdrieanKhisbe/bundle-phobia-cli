@@ -6,7 +6,7 @@ const {
   sizeView,
   gzipsizeView,
   dependenciesView
-} = require('../src/cli-views');
+} = require('../../src/cli-views');
 const {lodashStats} = require('./fixtures');
 
 describe('syntheticView', () => {

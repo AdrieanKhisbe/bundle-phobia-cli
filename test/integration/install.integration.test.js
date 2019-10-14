@@ -1,37 +1,5 @@
-const stripAnsi = require('strip-ansi');
-const {main} = require('../src/install');
-
-const fakeStream = () => {
-  const content = [];
-  return {
-    write(chunk) {
-      content.push(chunk);
-    },
-    getContent() {
-      return content.join('');
-    }
-  };
-};
-const fakeExec = (statusCode = 0) => {
-  let runCommand;
-  const exec = cmd => {
-    runCommand = cmd;
-    return {code: statusCode};
-  };
-  exec.retrieveCmd = () => runCommand;
-  return exec;
-};
-const fakePkg = () => ({dependencies: {ora: '^3.0.0'}});
-
-const fakePrompt = (result = true) => {
-  let sendArgs;
-  const prompt = args => {
-    sendArgs = args;
-    return Promise.resolve({[args[0].name]: result});
-  };
-  prompt.retrieveArgs = () => sendArgs;
-  return prompt;
-};
+const {main} = require('../../src/install');
+const {fakeStream, fakeExec, fakePkg, fakePrompt} = require('./utils');
 
 const defaultMaxSize = 10000;
 describe('Integrations tests', () => {
@@ -49,8 +17,7 @@ describe('Integrations tests', () => {
       throw new Error('Did not fail as exected');
     } catch (err) {
       expect(err.message).toEqual('Install was canceled.');
-      const output = stream.getContent();
-      expect(stripAnsi(output)).toEqual(
+      expect(stream.getContent()).toEqual(
         `ℹ Applying a size limit of 9.77KB from default
 
 - Fetching stats for package lodash@4.12.0
@@ -74,8 +41,7 @@ describe('Integrations tests', () => {
       readPkg: fakePkg
     });
 
-    const output = stream.getContent();
-    expect(stripAnsi(output)).toEqual(
+    expect(stream.getContent()).toEqual(
       `ℹ Applying a size limit of 9.77KB from default
 
 - Fetching stats for package bytes@3.0.0
@@ -87,7 +53,6 @@ describe('Integrations tests', () => {
   it('install just a single package and just warn', async () => {
     const stream = fakeStream();
     const exec = fakeExec();
-    //
     await main({
       argv: {_: ['lodash@4.12.0'], w: true, warn: true, 'save-dev': true},
       stream,
@@ -96,8 +61,7 @@ describe('Integrations tests', () => {
       readPkg: fakePkg
     });
 
-    const output = stream.getContent();
-    expect(stripAnsi(output)).toEqual(
+    expect(stream.getContent()).toEqual(
       `ℹ Applying a size limit of 9.77KB from default
 
 - Fetching stats for package lodash@4.12.0
@@ -112,7 +76,6 @@ describe('Integrations tests', () => {
     const stream = fakeStream();
     const exec = fakeExec();
     const prompt = fakePrompt();
-    //
     await main({
       argv: {_: ['lodash@4.12.0'], i: true, interactive: true},
       stream,
@@ -121,8 +84,7 @@ describe('Integrations tests', () => {
       defaultMaxSize,
       readPkg: fakePkg
     });
-    const output = stream.getContent();
-    expect(stripAnsi(output)).toEqual(
+    expect(stream.getContent()).toEqual(
       `ℹ Applying a size limit of 9.77KB from default
 
 - Fetching stats for package lodash@4.12.0
@@ -137,7 +99,6 @@ describe('Integrations tests', () => {
     const stream = fakeStream();
     const exec = fakeExec();
     const prompt = fakePrompt(false);
-    //
     await main({
       argv: {_: ['lodash@4.12.0'], i: true, interactive: true},
       stream,
@@ -147,8 +108,7 @@ describe('Integrations tests', () => {
       readPkg: fakePkg
     });
 
-    const output = stream.getContent();
-    expect(stripAnsi(output)).toEqual(
+    expect(stream.getContent()).toEqual(
       `ℹ Applying a size limit of 9.77KB from default
 
 - Fetching stats for package lodash@4.12.0

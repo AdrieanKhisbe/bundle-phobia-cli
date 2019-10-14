@@ -1,18 +1,6 @@
-const stripAnsi = require('strip-ansi');
-const {main} = require('../src/core');
-const index = require('../src'); // eslint-disable-line no-unused-vars
-
-const fakeStream = () => {
-  const content = [];
-  return {
-    write(chunk) {
-      content.push(chunk);
-    },
-    getContent() {
-      return content.join('');
-    }
-  };
-};
+const {main} = require('../../src/core');
+const index = require('../../src'); // eslint-disable-line no-unused-vars
+const {fakeStream} = require('./utils');
 
 describe('Integrations tests', () => {
   it('fetch just a single package', async () => {
@@ -20,8 +8,7 @@ describe('Integrations tests', () => {
     // had to pin version for test stability
     await main({argv: {_: ['lodash@4.12.0']}, stream});
 
-    const output = stream.getContent();
-    expect(stripAnsi(output)).toEqual(
+    expect(stream.getContent()).toEqual(
       `- Fetching stats for package lodash@4.12.0
 ℹ lodash (4.12.0) has 0 dependencies for a weight of 63.65KB (22.11KB gzipped)
 `
@@ -32,8 +19,7 @@ describe('Integrations tests', () => {
     // had to pin version for test stability
     await main({argv: {_: ['lodash@2.4.2', 'moment@1.2.0']}, stream});
 
-    const output = stream.getContent();
-    expect(stripAnsi(output)).toEqual(
+    expect(stream.getContent()).toEqual(
       `- Fetching stats for package lodash@2.4.2
 ℹ lodash (2.4.2) has 0 dependencies for a weight of 27.94KB (10.04KB gzipped)
 - Fetching stats for package moment@1.2.0
@@ -64,8 +50,7 @@ describe('Integrations tests', () => {
         stream
       })
     ).rejects.toThrow("The package you were looking for doesn't exist.");
-    const output = stream.getContent();
-    expect(stripAnsi(output)).toEqual(
+    expect(stream.getContent()).toEqual(
       `- Fetching stats for package sorry-but-i-really-do-not-exist
 ✖ resolving sorry-but-i-really-do-not-exist failed: The package you were looking for doesn't exist.
 `

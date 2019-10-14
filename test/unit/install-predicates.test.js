@@ -3,7 +3,7 @@ const {
   gzipSizePredicate,
   globalSizePredicate,
   globalGzipSizePredicate
-} = require('../src/install-predicates');
+} = require('../../src/install-predicates');
 
 const smallStats = {
   size: 1000,
