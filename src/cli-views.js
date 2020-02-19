@@ -17,12 +17,10 @@ const gzipsizeView = stat => stat.gzip;
 const dependenciesView = stat => stat.dependencyCount;
 
 const getView = (argv = {}) => {
-  const viewOpts = _.intersection(_.keys(argv).filter(key => argv[key]), [
-    'json',
-    'gzip-size',
-    'size',
-    'dependencies'
-  ]);
+  const viewOpts = _.intersection(
+    _.keys(argv).filter(key => argv[key]),
+    ['json', 'gzip-size', 'size', 'dependencies']
+  );
   if (_.size(viewOpts) > 1)
     throw new Error(`Can't use in the same time options ${[...viewOpts].sort().join(', ')}`);
 

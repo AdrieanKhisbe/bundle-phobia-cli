@@ -4,8 +4,7 @@ node_js:
   - '10'
   - '12'
 script:
-  - npm run lint
-  - npm run test
+  - npm test
   # End to End test like
   - node index.js lodash -r 2 && node index.js lodash bluebird react
 after_script:
