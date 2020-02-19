@@ -7,6 +7,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.14.2] - 2020-02-20
+Covered in PR #20
+### Changed
+- Updated dependencies
+
 ## [0.14.1] - 2019-10-14
 ### Changed
 - Major refactor from chained promises to async/await
@@ -89,8 +94,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Older changes have to be documented
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.1...master
-[0.14.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.0...v0.14.1
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.2...master
+[0.14.2]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.1...v0.14.2
+[0.14.1]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.13.0...v0.14.0
 [0.13.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.12.1...v0.13.0
 [0.12.1]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.12.0...v0.12.1
