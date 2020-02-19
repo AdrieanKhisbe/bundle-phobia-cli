@@ -31,26 +31,26 @@
   "homepage": "https://github.com/AdrieanKhisbe/bundle-phobia-cli#readme",
   "dependencies": {
     "bytes": "^3.1.0",
-    "chalk": "^2.4.2",
-    "inquirer": "^7.0.0",
+    "chalk": "^3.0.0",
+    "inquirer": "^7.0.4",
     "lodash": "^4.17.15",
     "node-fetch": "^2.6.0",
-    "ora": "^4.0.2",
+    "ora": "^4.0.3",
     "p-map": "^3.0.0",
-    "read-pkg-up": "^7.0.0",
+    "read-pkg-up": "^7.0.1",
     "resolve-package-json": "^1.4.0",
     "shelljs": "^0.8.3",
-    "update-notifier": "^3.0.1",
-    "yargs": "^14.2.0"
+    "update-notifier": "^4.1.0",
+    "yargs": "^15.1.0"
   },
   "devDependencies": {
-    "@-k/eslint-plugin": "^0.1.2",
-    "codecov": "^3.6.1",
-    "eslint": "^6.5.1",
-    "jest": "^24.9.0",
-    "jest-fetch-mock": "^2.1.2",
-    "strip-ansi": "^5.2.0",
-    "yargs-parser": "^15.0.0"
+    "@-k/eslint-plugin": "^0.2.0",
+    "codecov": "^3.6.5",
+    "eslint": "^6.8.0",
+    "jest": "^25.1.0",
+    "jest-fetch-mock": "^3.0.1",
+    "strip-ansi": "^6.0.0",
+    "yargs-parser": "^17.0.0"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
