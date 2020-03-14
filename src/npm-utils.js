@@ -18,7 +18,7 @@ const getVersionList = name => {
   );
 };
 
-const shouldResolve = pkg => /.*@([~^]|.*x)/.test(pkg);
+const shouldResolve = pkg => /.*@([\^~]|.*x)/.test(pkg);
 
 const resolveVersionRange = async pkg => {
   // unfortunately no named capture groups in Node 6..

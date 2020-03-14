@@ -33,7 +33,7 @@
   "dependencies": {
     "bytes": "^3.1.0",
     "chalk": "^3.0.0",
-    "inquirer": "^7.0.4",
+    "inquirer": "^7.1.0",
     "lodash": "^4.17.15",
     "node-fetch": "^2.6.0",
     "ora": "^4.0.3",
@@ -42,16 +42,16 @@
     "resolve-package-json": "^1.4.0",
     "shelljs": "^0.8.3",
     "update-notifier": "^4.1.0",
-    "yargs": "^15.1.0"
+    "yargs": "^15.3.0"
   },
   "devDependencies": {
-    "@-k/eslint-plugin": "^0.2.0",
+    "@-k/eslint-plugin": "^0.3.0",
     "codecov": "^3.6.5",
     "eslint": "^6.8.0",
     "jest": "^25.1.0",
-    "jest-fetch-mock": "^3.0.1",
+    "jest-fetch-mock": "^3.0.3",
     "strip-ansi": "^6.0.0",
-    "yargs-parser": "^17.0.0"
+    "yargs-parser": "^18.1.0"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
