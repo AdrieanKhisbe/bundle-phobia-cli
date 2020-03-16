@@ -42,7 +42,7 @@
     "resolve-package-json": "^1.4.0",
     "shelljs": "^0.8.3",
     "update-notifier": "^4.1.0",
-    "yargs": "^15.3.0"
+    "yargs": "^15.3.1"
   },
   "devDependencies": {
     "@-k/eslint-plugin": "^0.3.1",
@@ -51,7 +51,7 @@
     "jest": "^25.1.0",
     "jest-fetch-mock": "^3.0.3",
     "strip-ansi": "^6.0.0",
-    "yargs-parser": "^18.1.0"
+    "yargs-parser": "^18.1.1"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
