@@ -2,7 +2,7 @@
 
 const updateNotifier = require('update-notifier');
 const c = require('chalk');
-const argv = require('yargs')
+const {argv} = require('yargs')
   .parserConfiguration({
     'short-option-groups': true,
     'camel-case-expansion': false,
@@ -48,7 +48,8 @@ const argv = require('yargs')
     'dry-run'
   ])
   .help('h')
-  .alias('h', 'help').argv;
+  .alias('h', 'help')
+  .pkgConf('bundle-phobia');
 const pkg = require('./package.json');
 
 const {main} = require('./src/install');
