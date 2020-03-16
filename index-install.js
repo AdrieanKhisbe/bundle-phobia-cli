@@ -3,6 +3,13 @@
 const updateNotifier = require('update-notifier');
 const c = require('chalk');
 const argv = require('yargs')
+  .parserConfiguration({
+    'short-option-groups': true,
+    'camel-case-expansion': false,
+    'dot-notation': false,
+    'parse-numbers': true,
+    'boolean-negation': false
+  })
   .usage('Usage: $0  <package-name> [other-package-names...]')
   .describe('warn', 'Install despite of negative check but warn about predicate violation')
   .alias('warn', 'w')
