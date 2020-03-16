@@ -7,6 +7,20 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.14.5] - 2020-03-16
+Covered in PR #24
+### Fixed
+- Restored config reading from package.json
+
+## [0.14.4] - 2020-03-14
+### Changed
+- Updated package-lock
+
+## [0.14.3] - 2020-03-14
+Covered in PR #22
+### Changed
+- Updated dependencies, Fixing one CVE
+
 ## [0.14.2] - 2020-02-20
 Covered in PR #20
 ### Changed
@@ -94,7 +108,10 @@ Covered in PR #20
 
 ## Older changes have to be documented
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.2...master
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.5...master
+[0.14.5]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.4...v0.14.5
+[0.14.4]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.3...v0.14.4
+[0.14.3]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.2...v0.14.3
 [0.14.2]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.1...v0.14.2
 [0.14.1]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.13.0...v0.14.0
