@@ -130,7 +130,7 @@ const main = async ({
 
   const statuses = await pMap(packages, async paquage => {
     const stats = await fetchPackageStats(paquage).catch(handleError(paquage, true));
-    return _.set('package', paquage, predicate(stats));
+    return _.defaultsAll([{package: paquage}, stats, predicate(stats)]);
   });
 
   const toInstallStats = aggregateStats(statuses);

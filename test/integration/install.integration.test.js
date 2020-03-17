@@ -50,6 +50,7 @@ describe('Integrations tests', () => {
     );
     expect(exec.retrieveCmd()).toEqual('npm install bytes@3.0.0');
   });
+
   it('install just a single package and just warn', async () => {
     const stream = fakeStream();
     const exec = fakeExec();
@@ -138,5 +139,33 @@ describe('Integrations tests', () => {
         "no-sorry-but-i-do-not-exist: The package you were looking for doesn't exist."
       );
     }
+  });
+
+  it('install just a single package on empty package with global config and succeed', async () => {
+    const stream = fakeStream();
+    const exec = fakeExec();
+
+    await main({
+      argv: {_: ['bytes@3.0.0']},
+      stream,
+      exec,
+      defaultMaxSize,
+      readPkg: () => ({
+        dependencies: {},
+        'bundle-phobia': {
+          'max-size': '20kB',
+          'max-overall-size': '50kB'
+        }
+      })
+    });
+
+    expect(stream.getContent()).toEqual(
+      `ℹ Applying a size limit of 20KB from package-config and overall size limit of 50KB from package-config
+
+- Fetching stats for package bytes@3.0.0
+ℹ Proceed to installation of package bytes@3.0.0
+`
+    );
+    expect(exec.retrieveCmd()).toEqual('npm install bytes@3.0.0');
   });
 });
