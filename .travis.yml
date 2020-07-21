@@ -6,7 +6,5 @@ node_js:
   - '14'
 script:
   - npm test
-  # End to End test like
-  - node index.js lodash -r 2 && node index.js lodash bluebird react
 after_script:
   - npm run publish-coverage
