@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.14.8] - 2020-07-24
+### Fixed
+- npmignored was misconfigured, replaced with `files` configuration in `package.json`
+
 ## [0.14.7] - 2020-07-24
 Covered in PR [#30]: :wind_face: Refreshed dependencies & Better tests :test_tube:
 
@@ -121,7 +125,8 @@ Covered in PR [#20]
 [#22]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/22
 [#20]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/20
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.7...master
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.8...master
+[0.14.8]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.7...v.0.14.8
 [0.14.7]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.6...v.0.14.7
 [0.14.6]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.5...v0.14.6
 [0.14.5]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.4...v0.14.5
