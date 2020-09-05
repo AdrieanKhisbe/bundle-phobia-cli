@@ -2,7 +2,7 @@ const c = require('chalk');
 const _ = require('lodash/fp');
 const ora = require('ora');
 const pMap = require('p-map');
-const shelljs = require('shelljs');
+const childProcess = require('child-process');
 const inquirer = require('inquirer');
 const readPkgUp = require('read-pkg-up');
 const {fetchPackageStats, fetchPackageJsonStats} = require('./fetch-package-stats');
@@ -46,7 +46,7 @@ const npmOptionsFromArgv = argv => {
 
 const installCommand = argv => {
   const options = npmOptionsFromArgv(argv);
-  return `npm install ${argv._.join(' ')}${(options && ` ${options}`) || ''}`;
+  return `install ${argv._.join(' ')}${(options && ` ${options}`) || ''}`;
 };
 
 const getSizePredicate = (argv, defaultSize, packageConfig) => {
@@ -87,7 +87,7 @@ const main = async ({
   argv,
   stream = process.stdout,
   noOra = false,
-  exec = shelljs.exec,
+  execFile = childProcess.execFile,
   prompt = inquirer.prompt,
   defaultMaxSize = DEFAULT_MAX_SIZE,
   readPkg = () => _.get('pkg', readPkgUp.sync())
@@ -111,7 +111,7 @@ const main = async ({
   const pluralSuffix = _.size(packages) > 1 ? 's' : '';
 
   const performInstall = () => {
-    const res = exec(installCommand(argv));
+    const res = execFile(`npm`, installCommand(argv).split(' '));
     if (res.code !== 0) throw new Error(`npm install returned with status code ${res.code}`);
   };
   const predicate = getSizePredicate(argv, defaultMaxSize, currentPkg);
