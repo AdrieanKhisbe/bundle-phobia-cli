@@ -7,6 +7,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.14.9] - 2020-09-12
+Covered in PR [#33] ([#31] included)
+### Changed
+- Drop `shelljs` to use built in `child_process.execFile`
+- Update dependencies while keeping node 8 support
+
 ## [0.14.8] - 2020-07-24
 ### Fixed
 - npmignored was misconfigured, replaced with `files` configuration in `package.json`
@@ -120,12 +126,15 @@ Covered in PR [#20]
 
 ## Older changes have to be documented
 
+[#33]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/33
+[#31]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/31
 [#26]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/26
 [#24]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/24
 [#22]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/22
 [#20]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/20
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.8...master
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.9...master
+[0.14.9]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.8...v.0.14.9
 [0.14.8]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.7...v.0.14.8
 [0.14.7]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.6...v.0.14.7
 [0.14.6]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.5...v0.14.6
