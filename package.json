@@ -41,7 +41,7 @@
     "inquirer": "^7.3.3",
     "lodash": "^4.17.20",
     "node-fetch": "^2.6.1",
-    "ora": "^4.0.5",
+    "ora": "^4.1.1",
     "p-map": "^4.0.0",
     "read-pkg-up": "^7.0.1",
     "resolve-package-json": "^1.4.0",
