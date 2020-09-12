@@ -1,7 +1,4 @@
 {
   "extends": "plugin:@-k/base",
-  "plugins": ["@-k"],
-  "env": {
-    "jest": true
-  }
+  "plugins": ["@-k"]
 }

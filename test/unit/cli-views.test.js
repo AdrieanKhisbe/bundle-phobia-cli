@@ -1,3 +1,4 @@
+const test = require('ava');
 const stripAnsi = require('strip-ansi');
 const {
   getView,
@@ -9,49 +10,41 @@ const {
 } = require('../../src/cli-views');
 const {lodashStats} = require('./fixtures');
 
-describe('syntheticView', () => {
-  it('basic lodash stats', () => {
-    const lodashView = stripAnsi(syntheticView(lodashStats));
-    expect(lodashView).toEqual(
-      'lodash (4.17.4) has 0 dependencies for a weight of 69.21KB (24.09KB gzipped)'
-    );
-  });
+test('syntheticView basic lodash stats', t => {
+  const lodashView = stripAnsi(syntheticView(lodashStats));
+  t.is(lodashView, 'lodash (4.17.4) has 0 dependencies for a weight of 69.21KB (24.09KB gzipped)');
 });
 
-describe('simpleViews', () => {
-  it('sizeView', () => {
-    expect(sizeView(lodashStats)).toEqual(70870);
-  });
-  it('gzipsizeView', () => {
-    expect(gzipsizeView(lodashStats)).toEqual(24666);
-  });
-  it('dependenciesView', () => {
-    expect(dependenciesView(lodashStats)).toEqual(0);
-  });
+test('sizeView', t => {
+  t.is(sizeView(lodashStats), 70870);
+});
+test('gzipsizeView', t => {
+  t.is(gzipsizeView(lodashStats), 24666);
+});
+test('dependenciesView', t => {
+  t.is(dependenciesView(lodashStats), 0);
 });
 
-describe('getView', () => {
-  it('retrieve synthetic view by default', () => {
-    expect(getView()).toEqual(syntheticView);
-  });
+test('getView - retrieve synthetic view by default', t => {
+  t.is(getView(), syntheticView);
+});
 
-  it('retrieve size view by demand', () => {
-    expect(getView({size: true})).toEqual(sizeView);
-  });
+test('getView - retrieve size view on demand', t => {
+  t.is(getView({size: true}), sizeView);
+});
 
-  it('retrieve gzip size view by demand', () => {
-    expect(getView({'gzip-size': true})).toEqual(gzipsizeView);
-  });
+test('getView - retrieve gzip size view on demand', t => {
+  t.is(getView({'gzip-size': true}), gzipsizeView);
+});
 
-  it('retrieve dependencies view by demand', () => {
-    expect(getView({dependencies: true})).toEqual(dependenciesView);
-  });
+test('getView - retrieve dependencies view on demand', t => {
+  t.is(getView({dependencies: true}), dependenciesView);
+});
 
-  it('retrieve dependencies view by demand', () => {
-    expect(getView({json: true})).toEqual(jsonView);
-  });
+test('getView - retrieve json view on demand', t => {
+  t.is(getView({json: true}), jsonView);
+});
 
-  it('throw erreur when multiple args', () => {
-    expect(() => getView({json: true, size: true}).toThrow());
-  });
+test('getView - throw erreur when multiple args', t => {
+  t.throws(() => getView({json: true, size: true}));
 });

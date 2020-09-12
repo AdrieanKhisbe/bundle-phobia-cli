@@ -1,9 +1,10 @@
 const fs = require('fs');
-const fetch = require('node-fetch');
+const _ = require('lodash/fp');
+const nodeFetch = require('node-fetch');
 
 const {getVersionList, resolveVersionRange, getDependencyList} = require('./npm-utils');
 
-const fetchPackageStats = async name => {
+const fetchPackageStats = async (name, {fetch = nodeFetch} = {}) => {
   if (!name) throw new Error('Empty name given as argument');
   const pkg = await resolveVersionRange(name);
   const res = await fetch(`https://bundlephobia.com/api/size?package=${pkg}`, {
@@ -23,15 +24,16 @@ const fetchPackagesStats = names => Promise.all(names.map(fetchPackageStats));
 const fetchPackageJsonStats = packageDetails =>
   fetchPackagesStats(getDependencyList(packageDetails));
 
-const selectVersions = (versionList, limit) => {
-  versionList.reverse();
-  if (limit <= 0) return versionList;
-  else return versionList.slice(0, limit);
-};
+const selectVersions = (versionList, limit, formatWithName = null) =>
+  _.pipe(
+    _.reverse,
+    limit <= 0 ? _.identity : _.slice(0, limit),
+    formatWithName ? _.map(version => `${formatWithName}@${version}`) : _.identity
+  )(versionList);
 
 const getPackageVersionList = async (name, limit = 8) => {
   const versionList = await getVersionList(name);
-  return selectVersions(versionList, limit).map(version => `${name}@${version}`);
+  return selectVersions(versionList, limit, name);
 };
 
 const getPackagesFromPackageJson = async pkg => {
