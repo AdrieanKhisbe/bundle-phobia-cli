@@ -12,14 +12,16 @@ jobs:
 
     - &test
       stage: test
-      name: test-plugin-node8
+      name: test-node8
       node_js: '8'
-      script: npm run test:unit
+      script:
+        - npm run test:unit
+        - npm run test:e2e
       after_script: npm run publish-coverage
 
     - &test
       stage: test
-      name: test-plugin-node10
+      name: test-node10
       script: npm run test:unit
       node_js: '10'
     - <<: *test
