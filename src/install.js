@@ -1,8 +1,8 @@
+const childProcess = require('child_process');
 const c = require('chalk');
 const _ = require('lodash/fp');
 const ora = require('ora');
 const pMap = require('p-map');
-const childProcess = require('child_process');
 const inquirer = require('inquirer');
 const readPkgUp = require('read-pkg-up');
 const {fetchPackageStats, fetchPackageJsonStats} = require('./fetch-package-stats');
