@@ -35,18 +35,18 @@ const npmOptionsFromArgv = argv => {
   return _.pipe(
     _.omit(BUNLE_PHOBIA_ARGS),
     _.toPairs,
-    _.map(([key, value]) => {
-      const val = _.isBoolean(value) ? '' : ` ${value}`; // FIXME: check handling of false
+    _.flatMap(([key, value]) => {
+      const isFlag = _.isBoolean(value); // FIXME: check handling of false
       const leadingDash = _.size(key) === 1 ? '-' : '--';
-      return leadingDash + key + val;
-    }),
-    _.join(' ')
+      const option = leadingDash + key;
+      return isFlag ? [option] : [option, value];
+    })
   )(argv);
 };
 
-const installCommand = argv => {
+const installCommandArgs = argv => {
   const options = npmOptionsFromArgv(argv);
-  return `install ${argv._.join(' ')}${(options && ` ${options}`) || ''}`;
+  return ['install', ...argv._, ...options];
 };
 
 const getSizePredicate = (argv, defaultSize, packageConfig) => {
@@ -111,7 +111,7 @@ const main = async ({
   const pluralSuffix = _.size(packages) > 1 ? 's' : '';
 
   const performInstall = () => {
-    const res = execFile(`npm`, installCommand(argv).split(' '));
+    const res = execFile(`npm`, installCommandArgs(argv));
     if (res.code !== 0) throw new Error(`npm install returned with status code ${res.code}`);
   };
   const predicate = getSizePredicate(argv, defaultMaxSize, currentPkg);
@@ -235,7 +235,7 @@ const main = async ({
 module.exports = {
   main,
   npmOptionsFromArgv,
-  installCommand,
+  installCommandArgs,
   getGlobalSizePredicate,
   getSizePredicate
 };
