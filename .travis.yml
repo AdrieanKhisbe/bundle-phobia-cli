@@ -1,10 +1,32 @@
 language: node_js
-node_js:
-  - '8'
-  - '10'
-  - '12'
-  - '14'
-script:
-  - npm test
-after_script:
-  - npm run publish-coverage
+
+stages:
+  - lint
+  - test
+
+jobs:
+  include:
+    - stage: lint
+      name: lint
+      script: npm run lint
+
+    - &test
+      stage: test
+      name: test-plugin-node8
+      node_js: '8'
+      script: npm run test:unit
+      after_script: npm run publish-coverage
+
+    - &test
+      stage: test
+      name: test-plugin-node10
+      script: npm run test:unit
+      node_js: '10'
+    - <<: *test
+      name: test-node12
+      node_js: '12'
+    - <<: *test
+      name: test-node14
+      node_js: '14'
+
+cache: npm

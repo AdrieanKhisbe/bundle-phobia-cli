@@ -1,20 +1,20 @@
 const {main} = require('../../src/install');
-const {fakeStream, fakeExec, fakePkg, fakePrompt} = require('./utils');
+const {fakeStream, fakeExecFile, fakePkg, fakePrompt} = require('./utils');
 
 const defaultMaxSize = 10000;
 describe('Integrations tests', () => {
   it('install just a single package and fail', async () => {
     const stream = fakeStream();
-    const exec = fakeExec();
+    const execFile = fakeExecFile();
     try {
       await main({
         argv: {_: ['lodash@4.12.0']},
         stream,
-        exec,
+        execFile,
         defaultMaxSize,
         readPkg: fakePkg
       });
-      throw new Error('Did not fail as exected');
+      throw new Error('Did not fail as execFileted');
     } catch (err) {
       expect(err.message).toEqual('Install was canceled.');
       expect(stream.getContent()).toEqual(
@@ -31,12 +31,12 @@ describe('Integrations tests', () => {
 
   it('install just a single package and succeed', async () => {
     const stream = fakeStream();
-    const exec = fakeExec();
+    const execFile = fakeExecFile();
     //
     await main({
       argv: {_: ['bytes@3.0.0']},
       stream,
-      exec,
+      execFile,
       defaultMaxSize,
       readPkg: fakePkg
     });
@@ -48,16 +48,17 @@ describe('Integrations tests', () => {
 ℹ Proceed to installation of package bytes@3.0.0
 `
     );
-    expect(exec.retrieveCmd()).toEqual('npm install bytes@3.0.0');
+    expect(execFile.invokedCmd).toEqual('npm');
+    expect(execFile.invokedArgs).toEqual(['install', 'bytes@3.0.0']);
   });
 
   it('install just a single package and just warn', async () => {
     const stream = fakeStream();
-    const exec = fakeExec();
+    const execFile = fakeExecFile();
     await main({
       argv: {_: ['lodash@4.12.0'], w: true, warn: true, 'save-dev': true},
       stream,
-      exec,
+      execFile,
       defaultMaxSize,
       readPkg: fakePkg
     });
@@ -70,17 +71,18 @@ describe('Integrations tests', () => {
 ⚠ lodash@4.12.0: size over threshold (63.65KB > 9.77KB)
 `
     );
-    expect(exec.retrieveCmd()).toEqual('npm install lodash@4.12.0 --save-dev');
+    expect(execFile.invokedCmd).toEqual('npm');
+    expect(execFile.invokedArgs).toEqual(['install', 'lodash@4.12.0', '--save-dev']);
   });
 
   it('ask to install a package and accept', async () => {
     const stream = fakeStream();
-    const exec = fakeExec();
+    const execFile = fakeExecFile();
     const prompt = fakePrompt();
     await main({
       argv: {_: ['lodash@4.12.0'], i: true, interactive: true},
       stream,
-      exec,
+      execFile,
       prompt,
       defaultMaxSize,
       readPkg: fakePkg
@@ -94,16 +96,17 @@ describe('Integrations tests', () => {
 ✔ Proceeding with installation as you requested
 `
     );
-    expect(exec.retrieveCmd()).toEqual('npm install lodash@4.12.0');
+    expect(execFile.invokedCmd).toEqual('npm');
+    expect(execFile.invokedArgs).toEqual(['install', 'lodash@4.12.0']);
   });
   it('ask to install a package and deny', async () => {
     const stream = fakeStream();
-    const exec = fakeExec();
+    const execFile = fakeExecFile();
     const prompt = fakePrompt(false);
     await main({
       argv: {_: ['lodash@4.12.0'], i: true, interactive: true},
       stream,
-      exec,
+      execFile,
       prompt,
       defaultMaxSize,
       readPkg: fakePkg
@@ -118,17 +121,17 @@ describe('Integrations tests', () => {
 ✖ Installation is canceled on your demand
 `
     );
-    expect(exec.retrieveCmd()).toBeUndefined();
+    expect(execFile.invokedCmd).toBeUndefined();
   });
 
   it('try to install package that does not exist', async () => {
     const stream = fakeStream();
-    const exec = fakeExec();
+    const execFile = fakeExecFile();
     try {
       await main({
         argv: {_: ['no-sorry-but-i-do-not-exist']},
         stream,
-        exec,
+        execFile,
         defaultMaxSize,
         readPkg: fakePkg
       });
@@ -143,12 +146,12 @@ describe('Integrations tests', () => {
 
   it('install just a single package on empty package with global config and succeed', async () => {
     const stream = fakeStream();
-    const exec = fakeExec();
+    const execFile = fakeExecFile();
 
     await main({
       argv: {_: ['bytes@3.0.0']},
       stream,
-      exec,
+      execFile,
       defaultMaxSize,
       readPkg: () => ({
         dependencies: {},
@@ -166,6 +169,7 @@ describe('Integrations tests', () => {
 ℹ Proceed to installation of package bytes@3.0.0
 `
     );
-    expect(exec.retrieveCmd()).toEqual('npm install bytes@3.0.0');
+    expect(execFile.invokedCmd).toEqual('npm');
+    expect(execFile.invokedArgs).toEqual(['install', 'bytes@3.0.0']);
   });
 });

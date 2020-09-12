@@ -1,8 +1,8 @@
+const childProcess = require('child_process');
 const c = require('chalk');
 const _ = require('lodash/fp');
 const ora = require('ora');
 const pMap = require('p-map');
-const shelljs = require('shelljs');
 const inquirer = require('inquirer');
 const readPkgUp = require('read-pkg-up');
 const {fetchPackageStats, fetchPackageJsonStats} = require('./fetch-package-stats');
@@ -35,18 +35,18 @@ const npmOptionsFromArgv = argv => {
   return _.pipe(
     _.omit(BUNLE_PHOBIA_ARGS),
     _.toPairs,
-    _.map(([key, value]) => {
-      const val = _.isBoolean(value) ? '' : ` ${value}`; // FIXME: check handling of false
+    _.flatMap(([key, value]) => {
+      const isFlag = _.isBoolean(value); // FIXME: check handling of false
       const leadingDash = _.size(key) === 1 ? '-' : '--';
-      return leadingDash + key + val;
-    }),
-    _.join(' ')
+      const option = leadingDash + key;
+      return isFlag ? [option] : [option, value];
+    })
   )(argv);
 };
 
-const installCommand = argv => {
+const installCommandArgs = argv => {
   const options = npmOptionsFromArgv(argv);
-  return `npm install ${argv._.join(' ')}${(options && ` ${options}`) || ''}`;
+  return ['install', ...argv._, ...options];
 };
 
 const getSizePredicate = (argv, defaultSize, packageConfig) => {
@@ -87,7 +87,7 @@ const main = async ({
   argv,
   stream = process.stdout,
   noOra = false,
-  exec = shelljs.exec,
+  execFile = childProcess.execFile,
   prompt = inquirer.prompt,
   defaultMaxSize = DEFAULT_MAX_SIZE,
   readPkg = () => _.get('pkg', readPkgUp.sync())
@@ -111,7 +111,7 @@ const main = async ({
   const pluralSuffix = _.size(packages) > 1 ? 's' : '';
 
   const performInstall = () => {
-    const res = exec(installCommand(argv));
+    const res = execFile(`npm`, installCommandArgs(argv));
     if (res.code !== 0) throw new Error(`npm install returned with status code ${res.code}`);
   };
   const predicate = getSizePredicate(argv, defaultMaxSize, currentPkg);
@@ -235,7 +235,7 @@ const main = async ({
 module.exports = {
   main,
   npmOptionsFromArgv,
-  installCommand,
+  installCommandArgs,
   getGlobalSizePredicate,
   getSizePredicate
 };

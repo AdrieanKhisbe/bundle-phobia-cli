@@ -1,11 +1,11 @@
-const {exec} = require('child_process');
+const {execFile} = require('child_process');
 const {resolver} = require('resolve-package-json');
 const _ = require('lodash/fp');
 
 const getVersionList = name => {
   if (!name) return Promise.reject(new Error('Empty name given as argument'));
   return new Promise((resolve, reject) =>
-    exec(`npm show ${name} versions --json`, (err, stdout, stderr) => {
+    execFile(`npm`, ['show', name, 'versions', '--json'], (err, stdout, stderr) => {
       if (err) {
         return reject(
           /Registry returned 404 for GET on|404 Not found|code E404/.test(stderr)

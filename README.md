@@ -1,7 +1,7 @@
 # bundle-phobia-cli
 
 [![npm](https://img.shields.io/npm/v/bundle-phobia-cli.svg)](https://www.npmjs.com/package/bundle-phobia-cli)
-[![Build Status](https://travis-ci.org/AdrieanKhisbe/bundle-phobia-cli.svg?branch=master)](https://travis-ci.org/AdrieanKhisbe/bundle-phobia-cli)
+[![Build Status](https://travis-ci.com/AdrieanKhisbe/bundle-phobia-cli.svg?branch=master)](https://travis-ci.com/AdrieanKhisbe/bundle-phobia-cli)
 [![codecov](https://codecov.io/gh/AdrieanKhisbe/bundle-phobia-cli/branch/master/graph/badge.svg)](https://codecov.io/gh/AdrieanKhisbe/bundle-phobia-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 

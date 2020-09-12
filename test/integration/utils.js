@@ -12,14 +12,18 @@ const fakeStream = () => {
   };
 };
 
-const fakeExec = (statusCode = 0) => {
-  let runCommand;
-  const exec = cmd => {
+const fakeExecFile = (statusCode = 0) => {
+  let runCommand, runArgs;
+  const execFile = (cmd, args) => {
     runCommand = cmd;
+    runArgs = args;
     return {code: statusCode};
   };
-  exec.retrieveCmd = () => runCommand;
-  return exec;
+  Object.defineProperties(execFile, {
+    invokedCmd: {get: () => runCommand},
+    invokedArgs: {get: () => runArgs}
+  });
+  return execFile;
 };
 const fakePkg = () => ({dependencies: {ora: '^3.0.0'}});
 
@@ -33,4 +37,4 @@ const fakePrompt = (result = true) => {
   return prompt;
 };
 
-module.exports = {fakeStream, fakeExec, fakePkg, fakePrompt};
+module.exports = {fakeStream, fakeExecFile, fakePkg, fakePrompt};
