@@ -7,6 +7,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.14.10] - 2020-10-22
+Covered in PR [#36]
+### Fixed
+- Address [#35] issue, and support resolving for packages with dot in it.
+### Changed
+- Update dependencies within minor range
+
 ## [0.14.9] - 2020-09-12
 Covered in PR [#33] ([#31] included)
 ### Changed
@@ -126,6 +133,8 @@ Covered in PR [#20]
 
 ## Older changes have to be documented
 
+[#36]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/36
+[#35]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/issues/35
 [#33]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/33
 [#31]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/31
 [#26]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/26
@@ -133,7 +142,8 @@ Covered in PR [#20]
 [#22]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/22
 [#20]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/20
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.9...master
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.10...master
+[0.14.10]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.9...v.0.14.10
 [0.14.9]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.8...v.0.14.9
 [0.14.8]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.7...v.0.14.8
 [0.14.7]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.6...v.0.14.7
