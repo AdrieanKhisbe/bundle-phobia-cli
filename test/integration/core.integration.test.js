@@ -46,6 +46,15 @@ test('prevent to fetch list of package with range', async t => {
   }
 });
 
+test('handle package with dot, using a caret version lock', async t => {
+  const stream = fakeStream();
+  await main({argv: {_: ['ahoy.js@^0.3.5']}, stream});
+
+  const [firstLine, secondLine] = stream.getContent().split('\n');
+  t.is(firstLine, '- Fetching stats for package ahoy.js@^0.3.5');
+  t.true(secondLine.startsWith('ℹ ahoy.js (0.', `Unexpected resolve entry: '${secondLine}'`));
+});
+
 test('fetch a package that does not exist at all', async t => {
   const stream = fakeStream();
   await t.throwsAsync(
