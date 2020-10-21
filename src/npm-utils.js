@@ -31,7 +31,7 @@ const resolveVersionRange = async pkg => {
     return pkg;
   }
   return new Promise((resolve, reject) => {
-    resolver({[packageName]: version}, function(err, result) {
+    resolver({[packageName]: version}, function (err, result) {
       /* istanbul ignore if*/
       if (err) return reject(err);
       if (!_.has(['dependencies', packageName], result))

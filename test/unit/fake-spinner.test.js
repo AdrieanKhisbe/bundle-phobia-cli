@@ -16,7 +16,7 @@ test('methods returns the instance', t => {
 test('methods logging method just log returns the instance', t => {
   const loggingMethods = ['info', 'succeed', 'fail', 'warn'];
   let ncall = 0;
-  const testGenerator = (function*() {
+  const testGenerator = (function* () {
     for (const method of loggingMethods) {
       t.is(yield, method);
       t.is(yield, '\n');
