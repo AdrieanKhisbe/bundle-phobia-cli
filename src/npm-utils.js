@@ -5,7 +5,7 @@ const _ = require('lodash/fp');
 const getVersionList = name => {
   if (!name) return Promise.reject(new Error('Empty name given as argument'));
   return new Promise((resolve, reject) =>
-    execFile(getNpmCommand( ), ['show', name, 'versions', '--json'], (err, stdout, stderr) => {
+    execFile(getNpmCommand(), ['show', name, 'versions', '--json'], (err, stdout, stderr) => {
       if (err) {
         return reject(
           /Registry returned 404 for GET on|404 Not found|code E404/.test(stderr)
@@ -18,7 +18,7 @@ const getVersionList = name => {
   );
 };
 
-const getNpmCommand = () => /^win/.test(process.platform) ? 'npm.cmd' : 'npm';
+const getNpmCommand = () => process.platform.startsWith('win') ? 'npm.cmd' : 'npm';
 
 const shouldResolve = pkg => /.*@([\^~]|.*x)/.test(pkg);
 
