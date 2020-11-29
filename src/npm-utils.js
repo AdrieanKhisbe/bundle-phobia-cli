@@ -18,7 +18,7 @@ const getVersionList = name => {
   );
 };
 
-const getNpmCommand = () => process.platform.startsWith('win') ? 'npm.cmd' : 'npm';
+const getNpmCommand = () => (process.platform.startsWith('win') ? 'npm.cmd' : 'npm');
 
 const shouldResolve = pkg => /.*@([\^~]|.*x)/.test(pkg);
 
