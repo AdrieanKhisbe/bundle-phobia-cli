@@ -1,0 +1,14 @@
+{
+    "all": true,
+    "reporter": [
+      "lcov",
+      "text",
+      "text-summary"
+    ],
+    "include": [
+      "src"
+    ],
+    "exclude": [
+      "test"
+    ]
+}
