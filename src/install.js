@@ -111,7 +111,7 @@ const main = async ({
   const pluralSuffix = _.size(packages) > 1 ? 's' : '';
 
   const performInstall = () => {
-    const res = execFile(`npm`, installCommandArgs(argv));
+    const res = execFile(`npm`, installCommandArgs(argv), {shell: true});
     if (res.code !== 0) throw new Error(`npm install returned with status code ${res.code}`);
   };
   const predicate = getSizePredicate(argv, defaultMaxSize, currentPkg);
