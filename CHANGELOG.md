@@ -7,6 +7,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.14.11] - 2020-12-06
+Covered in PR [#37], [#38] and [#39]
+### Fixed
+- Fix issue with calling `npm` on windows ([#37]). (regression was introduced by [#33] in [0.14.9])
+- Restore coverage ([#39])
+
 ## [0.14.10] - 2020-10-22
 Covered in PR [#36]
 ### Fixed
@@ -133,6 +139,9 @@ Covered in PR [#20]
 
 ## Older changes have to be documented
 
+[#39]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/39
+[#38]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/38
+[#37]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/37
 [#36]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/36
 [#35]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/issues/35
 [#33]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/33
@@ -142,7 +151,8 @@ Covered in PR [#20]
 [#22]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/22
 [#20]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/20
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.10...master
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.11...master
+[0.14.11]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.10...v.0.14.11
 [0.14.10]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.9...v.0.14.10
 [0.14.9]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.8...v.0.14.9
 [0.14.8]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.7...v.0.14.8
