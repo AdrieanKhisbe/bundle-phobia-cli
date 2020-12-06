@@ -110,10 +110,12 @@ const main = async ({
   if (_.isEmpty(packages)) throw new Error('No packages to install was given');
   const pluralSuffix = _.size(packages) > 1 ? 's' : '';
 
-  const performInstall = () => {
-    const res = execFile(`npm`, installCommandArgs(argv), {shell: true});
-    if (res.code !== 0) throw new Error(`npm install returned with status code ${res.code}`);
-  };
+  const performInstall = () =>
+    new Promise((resolve, reject) =>
+      execFile(`npm`, installCommandArgs(argv), {shell: true}, err => {
+        if (err) return reject(new Error(`npm install returned with status code ${err.code}`));
+      })
+    );
   const predicate = getSizePredicate(argv, defaultMaxSize, currentPkg);
   const globalPredicate = getGlobalSizePredicate(argv, currentPkg);
 
