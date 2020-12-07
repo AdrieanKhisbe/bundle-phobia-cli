@@ -12,12 +12,14 @@ const fakeStream = () => {
   };
 };
 
-const fakeExecFile = (statusCode = 0) => {
+const fakeExecFile = (statusCode = 0, stdout = '', stderr = '') => {
   let runCommand, runArgs;
-  const execFile = (cmd, args) => {
+  const execFile = (cmd, args, options, callback) => {
     runCommand = cmd;
     runArgs = args;
-    return {code: statusCode};
+    const errorObject = statusCode !== 0 ? {code: statusCode} : null;
+    callback(errorObject, stdout, stderr);
+    return {};
   };
   Object.defineProperties(execFile, {
     invokedCmd: {get: () => runCommand},
