@@ -114,6 +114,7 @@ const main = async ({
     new Promise((resolve, reject) =>
       execFile(`npm`, installCommandArgs(argv), {shell: true}, err => {
         if (err) return reject(new Error(`npm install returned with status code ${err.code}`));
+        resolve();
       })
     );
   const predicate = getSizePredicate(argv, defaultMaxSize, currentPkg);
