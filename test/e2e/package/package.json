@@ -1,0 +1,11 @@
+{
+  "name": "bundle-phobia-cli-e2e",
+  "version": "0.14.12",
+  "dependencies": {
+    "bytes": "^3.1.0"
+  },
+  "bundle-phobia": {
+    "max-size": "20kB",
+    "max-overall-size": "50kB"
+  }
+}
