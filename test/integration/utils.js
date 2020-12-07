@@ -12,19 +12,19 @@ const fakeStream = () => {
   };
 };
 
-const fakeExecFile = (statusCode = 0, stdout = '', stderr = '') => {
+const fakeSpawn = (statusCode = 0, stdout = '', stderr = '') => {
   let runCommand, runArgs;
-  const execFile = (cmd, args, options, callback) => {
+  const spawn = (cmd, args, options, callback) => {
     runCommand = cmd;
     runArgs = args;
     const errorObject = statusCode !== 0 ? {code: statusCode} : null;
     callback(errorObject, stdout, stderr);
   };
-  Object.defineProperties(execFile, {
+  Object.defineProperties(spawn, {
     invokedCmd: {get: () => runCommand},
     invokedArgs: {get: () => runArgs}
   });
-  return execFile;
+  return spawn;
 };
 const fakePkg = () => ({dependencies: {ora: '^3.0.0'}});
 
@@ -38,4 +38,4 @@ const fakePrompt = (result = true) => {
   return prompt;
 };
 
-module.exports = {fakeStream, fakeExecFile, fakePkg, fakePrompt};
+module.exports = {fakeStream, fakeSpawn, fakePkg, fakePrompt};

@@ -1,4 +1,5 @@
 const childProcess = require('child_process');
+const {promisify} = require('util');
 const c = require('chalk');
 const _ = require('lodash/fp');
 const ora = require('ora');
@@ -86,8 +87,9 @@ const aggregateStats = statsList => ({
 const main = async ({
   argv,
   stream = process.stdout,
+  errorStream = process.stderr,
   noOra = false,
-  execFile = childProcess.execFile,
+  spawn = childProcess.spawn,
   prompt = inquirer.prompt,
   defaultMaxSize = DEFAULT_MAX_SIZE,
   readPkg = () => _.get('pkg', readPkgUp.sync())
@@ -111,12 +113,10 @@ const main = async ({
   const pluralSuffix = _.size(packages) > 1 ? 's' : '';
 
   const performInstall = () =>
-    new Promise((resolve, reject) =>
-      execFile(`npm`, installCommandArgs(argv), {shell: true}, err => {
-        if (err) return reject(new Error(`npm install returned with status code ${err.code}`));
-        resolve();
-      })
-    );
+    promisify(spawn)(`npm`, installCommandArgs(argv), {
+      shell: true,
+      stdio: [null, stream, errorStream]
+    });
   const predicate = getSizePredicate(argv, defaultMaxSize, currentPkg);
   const globalPredicate = getGlobalSizePredicate(argv, currentPkg);
 

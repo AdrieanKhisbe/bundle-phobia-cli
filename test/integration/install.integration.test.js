@@ -1,21 +1,21 @@
 const test = require('ava');
 const {main} = require('../../src/install');
-const {fakeStream, fakeExecFile, fakePkg, fakePrompt} = require('./utils');
+const {fakeStream, fakeSpawn, fakePkg, fakePrompt} = require('./utils');
 
 const defaultMaxSize = 10000;
 
 test('install just a single package and fail', async t => {
   const stream = fakeStream();
-  const execFile = fakeExecFile();
+  const spawn = fakeSpawn();
   try {
     await main({
       argv: {_: ['lodash@4.12.0']},
       stream,
-      execFile,
+      spawn,
       defaultMaxSize,
       readPkg: fakePkg
     });
-    throw new Error('Did not fail as execFileted');
+    throw new Error('Did not fail as spawned');
   } catch (err) {
     t.is(err.message, 'Install was canceled.');
     t.is(
@@ -33,12 +33,12 @@ test('install just a single package and fail', async t => {
 
 test('install just a single package and succeed', async t => {
   const stream = fakeStream();
-  const execFile = fakeExecFile();
+  const spawn = fakeSpawn();
   //
   await main({
     argv: {_: ['bytes@3.0.0']},
     stream,
-    execFile,
+    spawn,
     defaultMaxSize,
     readPkg: fakePkg
   });
@@ -51,17 +51,17 @@ test('install just a single package and succeed', async t => {
 ℹ Proceed to installation of package bytes@3.0.0
 `
   );
-  t.is(execFile.invokedCmd, 'npm');
-  t.deepEqual(execFile.invokedArgs, ['install', 'bytes@3.0.0']);
+  t.is(spawn.invokedCmd, 'npm');
+  t.deepEqual(spawn.invokedArgs, ['install', 'bytes@3.0.0']);
 });
 
 test('install just a single package and just warn', async t => {
   const stream = fakeStream();
-  const execFile = fakeExecFile();
+  const spawn = fakeSpawn();
   await main({
     argv: {_: ['lodash@4.12.0'], w: true, warn: true, 'save-dev': true},
     stream,
-    execFile,
+    spawn,
     defaultMaxSize,
     readPkg: fakePkg
   });
@@ -75,18 +75,18 @@ test('install just a single package and just warn', async t => {
 ⚠ lodash@4.12.0: size over threshold (63.65KB > 9.77KB)
 `
   );
-  t.is(execFile.invokedCmd, 'npm');
-  t.deepEqual(execFile.invokedArgs, ['install', 'lodash@4.12.0', '--save-dev']);
+  t.is(spawn.invokedCmd, 'npm');
+  t.deepEqual(spawn.invokedArgs, ['install', 'lodash@4.12.0', '--save-dev']);
 });
 
 test('ask to install a package and accept', async t => {
   const stream = fakeStream();
-  const execFile = fakeExecFile();
+  const spawn = fakeSpawn();
   const prompt = fakePrompt();
   await main({
     argv: {_: ['lodash@4.12.0'], i: true, interactive: true},
     stream,
-    execFile,
+    spawn,
     prompt,
     defaultMaxSize,
     readPkg: fakePkg
@@ -101,17 +101,17 @@ test('ask to install a package and accept', async t => {
 ✔ Proceeding with installation as you requested
 `
   );
-  t.is(execFile.invokedCmd, 'npm');
-  t.deepEqual(execFile.invokedArgs, ['install', 'lodash@4.12.0']);
+  t.is(spawn.invokedCmd, 'npm');
+  t.deepEqual(spawn.invokedArgs, ['install', 'lodash@4.12.0']);
 });
 test('ask to install a package and deny', async t => {
   const stream = fakeStream();
-  const execFile = fakeExecFile();
+  const spawn = fakeSpawn();
   const prompt = fakePrompt(false);
   await main({
     argv: {_: ['lodash@4.12.0'], i: true, interactive: true},
     stream,
-    execFile,
+    spawn,
     prompt,
     defaultMaxSize,
     readPkg: fakePkg
@@ -127,17 +127,17 @@ test('ask to install a package and deny', async t => {
 ✖ Installation is canceled on your demand
 `
   );
-  t.is(execFile.invokedCmd, undefined);
+  t.is(spawn.invokedCmd, undefined);
 });
 
 test('try to install package that does not exist', async t => {
   const stream = fakeStream();
-  const execFile = fakeExecFile();
+  const spawn = fakeSpawn();
   try {
     await main({
       argv: {_: ['no-sorry-but-i-do-not-exist']},
       stream,
-      execFile,
+      spawn,
       defaultMaxSize,
       readPkg: fakePkg
     });
@@ -153,12 +153,12 @@ test('try to install package that does not exist', async t => {
 
 test('install just a single package on empty package with global config and succeed', async t => {
   const stream = fakeStream();
-  const execFile = fakeExecFile();
+  const spawn = fakeSpawn();
 
   await main({
     argv: {_: ['bytes@3.0.0']},
     stream,
-    execFile,
+    spawn,
     defaultMaxSize,
     readPkg: () => ({
       dependencies: {},
@@ -177,6 +177,6 @@ test('install just a single package on empty package with global config and succ
 ℹ Proceed to installation of package bytes@3.0.0
 `
   );
-  t.is(execFile.invokedCmd, 'npm');
-  t.deepEqual(execFile.invokedArgs, ['install', 'bytes@3.0.0']);
+  t.is(spawn.invokedCmd, 'npm');
+  t.deepEqual(spawn.invokedArgs, ['install', 'bytes@3.0.0']);
 });
