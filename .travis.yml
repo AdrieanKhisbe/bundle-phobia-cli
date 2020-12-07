@@ -19,10 +19,8 @@ jobs:
         - npm run test:e2e
       after_script: npm run publish-coverage
 
-    - &test
-      stage: test
+    - <<: *test
       name: test-node10
-      script: npm run test:unit
       node_js: '10'
     - <<: *test
       name: test-node12
