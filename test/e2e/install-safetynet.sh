@@ -22,11 +22,14 @@ expected_output="$(cat<<EXPECTED_OUTPUT
 EXPECTED_OUTPUT
 )"
 
-(cd $sandbox && node ../../../../index-install $args) > $output_file
+(cd $sandbox && node ../../../../index-install $args) > $output_file 2> $output_file.err
 
 echo "Program was successful, checking output"
 if ! diff <(tail -n +2 $output_file) <(echo "$expected_output"); then
-    echo output was not exactly the one expected
+    echo output was not exactly the one expected, see output:
+    cat $output_file
+    echo "See also stderr:"
+    cat $output_file.err
     exit 2
 fi
 if ! grep lodash $sandbox/package.json > /dev/null; then
