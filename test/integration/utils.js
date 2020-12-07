@@ -19,7 +19,6 @@ const fakeExecFile = (statusCode = 0, stdout = '', stderr = '') => {
     runArgs = args;
     const errorObject = statusCode !== 0 ? {code: statusCode} : null;
     callback(errorObject, stdout, stderr);
-    return {};
   };
   Object.defineProperties(execFile, {
     invokedCmd: {get: () => runCommand},
