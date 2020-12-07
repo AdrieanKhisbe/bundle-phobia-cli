@@ -17,7 +17,9 @@ const fakeExecFile = (statusCode = 0) => {
   const execFile = (cmd, args) => {
     runCommand = cmd;
     runArgs = args;
-    return {code: statusCode};
+    return statusCode === 0
+      ? Promise.resolve()
+      : Promise.reject(new Error(`npm install returned with status code ${statusCode}`));
   };
   Object.defineProperties(execFile, {
     invokedCmd: {get: () => runCommand},
