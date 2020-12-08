@@ -7,6 +7,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.14.12] - 2020-12-08
+Covered in PR [#40] and [#41]
+# Fixed
+- make install work again :white_check_mark:
+- running end-to-end for all node versions :traffic_light:
+### Changed
+- basic end to end test for the install command :shield:
+- npm install logs are now forwarded to the terminal :pager:
 ## [0.14.11] - 2020-12-06
 Covered in PR [#37], [#38] and [#39]
 ### Fixed
@@ -139,6 +147,8 @@ Covered in PR [#20]
 
 ## Older changes have to be documented
 
+[#41]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/41
+[#40]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/40
 [#39]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/39
 [#38]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/38
 [#37]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/37
@@ -151,7 +161,8 @@ Covered in PR [#20]
 [#22]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/22
 [#20]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/20
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.11...master
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.12...master
+[0.14.12]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.11...v.0.14.12
 [0.14.11]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.10...v.0.14.11
 [0.14.10]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.9...v.0.14.10
 [0.14.9]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.8...v.0.14.9
