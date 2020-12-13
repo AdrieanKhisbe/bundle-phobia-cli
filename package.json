@@ -17,8 +17,9 @@
   "scripts": {
     "test": "npm run lint && npm run test:unit && npm run test:e2e",
     "test:unit": "nyc ava",
-    "test:e2e:raw": "test/e2e/status-safetynet.sh && test/e2e/install-safetynet.sh",
-    "test:e2e": "nyc npm run test:e2e:raw",
+    "test:e2e": "test/e2e/status-safetynet.sh && test/e2e/install-safetynet.sh",
+    "test:all": "npm run test:unit && npm run test:e2e",
+    "test:cover": "nyc npm run test:all",
     "lint": "eslint src test *.js",
     "publish-coverage": "codecov"
   },
