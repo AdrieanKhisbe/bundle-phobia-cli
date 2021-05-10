@@ -14,11 +14,19 @@ It enables you to query package sizes.
 
 ## Installation
 
+*Installation is not necessary if you use [npx] \(see [Usage](#usage)).*
+
 Just use `npm install -g bundle-phobia-cli` and you're good to go!
 
 ## Usage
 
-Once installed you will have access to different executables:
+To use via [npx], you'll need to specify the package with `-p`/`--package`, e.g.:
+
+    npx -p bundle-phobia-cli <excutable> <package-name> [other-package-names...]
+
+If you've installed `bundle-phobia-cli` via `npm install -g`, then the executables should be available in your PATH.
+
+There are two different executables:
 - `bundle-phobia`: to query package size.
    Just invoke it with a list of package names and some options.
 - `bundle-phobia-install`: to conditionally install package if weight constraint are respected. This is a wrapper on `npm install`
@@ -115,3 +123,5 @@ Options:
                                                                         [string]
   -h, --help           Show help                                       [boolean]
 ```
+
+[npx]: https://docs.npmjs.com/cli/v7/commands/npm-exec
