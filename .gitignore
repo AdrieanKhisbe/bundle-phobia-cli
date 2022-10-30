@@ -60,3 +60,6 @@ typings/
 # customs
 private
 tmp
+
+.idea
+.vscode
