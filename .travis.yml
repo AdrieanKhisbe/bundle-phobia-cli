@@ -28,5 +28,8 @@ jobs:
     - <<: *test
       name: test-node14
       node_js: '14'
+    - <<: *test
+      name: test-node16
+      node_js: '16'
 
 cache: npm
