@@ -42,7 +42,7 @@
     "chalk": "^4.1.1",
     "inquirer": "^7.3.3",
     "lodash": "^4.17.21",
-    "node-fetch": "^2.6.1",
+    "node-fetch": "^2.6.7",
     "ora": "^4.1.1",
     "p-map": "^4.0.0",
     "read-pkg-up": "^7.0.1",
@@ -54,7 +54,7 @@
     "@-k/eslint-plugin": "^0.4.1",
     "ava": "^2.4.0",
     "codecov": "^3.8.2",
-    "eslint": "^6.8.0",
+    "eslint": "^7.32.0",
     "nyc": "^15.1.0",
     "strip-ansi": "^6.0.0",
     "yargs-parser": "^18.1.3"
