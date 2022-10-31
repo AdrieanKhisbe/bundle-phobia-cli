@@ -50,7 +50,7 @@ const {argv} = require('yargs')
   .help('h')
   .alias('h', 'help')
   .pkgConf('bundle-phobia');
-const pkg = require('./package.json');
+const pkg = require('./package');
 
 const {main} = require('./src/install');
 
