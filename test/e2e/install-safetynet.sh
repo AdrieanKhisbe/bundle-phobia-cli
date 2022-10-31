@@ -27,22 +27,26 @@ set -e
 head -6 $output_file > $output_file.head
 
 if [ $status_code -ne 0 ]; then
-    echo "Install failed, returned with $status_code exit code"
+    echo "❌ Install failed, returned with $status_code exit code"
     exit $status_code
 fi
 
 
 echo "Program was successful, checking output"
 if ! diff $output_file.head $E2E_FOLDER/tmp/expected_output; then
-    echo output was not exactly the one expected, see output:
+    echo "❌ Output was not exactly the one expected, see output:"
     cat $output_file
     echo "See also stderr:"
     cat $output_file.err
     exit_status=2
+else
+    echo "✅ Output head as expected"
 fi
 if ! grep lodash $sandbox/package.json > /dev/null; then
-    echo lodash was not installed it seems
+    echo "❌ lodash was not installed it seems"
     exit_status=3
+else
+    echo "✅ Lodash seems installed"
 fi
 
 node_major=$(node <<< "console.log(process.versions.node.split('.')[0])")
@@ -55,11 +59,15 @@ esac
 # output from npm diverges between node 14 and 16
 if ! cat $output_file | grep -q "$expected_add_message"; then
     exit_status=1
+    echo "❌ audit message missing or different than expected (for node $node_major)"
+else
+    echo "✅ audit message present"
 fi
 
 rm -r $sandbox
 if [ ${exit_status:-0} -eq 0 ]; then
-    echo "Safety net got the expected results"
+    echo "🟢 Safety net got the expected results"
 else
+    echo "🛑 Safety net had unexpected results"
     exit $exit_status
 fi
