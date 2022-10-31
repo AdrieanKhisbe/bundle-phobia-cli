@@ -1,5 +1,7 @@
 const path = require('path');
 const test = require('ava');
+const _ = require('lodash/fp');
+const projectPackage = require('../../package');
 
 const {
   fetchPackageStats,
@@ -70,7 +72,37 @@ test('selectVersions - returns partial Package Version list', t => {
   t.deepEqual(versionList, ['lodash@1', 'lodash@0.2']);
 });
 
-test('getPackagesFromPackageJson - fetch data from an existing package.json', async t => {
+test('getPackagesFromPackageJson - fetch data from an existing package.json via .', async t => {
+  const res = await getPackagesFromPackageJson('.');
+  t.deepEqual(
+    res,
+    _.pipe(
+      _.toPairs,
+      _.map(([dep, version]) => `${dep}@${version}`),
+      _.sortBy(_.identity)
+    )(projectPackage.dependencies)
+  );
+});
+
+test('getPackagesFromPackageJson - fetch data from an existing package.json via folder', async t => {
+  const res = await getPackagesFromPackageJson(__dirname);
+  t.deepEqual(res, [
+    'bluebird@^3.5.2',
+    'chalk@^2.4.1',
+    'lodash@^4.17.11',
+    'ora@^3.0.0',
+    'shelljs@^0.8.2',
+    'yargs@^12.0.2'
+  ]);
+});
+
+test('getPackagesFromPackageJson - fail correctly if no package.json in folder', async t => {
+  await t.throwsAsync(() => getPackagesFromPackageJson('..'), {
+    message: 'No package.json found in provided folder'
+  });
+});
+
+test('getPackagesFromPackageJson - fetch data from an existing package.json via explicit path', async t => {
   const packageJsonPath = path.join(__dirname, 'package.fixture.json');
   const res = await getPackagesFromPackageJson(packageJsonPath);
   t.deepEqual(res, [

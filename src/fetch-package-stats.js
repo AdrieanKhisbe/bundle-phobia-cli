@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const _ = require('lodash/fp');
 const nodeFetch = require('node-fetch');
 
@@ -36,8 +37,24 @@ const getPackageVersionList = async (name, limit = 8) => {
   return selectVersions(versionList, limit, name);
 };
 
+const resolvePackageJson = pkg => {
+  if (_.endsWith('.json', pkg))
+    // assume legitimate json  path provided
+    return pkg;
+
+  const fsStat = fs.statSync(pkg);
+  const isDir = fsStat.isDirectory();
+  if (!isDir) throw new Error('Provide json or folder with package.json');
+
+  const packageCandidate = path.join(pkg, 'package.json');
+  if (!fs.existsSync(packageCandidate)) throw new Error('No package.json found in provided folder');
+  // note: this logic also support '.' as folder package.jsoon
+
+  return packageCandidate;
+};
+
 const getPackagesFromPackageJson = async pkg => {
-  const packageContent = JSON.parse(fs.readFileSync(pkg));
+  const packageContent = JSON.parse(fs.readFileSync(resolvePackageJson(pkg)));
   return getDependencyList(packageContent);
 };
 
@@ -46,5 +63,6 @@ module.exports = {
   fetchPackageJsonStats,
   selectVersions,
   getPackageVersionList,
+  resolvePackageJson,
   getPackagesFromPackageJson
 };

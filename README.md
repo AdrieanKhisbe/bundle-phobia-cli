@@ -55,6 +55,7 @@ use the `--[gzip]-size` flag.
 To control the packages to be queried, you can either provide them as an argument list,
 or you can refer a `package.json` file with the `--package` option. This would read the
 packages as `dependencies`.
+You can also provide a folder to `-p` (including `.`). This would look for `package.json` in that folder.
 
 ##### Options Summary
 ```
