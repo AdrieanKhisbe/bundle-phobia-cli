@@ -1,4 +1,12 @@
 {
   "extends": "plugin:@-k/base",
-  "plugins": ["@-k"]
+  "plugins": ["@-k"],
+  "overrides": [
+    {
+      "files": "test/**/*.test.js",
+      "rules": {
+        "import/no-extraneous-dependencies": "off"
+      }
+    }
+  ]
 }
