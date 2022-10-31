@@ -51,15 +51,16 @@ fi
 
 node_major=$(node <<< "console.log(process.versions.node.split('.')[0])")
 case $node_major in
-    8|10|12|14) expected_add_message="added 1 package from 3 contributors and audited 2 packages in";;
-    16|18) expected_add_message="added 1 package, and audited 3 packages";;
+    8|10|12|14) expected_add_message="added [1-2] packages? from [1-9] contributors? and audited [1-6] packages? in";;
+    16|18) expected_add_message="added [1-2] packages?, and audited [1-6] packages?";;
     *) expected_add_message="><"; echo "No expected message for this major version";;
 esac
 
 # output from npm diverges between node 14 and 16
-if ! cat $output_file | grep -q "$expected_add_message"; then
+if ! cat $output_file | grep -q -E "$expected_add_message"; then
     exit_status=1
-    echo "❌ audit message missing or different than expected (for node $node_major)"
+    echo "❌ audit message missing or different than expected (for node $node_major):"
+    cat $output_file
 else
     echo "✅ audit message present"
 fi
