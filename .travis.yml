@@ -13,25 +13,12 @@ jobs:
 
     - &test
       stage: test
-      name: test-node8
-      node_js: '8'
+      name: test-node16
+      node_js: '16'
       script:
         - npm run test:unit
         - npm run test:e2e
       after_script: npm run publish-coverage
-
-    - <<: *test
-      name: test-node10
-      node_js: '10'
-    - <<: *test
-      name: test-node12
-      node_js: '12'
-    - <<: *test
-      name: test-node14
-      node_js: '14'
-    - <<: *test
-      name: test-node16
-      node_js: '16'
     - <<: *test
       name: test-node18
       node_js: '18'

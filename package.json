@@ -8,7 +8,7 @@
     "bundle-phobia-install": "index-install.js"
   },
   "engines": {
-    "node": ">=8.10"
+    "node": ">=16.13"
   },
   "files": [
     "src",
