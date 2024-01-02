@@ -52,7 +52,7 @@ fi
 node_major=$(node <<< "console.log(process.versions.node.split('.')[0])")
 case $node_major in
     8|10|12|14) expected_add_message="added [1-2] packages? from [1-9] contributors? and audited [1-6] packages? in";;
-    16|18) expected_add_message="added [1-2] packages?, and audited [1-6] packages?";;
+    16|18|20) expected_add_message="added [1-2] packages?, and audited [1-6] packages?";;
     *) expected_add_message="><"; echo "No expected message for this major version";;
 esac
 
