@@ -1,3 +1,4 @@
+# 🪦 Deprecation in progress, see .github/workflows/ci.yml
 language: node_js
 dist: focal
 
