@@ -19,7 +19,65 @@ test('fetch just a single package', async t => {
 test('fetch just a list of package', async t => {
   const stream = fakeStream();
   // had to pin version for test stability
-  await main({argv: {_: ['lodash@2.4.2', 'moment@1.2.0']}, stream});
+  await main({argv: {_: ['lodash@2.4.2', 'moment@1.2.0'], serial: 1}, stream});
+  const EXPECT_TEXT = `- Fetching stats for package lodash@2.4.2
+ℹ lodash (2.4.2) has 0 dependencies for a weight of 27.94KB (10.04KB gzipped)
+- Fetching stats for package moment@1.2.0
+ℹ moment (1.2.0) has 0 dependencies for a weight of 114.1KB (14.83KB gzipped)
+
+ℹ total (2 packages) has 0 dependencies for a weight of 142.04KB (24.87KB gzipped)
+`;
+
+  t.deepEqual(stream.getContent().split('\n').sort(), EXPECT_TEXT.split('\n').sort());
+});
+
+test('fetch all not stoping on error', async t => {
+  const stream = fakeStream();
+  // had to pin version for test stability
+  await t.throwsAsync(
+    () =>
+      main({
+        argv: {_: ['lodash@2.4.2', '@oh-no/no-noooo', 'moment@1.2.0'], serial: 1},
+        stream
+      }),
+    {message: /The package you were looking for doesn't exist./}
+    // TODO: enforce exact wording (and adequate formating)
+  );
+  t.is(
+    stream.getContent(),
+    `- Fetching stats for package lodash@2.4.2
+ℹ lodash (2.4.2) has 0 dependencies for a weight of 27.94KB (10.04KB gzipped)
+- Fetching stats for package @oh-no/no-noooo
+✖ resolving @oh-no/no-noooo failed: The package you were looking for doesn't exist.
+- Fetching stats for package moment@1.2.0
+ℹ moment (1.2.0) has 0 dependencies for a weight of 114.1KB (14.83KB gzipped)
+`
+  );
+});
+
+test('fetch all stoping on first error with flag', async t => {
+  const stream = fakeStream();
+  // had to pin version for test stability
+  const err = await main({
+    argv: {_: ['lodash@2.4.2', '@oh-no/no-noooo', 'moment@1.2.0'], serial: 1, 'fail-fast': true},
+    stream
+  }).catch(err => err);
+
+  t.is(
+    stream.getContent(),
+    `- Fetching stats for package lodash@2.4.2
+ℹ lodash (2.4.2) has 0 dependencies for a weight of 27.94KB (10.04KB gzipped)
+- Fetching stats for package @oh-no/no-noooo
+✖ resolving @oh-no/no-noooo failed: The package you were looking for doesn't exist.
+`
+  );
+  t.is(err.message, "The package you were looking for doesn't exist.");
+});
+
+test('fetch just a list of package serialy', async t => {
+  const stream = fakeStream();
+  // had to pin version for test stability
+  await main({argv: {_: ['lodash@2.4.2', 'moment@1.2.0'], serial: 1}, stream});
 
   t.is(
     stream.getContent(),

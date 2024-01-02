@@ -21,6 +21,8 @@ const getPackages = async argv => {
 const isSingleOutput = argv =>
   _.some(opt => opt in argv, ['size', 'json', 'gzip-size', 'dependencies']);
 
+const shouldStopOnError = (packages, argv) => _.size(packages) <= 1 || argv['fail-fast'] || false;
+
 const main = async ({argv, stream = process.stdout}) => {
   if ('range' in argv && 'r' in argv && argv._.length > 1)
     throw new Error("Can't use both --range option and list of packages");
@@ -57,7 +59,7 @@ const main = async ({argv, stream = process.stdout}) => {
       spinner.info(view(stats));
       return stats;
     },
-    {concurrency: argv.serial ? 1 : undefined, stopOnError: argv['fail-fast']}
+    {concurrency: argv.serial ? 1 : undefined, stopOnError: shouldStopOnError(packages, argv)}
   ).catch(err => {
     spinner.stop();
     throw err;
