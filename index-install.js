@@ -29,6 +29,8 @@ const {argv} = require('yargs')
   .describe('max-overall-gzip-size', 'Overall Gzip size threeshold of dependencies')
   .alias('max-overall-gzip-size', 'O')
   .string('max-overall-gzip-size')
+  .describe('fail-fast', 'Stop on first error')
+  .alias('fail-fast', 'x')
   // List of npm install flags
   .boolean([
     's',
@@ -45,7 +47,9 @@ const {argv} = require('yargs')
     '-B',
     'save-bundle',
     'no-save',
-    'dry-run'
+    'dry-run',
+    '-x',
+    '--fail-fast'
   ])
   .help('h')
   .alias('h', 'help')

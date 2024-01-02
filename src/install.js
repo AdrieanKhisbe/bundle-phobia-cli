@@ -137,7 +137,7 @@ const main = async ({
       const stats = await fetchPackageStats(paquage).catch(handleError(paquage, true));
       return _.defaultsAll([{package: paquage}, stats, predicate(stats)]);
     },
-    {stopOnError: false}
+    {stopOnError: argv['fail-fast']}
   );
 
   const toInstallStats = aggregateStats(statuses);
