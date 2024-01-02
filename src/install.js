@@ -131,10 +131,14 @@ const main = async ({
   );
   spinner.start();
 
-  const statuses = await pMap(packages, async paquage => {
-    const stats = await fetchPackageStats(paquage).catch(handleError(paquage, true));
-    return _.defaultsAll([{package: paquage}, stats, predicate(stats)]);
-  });
+  const statuses = await pMap(
+    packages,
+    async paquage => {
+      const stats = await fetchPackageStats(paquage).catch(handleError(paquage, true));
+      return _.defaultsAll([{package: paquage}, stats, predicate(stats)]);
+    },
+    {stopOnError: false}
+  );
 
   const toInstallStats = aggregateStats(statuses);
 

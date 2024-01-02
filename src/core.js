@@ -57,7 +57,7 @@ const main = async ({argv, stream = process.stdout}) => {
       spinner.info(view(stats));
       return stats;
     },
-    {concurrency: 1}
+    {concurrency: 1, stopOnError: false}
   ).catch(err => {
     spinner.stop();
     throw err;
