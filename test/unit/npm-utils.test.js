@@ -1,6 +1,6 @@
 const test = require('ava');
 const _ = require('lodash/fp');
-const {getVersionList, resolveVersionRange} = require('../../src/npm-utils');
+const {getVersionList, resolveVersionRange, getDependencyList} = require('../../src/npm-utils');
 
 test('getVersionList - get the version list of an existing package', async t => {
   const versionList = await getVersionList('lodash');
@@ -73,4 +73,27 @@ test('resolveVersionRange - scoped package with version to be resolved but cant'
 test('resolveVersionRange - scoped package with version to be resolved', async t => {
   const version = await resolveVersionRange('@atlaskit/button@^1.0.0');
   t.is(version, '@atlaskit/button@1.1.4');
+});
+
+test('getDependencyList - get the dependency list of a package', t => {
+  const simpleFakePackage = {
+    name: 'whatever',
+    dependencies: {
+      chalk: '^4.1.2',
+      lodash: '4.16.4'
+    }
+  };
+  t.deepEqual(getDependencyList(simpleFakePackage), ['chalk@^4.1.2', 'lodash@4.16.4']);
+});
+
+test('getDependencyList - get the dependency list of a package ignoring types', t => {
+  const simpleFakePackage = {
+    name: 'whatever',
+    dependencies: {
+      chalk: '^4.1.2',
+      lodash: '4.16.4',
+      '@types/lodash': '4.16.4'
+    }
+  };
+  t.deepEqual(getDependencyList(simpleFakePackage), ['chalk@^4.1.2', 'lodash@4.16.4']);
 });
