@@ -13,9 +13,11 @@ const fakeSpinner = require('./fake-spinner');
 const getPackages = async argv => {
   const range = argv.range || (argv.range === undefined ? null : -1);
   if ('range' in argv && 'r' in argv) return getPackageVersionList(argv._[0], range || 8);
-  if ('package' in argv && 'p' in argv) return getPackagesFromPackageJson(argv.package);
+  if (argv.self) return ['bundle-phobia-cli'];
+  if (('package' in argv && 'p' in argv) || _.isEmpty(argv._))
+    return getPackagesFromPackageJson(argv.package || '.'); // !FIXME: this adress 56, implicit default folder
 
-  return argv.self ? ['bundle-phobia-cli'] : argv._;
+  return argv._;
 };
 
 const isSingleOutput = argv =>
@@ -38,10 +40,13 @@ const main = async ({argv, stream = process.stdout}) => {
   const spinner = Spinner({stream});
 
   const packages = await getPackages(argv).catch(err => {
-    const paquage = argv._[0] || 'packages from packages.json';
+    // !FIXME: check the error handling message?
+    const paquage = argv._[0] || `packages from ${argv.package || 'package.json'}`;
+    /*
     if (spinnerActivated)
       spinner.fail(c.red(`resolving ${c.bold.underline(paquage)} failed: `) + err.message);
-    const wrapError = new Error(`${paquage}: ${err.message}`);
+    */
+    const wrapError = new Error(`${paquage}: ${err.message}`); // FIXME: reword
     wrapError.error = err;
     throw wrapError;
   });

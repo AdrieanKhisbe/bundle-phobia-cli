@@ -18,10 +18,15 @@ Just use `npm install -g bundle-phobia-cli` and you're good to go!
 
 ## Usage
 
-Once installed you will have access to different executables:
-- `bundle-phobia`: to query package size.
-   Just invoke it with a list of package names and some options.
-- `bundle-phobia-install`: to conditionally install package if weight constraint are respected. This is a wrapper on `npm install`
+Once installed you will have access a single executable `bundle-phobia` (aliased to `bundle-phobia-cli` for `npx usage`), with two commands: 
+- `stats` to query package size. This is the default command, just invoke it with a list of package names and some options.
+   ```
+    $ bundle-phobia lodash react
+   ```
+- `install`: to conditionally install package if weight constraint are respected. This is a wrapper on `npm install`
+   ```
+    $ bundle-phobia install lodash react
+   ```
 
 Note that you can specify a version along with the package range such as an
 instance exact version `lodash@4.12.0` or range version `ora@^3.0.0`.
@@ -63,18 +68,20 @@ Usage: bundle-phobia <package-name> [other-package-names...]
 
 Options:
   --version           Show version number                              [boolean]
-  --package, -p       Provide a package.json to read dependencies       [string]
-  --range, -r         Get a range of version (0 for all, 8 by default)  [number]
-  --json, -j          Output json rather than a formater string        [boolean]
-  --size, -s          Output just the module size                      [boolean]
-  --gzip-size, -g     Output just the module gzip size                 [boolean]
-  --dependencies, -d  Output just the number of dependencies           [boolean]
-  --self              Output bundle-phobia stats                       [boolean]
+  -p, --package       Provide a package.json to read dependencies       [string]
+  -r, --range         Get a range of version (0 for all, 8 by default)  [number]
+  -j, --json          Output json rather than a formater string        [boolean]
+  -s, --size          Output just the module size                      [boolean]
+  -g, --gzip-size     Output just the module gzip size                 [boolean]
+  -d, --dependencies  Output just the number of dependencies           [boolean]
+  -x, --fail-fast     Stop on first error                              [boolean]
+  -1, --serial        Run requests serially                            [boolean]
+      --self          Output bundle-phobia stats                       [boolean]
   -h, --help          Show help                                        [boolean]
 ```
-#### `bundle-phobia-install`
+#### `bundle-phobia install`
 
-`bundle-phobia-install` offer three kind of flags:
+`bundle-phobia install` offer three kind of flags:
 - flags to specify the size constraints
 - flags to specify behavior when constraints are not respected
 - npm install flags to control it's behavior
@@ -108,11 +115,15 @@ Usage: bundle-phobia-install <package-name> [other-package-names...]
 
 Options:
   --version            Show version number                             [boolean]
-  --warn, -w           Install despite of negative check but warn about
+  -w, --warn           Install despite of negative check but warn about
                        predicate violation                             [boolean]
-  --interactive, -i    Ask for override in case of predicate violation [boolean]
-  --max-size, -m       Size threeshold of individual library to install [string]
-  --max-gzip-size, -M  Gzip Size threeshold of individual library to install
+  -i, --interactive    Ask for override in case of predicate violation [boolean]
+  -m, --max-size       Size threeshold of individual library to install [string]
+  -M, --max-gzip-size  Gzip Size threeshold of individual library to install
                                                                         [string]
+  -o, --max-overall-size       Overall size threeshold of dependencies  [string]
+  -O, --max-overall-gzip-size  Overall Gzip size threeshold of dependencies
+                                                                        [string]
+  -x, --fail-fast              Stop on first error                     [boolean]
   -h, --help           Show help                                       [boolean]
 ```

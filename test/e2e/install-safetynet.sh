@@ -21,7 +21,7 @@ cat > $E2E_FOLDER/tmp/expected_output <<EXPECTED_OUTPUT
 EXPECTED_OUTPUT
 
 set +e
-(cd $sandbox && node ../../../../index-install $args > $output_file 2> $output_file.err)
+(cd $sandbox && node ../../../../main install $args > $output_file 2> $output_file.err)
 status_code=$?
 set -e
 head -6 $output_file > $output_file.head
