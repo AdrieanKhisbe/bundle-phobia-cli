@@ -9,7 +9,7 @@ test('install just a single package and fail', async t => {
   const spawn = fakeSpawn();
   try {
     await main({
-      argv: {_: ['lodash@4.12.0']},
+      argv: {packages: ['lodash@4.12.0']},
       stream,
       spawn,
       defaultMaxSize,
@@ -36,7 +36,7 @@ test('install just a single package and succeed', async t => {
   const spawn = fakeSpawn();
   //
   await main({
-    argv: {_: ['bytes@3.0.0']},
+    argv: {packages: ['bytes@3.0.0']},
     stream,
     spawn,
     defaultMaxSize,
@@ -59,7 +59,7 @@ test('install just a single package and just warn', async t => {
   const stream = fakeStream();
   const spawn = fakeSpawn();
   await main({
-    argv: {_: ['lodash@4.12.0'], w: true, warn: true, 'save-dev': true},
+    argv: {packages: ['lodash@4.12.0'], w: true, warn: true, 'save-dev': true},
     stream,
     spawn,
     defaultMaxSize,
@@ -84,7 +84,7 @@ test('ask to install a package and accept', async t => {
   const spawn = fakeSpawn();
   const prompt = fakePrompt();
   await main({
-    argv: {_: ['lodash@4.12.0'], i: true, interactive: true},
+    argv: {packages: ['lodash@4.12.0'], i: true, interactive: true},
     stream,
     spawn,
     prompt,
@@ -109,7 +109,7 @@ test('ask to install a package and deny', async t => {
   const spawn = fakeSpawn();
   const prompt = fakePrompt(false);
   await main({
-    argv: {_: ['lodash@4.12.0'], i: true, interactive: true},
+    argv: {packages: ['lodash@4.12.0'], i: true, interactive: true},
     stream,
     spawn,
     prompt,
@@ -135,7 +135,7 @@ test('try to install package that does not exist', async t => {
   const spawn = fakeSpawn();
   try {
     await main({
-      argv: {_: ['no-sorry-but-i-do-not-exist']},
+      argv: {packages: ['no-sorry-but-i-do-not-exist']},
       stream,
       spawn,
       defaultMaxSize,
@@ -156,7 +156,7 @@ test('install just a single package on empty package with global config and succ
   const spawn = fakeSpawn();
 
   await main({
-    argv: {_: ['bytes@3.0.0']},
+    argv: {packages: ['bytes@3.0.0']},
     stream,
     spawn,
     defaultMaxSize,

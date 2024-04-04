@@ -106,7 +106,7 @@ const yargsParser = Yargs.scriptName('bundle-phobia')
   .example('$0 lodash chalk', 'Get stats for a list of packages')
   .example('$0 install lodash chalk', 'Conditionaly install packages')
   .command(
-    'install',
+    'install <packages..>',
     'Perform install if specified size constraints are met',
     yargs => yargs.options(INSTALL_OPTIONS),
     argv =>

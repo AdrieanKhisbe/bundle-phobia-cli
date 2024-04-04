@@ -17,6 +17,7 @@ const {
 
 const DEFAULT_MAX_SIZE = '100kB';
 const BUNLE_PHOBIA_ARGS = [
+  'packages',
   'i',
   'interactive',
   '$0',
@@ -47,7 +48,7 @@ const npmOptionsFromArgv = argv => {
 
 const installCommandArgs = argv => {
   const options = npmOptionsFromArgv(argv);
-  return ['install', ...argv._, ...options];
+  return ['install', ...argv.packages, ...options];
 };
 
 const getSizePredicate = (argv, defaultSize, packageConfig) => {
@@ -108,8 +109,8 @@ const main = async ({
     }
   };
   const currentPkg = readPkg();
-  const packages = argv._;
-  if (_.isEmpty(packages)) throw new Error('No packages to install was given');
+  const {packages} = argv;
+  if (_.isEmpty(argv.packages)) throw new Error('No packages to install was given');
   const pluralSuffix = _.size(packages) > 1 ? 's' : '';
 
   const performInstall = () =>
