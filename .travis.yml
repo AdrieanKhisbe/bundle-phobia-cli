@@ -19,7 +19,9 @@ jobs:
       script:
         - npm run test:unit
         - npm run test:e2e
-      after_script: npm run publish-coverage
+      after_script:
+        - pip install codecov-cli
+        - codecov
     - <<: *test
       name: test-node18
       node_js: '18'

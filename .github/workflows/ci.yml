@@ -25,4 +25,5 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm ci
       - run: npm test
-      - run: npm run publish-coverage
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4

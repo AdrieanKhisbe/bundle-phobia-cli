@@ -20,8 +20,7 @@
     "test:e2e": "test/e2e/status-safetynet.sh && test/e2e/install-safetynet.sh",
     "test:all": "npm run test:unit && npm run test:e2e",
     "test:cover": "nyc npm run test:all",
-    "lint": "eslint src test *.js",
-    "publish-coverage": "codecov"
+    "lint": "eslint src test *.js"
   },
   "repository": {
     "type": "git",
@@ -53,7 +52,6 @@
   "devDependencies": {
     "@-k/eslint-plugin": "^0.4.1",
     "ava": "^5.3.1",
-    "codecov": "^3.8.2",
     "eslint": "^7.32.0",
     "nyc": "^15.1.0",
     "strip-ansi": "^6.0.1",
