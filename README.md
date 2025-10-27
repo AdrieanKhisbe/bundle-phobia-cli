@@ -111,7 +111,7 @@ Limits can also be configured in the `package.json` by adding a `bundle-phobia` 
 ##### Options Summary
 
 ```
-Usage: bundle-phobia-install <package-name> [other-package-names...]
+Usage: bundle-phobia install <package-name> [other-package-names...]
 
 Options:
   --version            Show version number                             [boolean]

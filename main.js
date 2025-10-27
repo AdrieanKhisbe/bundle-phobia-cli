@@ -118,7 +118,7 @@ const yargsParser = Yargs.scriptName('bundle-phobia')
         })
   )
   .command(
-    ['$0', 'stats', 'package-stats'],
+    '$0 <packages..>',
     'Get the stats of given package from bundlephobia.com',
     yargs => yargs.options(STATS_OPTIONS),
     argv =>

@@ -14,10 +14,10 @@ const getPackages = async argv => {
   const range = argv.range || (argv.range === undefined ? null : -1);
   if ('range' in argv && 'r' in argv) return getPackageVersionList(argv._[0], range || 8);
   if (argv.self) return ['bundle-phobia-cli'];
-  if (('package' in argv && 'p' in argv) || _.isEmpty(argv._))
+  if (('package' in argv && 'p' in argv) || _.isEmpty(argv.packages))
     return getPackagesFromPackageJson(argv.package || '.'); // !FIXME: this adress 56, implicit default folder
 
-  return argv._;
+  return argv.packages;
 };
 
 const isSingleOutput = argv =>
