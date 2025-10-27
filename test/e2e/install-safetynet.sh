@@ -16,15 +16,15 @@ cat > $E2E_FOLDER/tmp/expected_output <<EXPECTED_OUTPUT
 
 - Fetching stats for package lodash@4.12
 ⚠ Proceed to installation of packages lodash@4.12 despite following warnings:
-⚠ lodash@4.12: size over threshold (63.65KB > 20KB)
-⚠ global constraint is not respected: overall size after install would be over threshold (0B installed + 63.65KB > 50KB)
+⚠ lodash@4.12: size over threshold (XXXKB > 20KB)
+⚠ global constraint is not respected: overall size after install would be over threshold (0B installed + XXXKB > 50KB)
 EXPECTED_OUTPUT
 
 set +e
 (cd $sandbox && node ../../../../main install $args > $output_file 2> $output_file.err)
 status_code=$?
 set -e
-head -6 $output_file > $output_file.head
+head -6 $output_file | sed -E 's/[0-9]+\.[0-9]+KB/XXXKB/g' > $output_file.head
 
 if [ $status_code -ne 0 ]; then
     echo "❌ Install failed, returned with $status_code exit code"

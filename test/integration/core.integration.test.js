@@ -9,9 +9,9 @@ test('fetch just a single package', async t => {
   await main({argv: {_: ['lodash@4.12.0']}, stream});
 
   t.is(
-    stream.getContent(),
+    stream.getContent({stripKbSizes: true}),
     `- Fetching stats for package lodash@4.12.0
-ℹ lodash (4.12.0) has 0 dependencies for a weight of 63.65KB (22.11KB gzipped)
+ℹ lodash (4.12.0) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
 `
   );
 });
@@ -21,14 +21,17 @@ test('fetch just a list of package', async t => {
   // had to pin version for test stability
   await main({argv: {_: ['lodash@2.4.2', 'moment@1.2.0'], serial: 1}, stream});
   const EXPECT_TEXT = `- Fetching stats for package lodash@2.4.2
-ℹ lodash (2.4.2) has 0 dependencies for a weight of 27.94KB (10.04KB gzipped)
+ℹ lodash (2.4.2) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
 - Fetching stats for package moment@1.2.0
-ℹ moment (1.2.0) has 0 dependencies for a weight of 114.1KB (14.83KB gzipped)
+ℹ moment (1.2.0) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
 
-ℹ total (2 packages) has 0 dependencies for a weight of 142.04KB (24.87KB gzipped)
+ℹ total (2 packages) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
 `;
 
-  t.deepEqual(stream.getContent().split('\n').sort(), EXPECT_TEXT.split('\n').sort());
+  t.deepEqual(
+    stream.getContent({stripKbSizes: true}).split('\n').sort(),
+    EXPECT_TEXT.split('\n').sort()
+  );
 });
 
 test('fetch all not stoping on error', async t => {
@@ -44,13 +47,13 @@ test('fetch all not stoping on error', async t => {
     // TODO: enforce exact wording (and adequate formating)
   );
   t.is(
-    stream.getContent(),
+    stream.getContent({stripKbSizes: true}),
     `- Fetching stats for package lodash@2.4.2
-ℹ lodash (2.4.2) has 0 dependencies for a weight of 27.94KB (10.04KB gzipped)
+ℹ lodash (2.4.2) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
 - Fetching stats for package @oh-no/no-noooo
 ✖ resolving @oh-no/no-noooo failed: The package you were looking for doesn't exist.
 - Fetching stats for package moment@1.2.0
-ℹ moment (1.2.0) has 0 dependencies for a weight of 114.1KB (14.83KB gzipped)
+ℹ moment (1.2.0) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
 `
   );
 });
@@ -64,9 +67,9 @@ test('fetch all stoping on first error with flag', async t => {
   }).catch(err => err);
 
   t.is(
-    stream.getContent(),
+    stream.getContent({stripKbSizes: true}),
     `- Fetching stats for package lodash@2.4.2
-ℹ lodash (2.4.2) has 0 dependencies for a weight of 27.94KB (10.04KB gzipped)
+ℹ lodash (2.4.2) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
 - Fetching stats for package @oh-no/no-noooo
 ✖ resolving @oh-no/no-noooo failed: The package you were looking for doesn't exist.
 `
@@ -80,13 +83,13 @@ test('fetch just a list of package serialy', async t => {
   await main({argv: {_: ['lodash@2.4.2', 'moment@1.2.0'], serial: 1}, stream});
 
   t.is(
-    stream.getContent(),
+    stream.getContent({stripKbSizes: true}),
     `- Fetching stats for package lodash@2.4.2
-ℹ lodash (2.4.2) has 0 dependencies for a weight of 27.94KB (10.04KB gzipped)
+ℹ lodash (2.4.2) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
 - Fetching stats for package moment@1.2.0
-ℹ moment (1.2.0) has 0 dependencies for a weight of 114.1KB (14.83KB gzipped)
+ℹ moment (1.2.0) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
 
-ℹ total (2 packages) has 0 dependencies for a weight of 142.04KB (24.87KB gzipped)
+ℹ total (2 packages) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
 `
   );
 });

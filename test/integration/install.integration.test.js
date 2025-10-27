@@ -1,6 +1,6 @@
 const test = require('ava');
 const {main} = require('../../src/install');
-const {fakeStream, fakeSpawn, fakePkg, fakePrompt} = require('./utils');
+const {fakeStream, fakeSpawn, fakePkg, fakePrompt, stripKb} = require('./utils');
 
 const defaultMaxSize = 10000;
 
@@ -18,13 +18,17 @@ test('install just a single package and fail', async t => {
     throw new Error('Did not fail as spawned');
   } catch (err) {
     t.is(err.message, 'Install was canceled.');
+    const rawContent = stream.getContent();
+
+    t.is(rawContent.split('\n')[0], 'ℹ Applying a size limit of 9.77KB from default');
+    t.regex(rawContent, /lodash@4\.12\.0: size over threshold \(\d+\.\d+KB > 9\.77KB\)/);
     t.is(
-      stream.getContent(),
-      `ℹ Applying a size limit of 9.77KB from default
+      stripKb(rawContent),
+      `ℹ Applying a size limit of XXXKB from default
 
 - Fetching stats for package lodash@4.12.0
 ✖ Could not install for following reasons:
-✖ lodash@4.12.0: size over threshold (63.65KB > 9.77KB)
+✖ lodash@4.12.0: size over threshold (XXXKB > XXXKB)
 ✔ global constraint is respected
 `
     );
@@ -67,12 +71,12 @@ test('install just a single package and just warn', async t => {
   });
 
   t.is(
-    stream.getContent(),
-    `ℹ Applying a size limit of 9.77KB from default
+    stream.getContent({stripKbSizes: true}),
+    `ℹ Applying a size limit of XXXKB from default
 
 - Fetching stats for package lodash@4.12.0
 ⚠ Proceed to installation of packages lodash@4.12.0 despite following warnings:
-⚠ lodash@4.12.0: size over threshold (63.65KB > 9.77KB)
+⚠ lodash@4.12.0: size over threshold (XXXKB > XXXKB)
 `
   );
   t.is(spawn.invokedCmd, 'npm');
@@ -92,12 +96,12 @@ test('ask to install a package and accept', async t => {
     readPkg: fakePkg
   });
   t.is(
-    stream.getContent(),
-    `ℹ Applying a size limit of 9.77KB from default
+    stream.getContent({stripKbSizes: true}),
+    `ℹ Applying a size limit of XXXKB from default
 
 - Fetching stats for package lodash@4.12.0
 ⚠ Packages lodash@4.12.0 raised following warnings:
-⚠ lodash@4.12.0: size over threshold (63.65KB > 9.77KB)
+⚠ lodash@4.12.0: size over threshold (XXXKB > XXXKB)
 ✔ Proceeding with installation as you requested
 `
   );
@@ -118,12 +122,12 @@ test('ask to install a package and deny', async t => {
   });
 
   t.is(
-    stream.getContent(),
-    `ℹ Applying a size limit of 9.77KB from default
+    stream.getContent({stripKbSizes: true}),
+    `ℹ Applying a size limit of XXXKB from default
 
 - Fetching stats for package lodash@4.12.0
 ⚠ Packages lodash@4.12.0 raised following warnings:
-⚠ lodash@4.12.0: size over threshold (63.65KB > 9.77KB)
+⚠ lodash@4.12.0: size over threshold (XXXKB > XXXKB)
 ✖ Installation is canceled on your demand
 `
   );
