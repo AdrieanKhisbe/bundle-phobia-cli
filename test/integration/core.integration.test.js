@@ -1,4 +1,5 @@
 const test = require('ava');
+const _ = require('lodash/fp');
 const {main} = require('../../src/core');
 const index = require('../../src'); // eslint-disable-line no-unused-vars
 const {fakeStream} = require('./utils');
@@ -81,7 +82,7 @@ test('fetch all stoping on first error with flag', async t => {
   t.is(err.message, "The package you were looking for doesn't exist.");
 });
 
-test('fetch just a list of package serialy', async t => {
+test('fetch just a list of package serially', async t => {
   const stream = fakeStream();
   // had to pin version for test stability
   await main({argv: {packages: ['lodash@2.4.2', 'moment@1.2.0'], serial: 1}, stream});
@@ -109,6 +110,40 @@ test('prevent to fetch list of package with range', async t => {
   } catch (err) {
     t.is(err.message, "Can't use both --range option and list of packages");
   }
+});
+
+test('fetch from given package', async t => {
+  const stream = fakeStream();
+  await main({argv: {package: 'test/unit/package.json', packages: []}, stream});
+  const sorted = _.pipe(_.split('\n'), _.sortBy(_.identity));
+
+  t.deepEqual(
+    sorted(stream.getContent({stripKbSizes: true})),
+    sorted(`- Fetching stats for package bluebird@^3.5.2
+- Fetching stats for package chalk@^2.4.1
+- Fetching stats for package lodash@^4.17.11
+- Fetching stats for package ora@^3.0.0
+- Fetching stats for package shelljs@^0.8.2
+- Fetching stats for package yargs@^12.0.2
+ℹ lodash (4.17.21) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
+ℹ bluebird (3.7.2) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
+ℹ ora (3.4.0) has 6 dependencies for a weight of XXXKB (XXXKB gzipped)
+ℹ chalk (2.4.2) has 3 dependencies for a weight of XXXKB (XXXKB gzipped)
+ℹ shelljs (0.8.5) has 3 dependencies for a weight of XXXKB (XXXKB gzipped)
+ℹ yargs (12.0.5) has 12 dependencies for a weight of XXXKB (XXXKB gzipped)
+
+ℹ total (6 packages) has 24 dependencies for a weight of XXXKB (XXXKB gzipped)
+`)
+  );
+});
+
+test('fetch from current package', async t => {
+  const stream = fakeStream();
+  await main({argv: {package: undefined, p: undefined, packages: []}, stream});
+  t.regex(
+    stream.getContent({stripKbSizes: true}),
+    /ℹ total \(\d+ packages\) has \d+ dependencies for a weight of XXXKB \(XXXKB gzipped\)/
+  );
 });
 
 test('handle package with dot, using a caret version lock', async t => {
