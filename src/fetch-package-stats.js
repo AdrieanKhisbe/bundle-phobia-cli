@@ -1,11 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash/fp');
-const nodeFetch = require('node-fetch');
 
 const {getVersionList, resolveVersionRange, getDependencyList} = require('./npm-utils');
 
-const fetchPackageStats = async (name, {fetch = nodeFetch} = {}) => {
+const fetchPackageStats = async (name, {fetch = globalThis.fetch} = {}) => {
   if (!name) throw new Error('Empty name given as argument');
   const pkg = await resolveVersionRange(name);
   const res = await fetch(`https://bundlephobia.com/api/size?package=${pkg}`, {
