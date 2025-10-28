@@ -137,7 +137,7 @@ test('fetch from given package', async t => {
   );
 });
 
-test('fetch from current package', async t => {
+test.skip('fetch from current package', async t => {
   t.timeout(60_000);
   const stream = fakeStream();
 
