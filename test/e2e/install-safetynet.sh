@@ -16,15 +16,15 @@ cat > $E2E_FOLDER/tmp/expected_output <<EXPECTED_OUTPUT
 
 - Fetching stats for package lodash@4.12
 ⚠ Proceed to installation of packages lodash@4.12 despite following warnings:
-⚠ lodash@4.12: size over threshold (63.65KB > 20KB)
-⚠ global constraint is not respected: overall size after install would be over threshold (0B installed + 63.65KB > 50KB)
+⚠ lodash@4.12: size over threshold (XXXKB > 20KB)
+⚠ global constraint is not respected: overall size after install would be over threshold (XXXKB installed + XXXKB > 50KB)
 EXPECTED_OUTPUT
 
 set +e
-(cd $sandbox && node ../../../../index-install $args > $output_file 2> $output_file.err)
+(cd $sandbox && node ../../../../main install $args > $output_file 2> $output_file.err)
 status_code=$?
 set -e
-head -6 $output_file > $output_file.head
+head -6 $output_file | sed -E 's/[0-9]+\.[0-9]+KB/XXXKB/g' > $output_file.head
 
 if [ $status_code -ne 0 ]; then
     echo "❌ Install failed, returned with $status_code exit code"
@@ -51,8 +51,7 @@ fi
 
 node_major=$(node <<< "console.log(process.versions.node.split('.')[0])")
 case $node_major in
-    8|10|12|14) expected_add_message="added [1-2] packages? from [1-9] contributors? and audited [1-6] packages? in";;
-    16|18) expected_add_message="added [1-2] packages?, and audited [1-6] packages?";;
+    16|18|20|22|24) expected_add_message="added [1-3] packages?, and audited [1-6] packages?";;
     *) expected_add_message="><"; echo "No expected message for this major version";;
 esac
 

@@ -1,13 +1,16 @@
 const stripAnsi = require('strip-ansi');
 
+const stripKb = (str, pattern = 'XXX') => str.replace(/[\d.]+KB/g, `${pattern}KB`);
+
 const fakeStream = () => {
   const content = [];
   return {
     write(chunk) {
       content.push(chunk);
     },
-    getContent() {
-      return content.map(stripAnsi).join('');
+    getContent({stripKbSizes = false} = {}) {
+      const raw = content.map(stripAnsi).join('');
+      return stripKbSizes ? stripKb(raw) : raw;
     }
   };
 };
@@ -38,4 +41,4 @@ const fakePrompt = (result = true) => {
   return prompt;
 };
 
-module.exports = {fakeStream, fakeSpawn, fakePkg, fakePrompt};
+module.exports = {stripKb, fakeStream, fakeSpawn, fakePkg, fakePrompt};

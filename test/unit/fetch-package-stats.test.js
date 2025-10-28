@@ -9,7 +9,12 @@ const {
   getPackagesFromPackageJson
 } = require('../../src/fetch-package-stats');
 
-const {lodashStats, errorStats, missingVersionErrorStats} = require('./fixtures');
+const {
+  lodashStats,
+  errorStats,
+  missingVersionErrorStats,
+  unexpectedErrorStats
+} = require('./fixtures');
 // §FIXME : see fixtures, schema updated, have a look into that
 
 const fakeFetch = payload => () =>
@@ -44,6 +49,17 @@ test('fetchPackageStats -unexisting version of package', async t => {
     {
       message: `This package has not been published with this particular version.
     Valid versions - latest, 0.2.2`
+    }
+  );
+});
+
+test('fetchPackageStats - unexpected error', async t => {
+  await t.throwsAsync(
+    fetchPackageStats('lodash@4.12.0', {
+      fetch: fakeFetch(unexpectedErrorStats)
+    }),
+    {
+      message: 'Unexpected error happened.'
     }
   );
 });

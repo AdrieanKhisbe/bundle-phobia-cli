@@ -12,23 +12,27 @@ const fakeSpinner = require('./fake-spinner');
 
 const getPackages = async argv => {
   const range = argv.range || (argv.range === undefined ? null : -1);
-  if ('range' in argv && 'r' in argv) return getPackageVersionList(argv._[0], range || 8);
-  if ('package' in argv && 'p' in argv) return getPackagesFromPackageJson(argv.package);
+  if ('range' in argv && 'r' in argv) return getPackageVersionList(argv.packages[0], range || 8);
+  if (argv.self) return ['bundle-phobia-cli'];
+  if (('package' in argv && 'p' in argv) || _.isEmpty(argv.packages))
+    return getPackagesFromPackageJson(argv.package || '.'); // !FIXME: this adress 56, implicit default folder
 
-  return argv.self ? ['bundle-phobia-cli'] : argv._;
+  return argv.packages;
 };
 
 const isSingleOutput = argv =>
   _.some(opt => opt in argv, ['size', 'json', 'gzip-size', 'dependencies']);
 
+const shouldStopOnError = (packages, argv) => _.size(packages) <= 1 || argv['fail-fast'] || false;
+
 const main = async ({argv, stream = process.stdout}) => {
-  if ('range' in argv && 'r' in argv && argv._.length > 1)
+  if ('range' in argv && 'r' in argv && argv.packages.length > 1)
     throw new Error("Can't use both --range option and list of packages");
 
-  if ('package' in argv && 'p' in argv && argv._.length > 0)
+  if ('package' in argv && 'p' in argv && !_.isEmpty(argv.packages))
     throw new Error("Can't use both --package option and list of packages");
 
-  if ('self' in argv && argv._.length > 0)
+  if ('self' in argv && !_.isEmpty(argv.packages))
     throw new Error("Can't use both --self and list of packages");
 
   const spinnerActivated = !isSingleOutput(argv);
@@ -36,10 +40,13 @@ const main = async ({argv, stream = process.stdout}) => {
   const spinner = Spinner({stream});
 
   const packages = await getPackages(argv).catch(err => {
-    const paquage = argv._[0] || 'packages from packages.json';
+    // !FIXME: check the error handling message?
+    const paquage = argv.packages[0] || `packages from ${argv.package || 'package.json'}`;
+    /*
     if (spinnerActivated)
       spinner.fail(c.red(`resolving ${c.bold.underline(paquage)} failed: `) + err.message);
-    const wrapError = new Error(`${paquage}: ${err.message}`);
+    */
+    const wrapError = new Error(`${paquage}: ${err.message}`); // FIXME: reword
     wrapError.error = err;
     throw wrapError;
   });
@@ -57,7 +64,7 @@ const main = async ({argv, stream = process.stdout}) => {
       spinner.info(view(stats));
       return stats;
     },
-    {concurrency: 1}
+    {concurrency: argv.serial ? 1 : undefined, stopOnError: shouldStopOnError(packages, argv)}
   ).catch(err => {
     spinner.stop();
     throw err;

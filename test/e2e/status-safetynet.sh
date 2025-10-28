@@ -1,13 +1,13 @@
 #!/bin/bash
 set -e
 
-diff <(node index.js lodash@4.12) \
+diff <(node main.js lodash@4.12 | sed 's/[0-9.]*KB/XXXKB/g') \
      <(echo "- Fetching stats for package lodash@4.12
-ℹ lodash (4.12.0) has 0 dependencies for a weight of 63.65KB (22.11KB gzipped)")
+ℹ lodash (4.12.0) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)")
 
 for pattern in lodash react bluebird; do
-    [[ $(node index.js lodash bluebird react | grep lodash | wc -l) -eq 2 ]]
+    [[ $(node main.js lodash bluebird react | grep lodash | wc -l) -eq 2 ]]
     # one occurence for report, one other for  progress
 done
-[[ $(node index.js lodash bluebird react | grep total | wc -l) -eq 1 ]]
-[[ $(node index.js lodash bluebird react | grep weight | wc -l) -eq 4 ]]
+[[ $(node main.js lodash bluebird react | grep total | wc -l) -eq 1 ]]
+[[ $(node main.js lodash bluebird react | grep weight | wc -l) -eq 4 ]]

@@ -17,6 +17,7 @@ const {
 
 const DEFAULT_MAX_SIZE = '100kB';
 const BUNLE_PHOBIA_ARGS = [
+  'packages',
   'i',
   'interactive',
   '$0',
@@ -47,7 +48,7 @@ const npmOptionsFromArgv = argv => {
 
 const installCommandArgs = argv => {
   const options = npmOptionsFromArgv(argv);
-  return ['install', ...argv._, ...options];
+  return ['install', ...argv.packages, ...options];
 };
 
 const getSizePredicate = (argv, defaultSize, packageConfig) => {
@@ -84,6 +85,8 @@ const aggregateStats = statsList => ({
   dependencyCount: _.sumBy('dependencyCount', statsList)
 });
 
+const readCurrentPackage = () => _.get('packageJson', readPkgUp.sync());
+
 const main = async ({
   argv,
   stream = process.stdout,
@@ -92,7 +95,7 @@ const main = async ({
   spawn = childProcess.spawn,
   prompt = inquirer.prompt,
   defaultMaxSize = DEFAULT_MAX_SIZE,
-  readPkg = () => _.get('pkg', readPkgUp.sync())
+  readPkg = readCurrentPackage
 }) => {
   const noSpin = noOra;
   const Spinner = noSpin ? fakeSpinner : ora;
@@ -108,8 +111,8 @@ const main = async ({
     }
   };
   const currentPkg = readPkg();
-  const packages = argv._;
-  if (_.isEmpty(packages)) throw new Error('No packages to install was given');
+  const {packages} = argv;
+  if (_.isEmpty(argv.packages)) throw new Error('No packages to install was given');
   const pluralSuffix = _.size(packages) > 1 ? 's' : '';
 
   const performInstall = () =>
@@ -131,10 +134,14 @@ const main = async ({
   );
   spinner.start();
 
-  const statuses = await pMap(packages, async paquage => {
-    const stats = await fetchPackageStats(paquage).catch(handleError(paquage, true));
-    return _.defaultsAll([{package: paquage}, stats, predicate(stats)]);
-  });
+  const statuses = await pMap(
+    packages,
+    async paquage => {
+      const stats = await fetchPackageStats(paquage).catch(handleError(paquage, true));
+      return _.defaultsAll([{package: paquage}, stats, predicate(stats)]);
+    },
+    {stopOnError: argv['fail-fast']}
+  );
 
   const toInstallStats = aggregateStats(statuses);
 
@@ -237,6 +244,7 @@ const main = async ({
 
 module.exports = {
   main,
+  readCurrentPackage,
   npmOptionsFromArgv,
   installCommandArgs,
   getGlobalSizePredicate,

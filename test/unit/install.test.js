@@ -1,6 +1,11 @@
 const test = require('ava');
 const yargs = require('yargs-parser');
-const {npmOptionsFromArgv, getGlobalSizePredicate, getSizePredicate} = require('../../src/install');
+const {
+  npmOptionsFromArgv,
+  getGlobalSizePredicate,
+  getSizePredicate,
+  readCurrentPackage
+} = require('../../src/install');
 
 const parse = cmd => yargs(cmd, {configuration: {'camel-case-expansion': false}});
 
@@ -93,4 +98,10 @@ test('getGlobalSizePredicate -returns predicate request by package.json', t => {
   );
   t.deepEqual(predicate.description, 'gzip size limit of 12KB');
   t.deepEqual(predicate.source, 'package-config');
+});
+
+test('readCurrentPackage', t => {
+  const pkg = readCurrentPackage();
+  t.is(pkg.name, 'bundle-phobia-cli');
+  t.is(pkg.description, 'Cli for the node BundlePhobia Service');
 });

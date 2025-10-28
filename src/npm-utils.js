@@ -44,6 +44,9 @@ const resolveVersionRange = async pkg => {
 const getDependencyList = _.pipe(
   _.getOr({}, 'dependencies'),
   _.toPairs,
+  // ignore @types packages that might have end up in prod dependencies
+  // note: this could be make optional for more flexibility
+  _.filter(_.pipe(_.head, _.negate(_.startsWith('@types/')))),
   _.map(([key, value]) => `${key}@${value}`)
 );
 

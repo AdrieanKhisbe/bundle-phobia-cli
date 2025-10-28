@@ -1,3 +1,4 @@
+# 🪦 Deprecation in progress, see .github/workflows/ci.yml
 language: node_js
 dist: focal
 
@@ -13,27 +14,25 @@ jobs:
 
     - &test
       stage: test
-      name: test-node8
-      node_js: '8'
+      name: test-node16
+      node_js: '16'
       script:
         - npm run test:unit
         - npm run test:e2e
-      after_script: npm run publish-coverage
-
-    - <<: *test
-      name: test-node10
-      node_js: '10'
-    - <<: *test
-      name: test-node12
-      node_js: '12'
-    - <<: *test
-      name: test-node14
-      node_js: '14'
-    - <<: *test
-      name: test-node16
-      node_js: '16'
+      after_script:
+        - pip install codecov-cli
+        - codecov
     - <<: *test
       name: test-node18
       node_js: '18'
+    - <<: *test
+      name: test-node20
+      node_js: '20'
+    - <<: *test
+      name: test-node22
+      node_js: '22'
+    - <<: *test
+      name: test-node24
+      node_js: '24'
 
 cache: npm
