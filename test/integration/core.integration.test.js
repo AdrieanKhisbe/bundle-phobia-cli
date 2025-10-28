@@ -6,7 +6,7 @@ const {fakeStream} = require('./utils');
 test('fetch just a single package', async t => {
   const stream = fakeStream();
   // had to pin version for test stability
-  await main({argv: {_: ['lodash@4.12.0']}, stream});
+  await main({argv: {packages: ['lodash@4.12.0']}, stream});
 
   t.is(
     stream.getContent({stripKbSizes: true}),
@@ -19,7 +19,7 @@ test('fetch just a single package', async t => {
 test('fetch just a list of package', async t => {
   const stream = fakeStream();
   // had to pin version for test stability
-  await main({argv: {_: ['lodash@2.4.2', 'moment@1.2.0'], serial: 1}, stream});
+  await main({argv: {packages: ['lodash@2.4.2', 'moment@1.2.0'], serial: 1}, stream});
   const EXPECT_TEXT = `- Fetching stats for package lodash@2.4.2
 ℹ lodash (2.4.2) has 0 dependencies for a weight of XXXKB (XXXKB gzipped)
 - Fetching stats for package moment@1.2.0
@@ -40,7 +40,7 @@ test('fetch all not stoping on error', async t => {
   await t.throwsAsync(
     () =>
       main({
-        argv: {_: ['lodash@2.4.2', '@oh-no/no-noooo', 'moment@1.2.0'], serial: 1},
+        argv: {packages: ['lodash@2.4.2', '@oh-no/no-noooo', 'moment@1.2.0'], serial: 1},
         stream
       }),
     {message: /The package you were looking for doesn't exist./}
@@ -62,7 +62,11 @@ test('fetch all stoping on first error with flag', async t => {
   const stream = fakeStream();
   // had to pin version for test stability
   const err = await main({
-    argv: {_: ['lodash@2.4.2', '@oh-no/no-noooo', 'moment@1.2.0'], serial: 1, 'fail-fast': true},
+    argv: {
+      packages: ['lodash@2.4.2', '@oh-no/no-noooo', 'moment@1.2.0'],
+      serial: 1,
+      'fail-fast': true
+    },
     stream
   }).catch(err => err);
 
@@ -80,7 +84,7 @@ test('fetch all stoping on first error with flag', async t => {
 test('fetch just a list of package serialy', async t => {
   const stream = fakeStream();
   // had to pin version for test stability
-  await main({argv: {_: ['lodash@2.4.2', 'moment@1.2.0'], serial: 1}, stream});
+  await main({argv: {packages: ['lodash@2.4.2', 'moment@1.2.0'], serial: 1}, stream});
 
   t.is(
     stream.getContent({stripKbSizes: true}),
@@ -98,7 +102,7 @@ test('prevent to fetch list of package with range', async t => {
   const stream = fakeStream();
   try {
     await main({
-      argv: {_: ['react@15', 'lodash@2', 'moment@1.2'], range: 2, r: 2},
+      argv: {packages: ['react@15', 'lodash@2', 'moment@1.2'], range: 2, r: 2},
       stream
     });
     throw new Error('Did not fail as expected');
@@ -109,7 +113,7 @@ test('prevent to fetch list of package with range', async t => {
 
 test('handle package with dot, using a caret version lock', async t => {
   const stream = fakeStream();
-  await main({argv: {_: ['ahoy.js@^0.3.5']}, stream});
+  await main({argv: {packages: ['ahoy.js@^0.3.5']}, stream});
 
   const [firstLine, secondLine] = stream.getContent().split('\n');
   t.is(firstLine, '- Fetching stats for package ahoy.js@^0.3.5');
@@ -121,7 +125,7 @@ test('fetch a package that does not exist at all', async t => {
   await t.throwsAsync(
     () =>
       main({
-        argv: {_: ['sorry-but-i-really-do-not-exist']},
+        argv: {packages: ['sorry-but-i-really-do-not-exist']},
         stream
       }),
     {message: "The package you were looking for doesn't exist."}
@@ -138,7 +142,7 @@ test('fetch a package that does not exist at all with range', async t => {
   const stream = fakeStream();
   try {
     await main({
-      argv: {_: ['sorry-but-i-really-do-not-exist'], range: 2, r: 2},
+      argv: {packages: ['sorry-but-i-really-do-not-exist'], range: 2, r: 2},
       stream
     });
 

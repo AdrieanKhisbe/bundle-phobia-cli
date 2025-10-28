@@ -12,7 +12,7 @@ const fakeSpinner = require('./fake-spinner');
 
 const getPackages = async argv => {
   const range = argv.range || (argv.range === undefined ? null : -1);
-  if ('range' in argv && 'r' in argv) return getPackageVersionList(argv._[0], range || 8);
+  if ('range' in argv && 'r' in argv) return getPackageVersionList(argv.packages[0], range || 8);
   if (argv.self) return ['bundle-phobia-cli'];
   if (('package' in argv && 'p' in argv) || _.isEmpty(argv.packages))
     return getPackagesFromPackageJson(argv.package || '.'); // !FIXME: this adress 56, implicit default folder
@@ -26,13 +26,13 @@ const isSingleOutput = argv =>
 const shouldStopOnError = (packages, argv) => _.size(packages) <= 1 || argv['fail-fast'] || false;
 
 const main = async ({argv, stream = process.stdout}) => {
-  if ('range' in argv && 'r' in argv && argv._.length > 1)
+  if ('range' in argv && 'r' in argv && argv.packages.length > 1)
     throw new Error("Can't use both --range option and list of packages");
 
-  if ('package' in argv && 'p' in argv && argv._.length > 0)
+  if ('package' in argv && 'p' in argv && argv.packages.length > 0)
     throw new Error("Can't use both --package option and list of packages");
 
-  if ('self' in argv && argv._.length > 0)
+  if ('self' in argv && argv.packages.length > 0)
     throw new Error("Can't use both --self and list of packages");
 
   const spinnerActivated = !isSingleOutput(argv);
@@ -41,7 +41,7 @@ const main = async ({argv, stream = process.stdout}) => {
 
   const packages = await getPackages(argv).catch(err => {
     // !FIXME: check the error handling message?
-    const paquage = argv._[0] || `packages from ${argv.package || 'package.json'}`;
+    const paquage = argv.packages[0] || `packages from ${argv.package || 'package.json'}`;
     /*
     if (spinnerActivated)
       spinner.fail(c.red(`resolving ${c.bold.underline(paquage)} failed: `) + err.message);
