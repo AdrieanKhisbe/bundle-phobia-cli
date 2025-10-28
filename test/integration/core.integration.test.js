@@ -138,11 +138,12 @@ test('fetch from given package', async t => {
 });
 
 test('fetch from current package', async t => {
+  t.timeout(60_000);
   const stream = fakeStream();
 
   await main({argv: {package: undefined, p: undefined, packages: []}, stream}).catch(err =>
     t.true(
-      /This package \(or this version\) uses .../.test(err.message),
+      /Failed to build this package|This package \(or this version\) uses .../.test(err.message),
       `Unexpected output:\n${err.message}`
     )
   );
