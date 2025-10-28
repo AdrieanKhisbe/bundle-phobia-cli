@@ -67,6 +67,10 @@ const main = async ({argv, stream = process.stdout}) => {
     {concurrency: argv.serial ? 1 : undefined, stopOnError: shouldStopOnError(packages, argv)}
   ).catch(err => {
     spinner.stop();
+    // p-map v7+ wraps multiple errors in AggregateError, unwrap the first one
+    if (err instanceof AggregateError && err.errors?.length > 0) {
+      throw err.errors[0];
+    }
     throw err;
   });
   const nLibs = _.size(allStats);

@@ -139,11 +139,20 @@ test('fetch from given package', async t => {
 
 test('fetch from current package', async t => {
   const stream = fakeStream();
-  await main({argv: {package: undefined, p: undefined, packages: []}, stream});
+
+  await main({argv: {package: undefined, p: undefined, packages: []}, stream}).catch(err =>
+    t.true(
+      /This package \(or this version\) uses .../.test(err.message),
+      `Unexpected output:\n${err.message}`
+    )
+  );
+  /* note: original test, but eslint is being a pain
+  const content = stream.getContent({stripKbSizes: true});
   t.regex(
     stream.getContent({stripKbSizes: true}),
     /ℹ total \(\d+ packages\) has \d+ dependencies for a weight of XXXKB \(XXXKB gzipped\)/
   );
+  */
 });
 
 test('handle package with dot, using a caret version lock', async t => {

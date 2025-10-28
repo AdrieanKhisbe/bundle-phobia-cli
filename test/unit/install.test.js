@@ -100,8 +100,8 @@ test('getGlobalSizePredicate -returns predicate request by package.json', t => {
   t.deepEqual(predicate.source, 'package-config');
 });
 
-test('readCurrentPackage', t => {
-  const pkg = readCurrentPackage();
+test('readCurrentPackage', async t => {
+  const pkg = await readCurrentPackage();
   t.is(pkg.name, 'bundle-phobia-cli');
   t.is(pkg.description, 'Cli for the node BundlePhobia Service');
 });

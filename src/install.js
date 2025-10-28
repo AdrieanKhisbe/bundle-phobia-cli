@@ -5,7 +5,7 @@ import _ from 'lodash/fp.js';
 import ora from 'ora';
 import pMap from 'p-map';
 import inquirer from 'inquirer';
-import readPkgUp from 'read-pkg-up';
+import {readPackageUp} from 'read-package-up';
 import {fetchPackageStats, fetchPackageJsonStats} from './fetch-package-stats.js';
 import fakeSpinner from './fake-spinner.js';
 import {
@@ -85,7 +85,10 @@ const aggregateStats = statsList => ({
   dependencyCount: _.sumBy('dependencyCount', statsList)
 });
 
-const readCurrentPackage = () => _.get('packageJson', readPkgUp.sync());
+const readCurrentPackage = async () => {
+  const result = await readPackageUp();
+  return result?.packageJson;
+};
 
 const main = async ({
   argv,
@@ -110,7 +113,7 @@ const main = async ({
       throw wrapError;
     }
   };
-  const currentPkg = readPkg();
+  const currentPkg = await readPkg();
   const {packages} = argv;
   if (_.isEmpty(argv.packages)) throw new Error('No packages to install was given');
   const pluralSuffix = _.size(packages) > 1 ? 's' : '';
