@@ -7,9 +7,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased][unreleased]
 *Nothing So Far*
 
+## [0.15.0] - 2025-10-28
+
+Covered in PR [#68]
+### Added
+- Ignore @types packages (cf Do not exit with error for type packages [#48])
+### Changed
+- Unified entrypoint
+- Update CI (github actions replacing travis)
+- Error resiliency (one error don't stop eveything anymore)
+- Dependency bumps
+- CI for node twenties (20, 22, 24)
+
 ## [0.14.12] - 2020-12-08
 Covered in PR [#40] and [#41]
-# Fixed
+### Fixed
 - make install work again :white_check_mark:
 - running end-to-end for all node versions :traffic_light:
 ### Changed
@@ -146,7 +158,11 @@ Covered in PR [#20]
 - New Header in request made to service. PR #6
 
 ## Older changes have to be documented
-
+[#48]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/48
+[#68]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/68
+[#30]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/30
+[#16]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/16
+[#6]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/6
 [#41]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/41
 [#40]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/40
 [#39]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/39
@@ -161,10 +177,11 @@ Covered in PR [#20]
 [#22]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/22
 [#20]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/pull/20
 
-[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.12...master
-[0.14.12]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.11...v.0.14.12
-[0.14.11]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.10...v.0.14.11
-[0.14.10]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.9...v.0.14.10
+[unreleased]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.15.0...master
+[0.15.0]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.12...v0.15.0
+[0.14.12]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.11...v0.14.12
+[0.14.11]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.10...v0.14.11
+[0.14.10]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.9...v0.14.10
 [0.14.9]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.8...v.0.14.9
 [0.14.8]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.7...v.0.14.8
 [0.14.7]: https://github.com/AdrieanKhisbe/bundle-phobia-cli/compare/v0.14.6...v.0.14.7
