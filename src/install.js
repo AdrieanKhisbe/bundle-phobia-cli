@@ -85,6 +85,8 @@ const aggregateStats = statsList => ({
   dependencyCount: _.sumBy('dependencyCount', statsList)
 });
 
+const readCurrentPackage = () => _.get('packageJson', readPkgUp.sync());
+
 const main = async ({
   argv,
   stream = process.stdout,
@@ -93,7 +95,7 @@ const main = async ({
   spawn = childProcess.spawn,
   prompt = inquirer.prompt,
   defaultMaxSize = DEFAULT_MAX_SIZE,
-  readPkg = () => _.get('pkg', readPkgUp.sync())
+  readPkg = readCurrentPackage
 }) => {
   const noSpin = noOra;
   const Spinner = noSpin ? fakeSpinner : ora;
@@ -242,6 +244,7 @@ const main = async ({
 
 module.exports = {
   main,
+  readCurrentPackage,
   npmOptionsFromArgv,
   installCommandArgs,
   getGlobalSizePredicate,
