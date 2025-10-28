@@ -169,13 +169,13 @@ const main = async ({
         .join(', ')} despite following warnings:`
     );
 
-    _.filter({canInstall: false}, statuses).forEach(status => {
+    for (const status of _.filter({canInstall: false}, statuses)) {
       spinner.warn(
         `${c.red.yellow(status.package)}: ${status.reason}${
           status.details ? ` (${c.dim(status.details)})` : ''
         }`
       );
-    });
+    }
     if (!globalStatus.canInstall)
       spinner.warn(
         `${c.yellow.bold('global constraint')} is not respected: ${globalStatus.reason} (${c.dim(
@@ -190,13 +190,13 @@ const main = async ({
       )}:`
     );
 
-    _.filter({canInstall: false}, statuses).forEach(status => {
+    for (const status of _.filter({canInstall: false}, statuses)) {
       spinner.warn(
         `${c.red.yellow(status.package)}: ${status.reason}${
           status.details ? ` (${c.dim(status.details)})` : ''
         }`
       );
-    });
+    }
     if (!globalStatus.canInstall)
       spinner.warn(
         `${c.yellow.bold('global constraint')} is not respected: ${globalStatus.reason} (${c.dim(
@@ -219,7 +219,7 @@ const main = async ({
     }
   } else {
     spinner.fail(c.bold('Could not install for following reasons:'));
-    _.forEach(status => {
+    for (const status of statuses) {
       if (status.canInstall)
         spinner.succeed(
           `${c.green.bold(status.package)}: was individually ${c.bold('ok')} to install`
@@ -230,7 +230,7 @@ const main = async ({
             status.details ? ` (${c.dim(status.details)})` : ''
           }`
         );
-    }, statuses);
+    }
     if (globalStatus.canInstall)
       spinner.succeed(`${c.green.bold('global constraint')} is respected`);
     else

@@ -15,7 +15,7 @@ import {
   unexpectedErrorStats
 } from './fixtures.js';
 
-// TODO: Replace with `import projectPackage from '../../package.json' with {type: 'json'};` once ESLint 8+ is used
+// TODO: Replace with `import pkg from './package.json' with {type: 'json'};` once ESLint 9+ parser is used
 const require = createRequire(import.meta.url);
 const projectPackage = require('../../package.json');
 

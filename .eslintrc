@@ -12,7 +12,8 @@
   "rules": {
     "import/extensions": ["error", "ignorePackages"],
     "import/order": "off",
-    "import/dynamic-import-chunkname": "off"
+    "import/dynamic-import-chunkname": "off",
+    "unicorn/consistent-destructuring": "off"
   },
   "overrides": [
     {

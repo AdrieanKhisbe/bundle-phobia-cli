@@ -3,10 +3,11 @@
 import updateNotifier from 'update-notifier';
 import c from 'chalk';
 import Yargs from 'yargs';
+// eslint-disable-next-line import/no-unresolved -- yargs/helpers is a valid subpath export
 import {hideBin} from 'yargs/helpers';
 import {createRequire} from 'module';
 
-// TODO: Replace with `import pkg from './package.json' with {type: 'json'};` once ESLint 8+ is used
+// TODO: Replace with `import pkg from './package.json' with {type: 'json'};` once ESLint 9+ parser is used
 const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
 

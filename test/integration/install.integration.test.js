@@ -2,7 +2,7 @@ import test from 'ava';
 import {main} from '../../src/install.js';
 import {fakeStream, fakeSpawn, fakePkg, fakePrompt, stripKb} from './utils.js';
 
-const defaultMaxSize = 10000;
+const defaultMaxSize = 10_000;
 
 test('install just a single package and fail', async t => {
   const stream = fakeStream();

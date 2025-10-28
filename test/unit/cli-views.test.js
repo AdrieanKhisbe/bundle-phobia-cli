@@ -16,10 +16,10 @@ test('syntheticView basic lodash stats', t => {
 });
 
 test('sizeView', t => {
-  t.is(sizeView(lodashStats), 70870);
+  t.is(sizeView(lodashStats), 70_870);
 });
 test('gzipsizeView', t => {
-  t.is(gzipsizeView(lodashStats), 24666);
+  t.is(gzipsizeView(lodashStats), 24_666);
 });
 test('dependenciesView', t => {
   t.is(dependenciesView(lodashStats), 0);

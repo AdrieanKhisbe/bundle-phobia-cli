@@ -1,11 +1,11 @@
 const lodashStats = {
   dependencyCount: 0,
-  gzip: 24666,
+  gzip: 24_666,
   hasJSModule: false,
   hasJSNext: false,
   name: 'lodash',
   scoped: false,
-  size: 70870,
+  size: 70_870,
   version: '4.17.4'
 };
 

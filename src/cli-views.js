@@ -26,7 +26,7 @@ const getView = (argv = {}) => {
 
   if (argv.json) return jsonView;
   if (argv['gzip-size']) return gzipsizeView;
-  if (argv.size) return sizeView;
+  if (argv.size > 0) return sizeView;
   if (argv.dependencies) return dependenciesView;
   return syntheticView;
 };
