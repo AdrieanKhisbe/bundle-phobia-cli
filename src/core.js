@@ -29,10 +29,10 @@ const main = async ({argv, stream = process.stdout}) => {
   if ('range' in argv && 'r' in argv && argv.packages.length > 1)
     throw new Error("Can't use both --range option and list of packages");
 
-  if ('package' in argv && 'p' in argv && argv.packages.length > 0)
+  if ('package' in argv && 'p' in argv && !_.isEmpty(argv.packages))
     throw new Error("Can't use both --package option and list of packages");
 
-  if ('self' in argv && argv.packages.length > 0)
+  if ('self' in argv && !_.isEmpty(argv.packages))
     throw new Error("Can't use both --self and list of packages");
 
   const spinnerActivated = !isSingleOutput(argv);
