@@ -1,8 +1,8 @@
-const test = require('ava');
-const _ = require('lodash/fp');
-const {main} = require('../../src/core');
-const index = require('../../src'); // eslint-disable-line no-unused-vars
-const {fakeStream} = require('./utils');
+import test from 'ava';
+import _ from 'lodash/fp.js';
+import {main} from '../../src/core.js';
+import '../../src/index.js'; // eslint-disable-line no-unused-vars, unicorn/import-index, import/no-useless-path-segments
+import {fakeStream} from './utils.js';
 
 test('fetch just a single package', async t => {
   const stream = fakeStream();

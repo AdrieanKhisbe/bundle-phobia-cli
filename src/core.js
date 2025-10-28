@@ -1,14 +1,14 @@
-const c = require('chalk');
-const _ = require('lodash/fp');
-const ora = require('ora');
-const pMap = require('p-map');
-const {
+import c from 'chalk';
+import _ from 'lodash/fp.js';
+import ora from 'ora';
+import pMap from 'p-map';
+import {
   fetchPackageStats,
   getPackageVersionList,
   getPackagesFromPackageJson
-} = require('./fetch-package-stats');
-const {getView} = require('./cli-views');
-const fakeSpinner = require('./fake-spinner');
+} from './fetch-package-stats.js';
+import {getView} from './cli-views.js';
+import fakeSpinner from './fake-spinner.js';
 
 const getPackages = async argv => {
   const range = argv.range || (argv.range === undefined ? null : -1);
@@ -87,4 +87,4 @@ const main = async ({argv, stream = process.stdout}) => {
   spinner.stop();
 };
 
-module.exports = {main, isSingleOutput};
+export {main, isSingleOutput};

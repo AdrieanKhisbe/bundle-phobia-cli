@@ -1,6 +1,6 @@
-const c = require('chalk');
-const _ = require('lodash/fp');
-const bytes = require('bytes');
+import c from 'chalk';
+import _ from 'lodash/fp.js';
+import bytes from 'bytes';
 
 const syntheticView = stat => {
   const size = bytes(stat.size);
@@ -31,9 +31,4 @@ const getView = (argv = {}) => {
   return syntheticView;
 };
 
-module.exports.syntheticView = syntheticView;
-module.exports.jsonView = jsonView;
-module.exports.sizeView = sizeView;
-module.exports.gzipsizeView = gzipsizeView;
-module.exports.dependenciesView = dependenciesView;
-module.exports.getView = getView;
+export {syntheticView, jsonView, sizeView, gzipsizeView, dependenciesView, getView};

@@ -1,10 +1,10 @@
-const test = require('ava');
-const {
+import test from 'ava';
+import {
   sizePredicate,
   gzipSizePredicate,
   globalSizePredicate,
   globalGzipSizePredicate
-} = require('../../src/install-predicates');
+} from '../../src/install-predicates.js';
 
 const smallStats = {size: 1000, gzip: 100};
 const bigStats = {size: 100000, gzip: 10000};

@@ -1,5 +1,5 @@
-const test = require('ava');
-const {main} = require('../../src/core');
+import test from 'ava';
+import {main} from '../../src/core.js';
 
 test('fails when range is used with package list', async t => {
   await t.throwsAsync(main({argv: {packages: ['1', '2'], range: 3, r: 3}}), {

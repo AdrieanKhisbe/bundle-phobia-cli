@@ -33,4 +33,4 @@ const missingVersionErrorStats = {
   }
 };
 
-module.exports = {lodashStats, errorStats, missingVersionErrorStats, unexpectedErrorStats};
+export {lodashStats, errorStats, missingVersionErrorStats, unexpectedErrorStats};

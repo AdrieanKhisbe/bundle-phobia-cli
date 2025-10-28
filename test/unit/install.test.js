@@ -1,11 +1,11 @@
-const test = require('ava');
-const yargs = require('yargs-parser');
-const {
+import test from 'ava';
+import yargs from 'yargs-parser';
+import {
   npmOptionsFromArgv,
   getGlobalSizePredicate,
   getSizePredicate,
   readCurrentPackage
-} = require('../../src/install');
+} from '../../src/install.js';
 
 const parse = cmd => yargs(cmd, {configuration: {'camel-case-expansion': false}});
 

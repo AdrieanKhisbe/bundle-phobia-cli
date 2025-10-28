@@ -1,6 +1,6 @@
-const test = require('ava');
-const _ = require('lodash/fp');
-const {getVersionList, resolveVersionRange, getDependencyList} = require('../../src/npm-utils');
+import test from 'ava';
+import _ from 'lodash/fp.js';
+import {getVersionList, resolveVersionRange, getDependencyList} from '../../src/npm-utils.js';
 
 test('getVersionList - get the version list of an existing package', async t => {
   const versionList = await getVersionList('lodash');

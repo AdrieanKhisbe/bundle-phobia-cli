@@ -1,5 +1,6 @@
 {
   "name": "bundle-phobia-cli-test",
+  "type": "module",
   "dependencies": {
     "bluebird": "^3.5.2",
     "chalk": "^2.4.1",

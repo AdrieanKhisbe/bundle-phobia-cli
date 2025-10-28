@@ -1,19 +1,19 @@
-const childProcess = require('child_process');
-const {promisify} = require('util');
-const c = require('chalk');
-const _ = require('lodash/fp');
-const ora = require('ora');
-const pMap = require('p-map');
-const inquirer = require('inquirer');
-const readPkgUp = require('read-pkg-up');
-const {fetchPackageStats, fetchPackageJsonStats} = require('./fetch-package-stats');
-const fakeSpinner = require('./fake-spinner');
-const {
+import childProcess from 'child_process';
+import {promisify} from 'util';
+import c from 'chalk';
+import _ from 'lodash/fp.js';
+import ora from 'ora';
+import pMap from 'p-map';
+import inquirer from 'inquirer';
+import readPkgUp from 'read-pkg-up';
+import {fetchPackageStats, fetchPackageJsonStats} from './fetch-package-stats.js';
+import fakeSpinner from './fake-spinner.js';
+import {
   sizePredicate,
   gzipSizePredicate,
   globalSizePredicate,
   globalGzipSizePredicate
-} = require('./install-predicates');
+} from './install-predicates.js';
 
 const DEFAULT_MAX_SIZE = '100kB';
 const BUNLE_PHOBIA_ARGS = [
@@ -242,7 +242,7 @@ const main = async ({
   spinner.stop();
 };
 
-module.exports = {
+export {
   main,
   readCurrentPackage,
   npmOptionsFromArgv,

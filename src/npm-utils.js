@@ -1,6 +1,6 @@
-const {execFile} = require('child_process');
-const {resolver} = require('resolve-package-json');
-const _ = require('lodash/fp');
+import {execFile} from 'child_process';
+import {resolver} from 'resolve-package-json';
+import _ from 'lodash/fp.js';
 
 const getVersionList = name => {
   if (!name) return Promise.reject(new Error('Empty name given as argument'));
@@ -50,4 +50,4 @@ const getDependencyList = _.pipe(
   _.map(([key, value]) => `${key}@${value}`)
 );
 
-module.exports = {getVersionList, shouldResolve, resolveVersionRange, getDependencyList};
+export {getVersionList, shouldResolve, resolveVersionRange, getDependencyList};
