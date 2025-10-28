@@ -16,6 +16,14 @@ const errorStats = {
     details: {}
   }
 };
+const unexpectedErrorStats = {
+  error: {
+    code: 'OhNo',
+    message: 'Unexpected error happened.',
+    details: {}
+  }
+};
+
 const missingVersionErrorStats = {
   error: {
     code: 'PackageNotFoundError',
@@ -25,4 +33,4 @@ const missingVersionErrorStats = {
   }
 };
 
-module.exports = {lodashStats, errorStats, missingVersionErrorStats};
+module.exports = {lodashStats, errorStats, missingVersionErrorStats, unexpectedErrorStats};

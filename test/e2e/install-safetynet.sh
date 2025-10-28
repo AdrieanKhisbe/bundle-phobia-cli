@@ -17,7 +17,7 @@ cat > $E2E_FOLDER/tmp/expected_output <<EXPECTED_OUTPUT
 - Fetching stats for package lodash@4.12
 ⚠ Proceed to installation of packages lodash@4.12 despite following warnings:
 ⚠ lodash@4.12: size over threshold (XXXKB > 20KB)
-⚠ global constraint is not respected: overall size after install would be over threshold (0B installed + XXXKB > 50KB)
+⚠ global constraint is not respected: overall size after install would be over threshold (XXXKB installed + XXXKB > 50KB)
 EXPECTED_OUTPUT
 
 set +e

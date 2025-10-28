@@ -35,6 +35,45 @@ test('install just a single package and fail', async t => {
   }
 });
 
+test('install just a single package and fail when global constraint is not respected', async t => {
+  const stream = fakeStream();
+  const spawn = fakeSpawn();
+  try {
+    await main({
+      argv: {packages: ['lodash@4.12.0']},
+      stream,
+      spawn,
+      defaultMaxSize,
+      readPkg: () => ({
+        dependencies: {},
+        'bundle-phobia': {
+          'max-overall-size': '1kB'
+        }
+      })
+    });
+    throw new Error('Did not fail as spawned');
+  } catch (err) {
+    t.is(err.message, 'Install was canceled.');
+    const rawContent = stream.getContent();
+
+    t.is(
+      rawContent.split('\n')[0],
+      'ℹ Applying a size limit of 9.77KB from default and overall size limit of 1KB from package-config'
+    );
+    t.regex(rawContent, /lodash@4\.12\.0: size over threshold \(\d+\.\d+KB > 9\.77KB\)/);
+    t.is(
+      stripKb(rawContent),
+      `ℹ Applying a size limit of XXXKB from default and overall size limit of XXXKB from package-config
+
+- Fetching stats for package lodash@4.12.0
+✖ Could not install for following reasons:
+✖ lodash@4.12.0: size over threshold (XXXKB > XXXKB)
+✖ global constraint is not respected: overall size after install would be over threshold (0B installed + XXXKB > XXXKB)
+`
+    );
+  }
+});
+
 test('install just a single package and succeed', async t => {
   const stream = fakeStream();
   const spawn = fakeSpawn();
