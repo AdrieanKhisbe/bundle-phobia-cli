@@ -5,7 +5,13 @@ All notable changes to *bundle-phobia-cli* will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased][unreleased]
-*Nothing So Far*
+
+### Changed
+- **BREAKING**: Dropped Node 16 & 18 support, now Node 20.9.0+ minimum required
+- **BREAKING**: Codebase convertion to ES Modules (esm)
+- Removed `node-fetch` for native `fetch`
+- Updated all production dependencies
+- Updated devDependencies (strip-ansi v7, yargs-parser v22, c8 v10 (replacing nyc), eslint v8)
 
 ## [0.15.0] - 2025-10-28
 
