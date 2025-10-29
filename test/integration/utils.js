@@ -1,4 +1,4 @@
-const stripAnsi = require('strip-ansi');
+import stripAnsi from 'strip-ansi';
 
 const stripKb = (str, pattern = 'XXX') => str.replace(/[\d.]+KB/g, `${pattern}KB`);
 
@@ -41,4 +41,4 @@ const fakePrompt = (result = true) => {
   return prompt;
 };
 
-module.exports = {stripKb, fakeStream, fakeSpawn, fakePkg, fakePrompt};
+export {stripKb, fakeStream, fakeSpawn, fakePkg, fakePrompt};

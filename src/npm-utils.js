@@ -1,6 +1,6 @@
-const {execFile} = require('child_process');
-const {resolver} = require('resolve-package-json');
-const _ = require('lodash/fp');
+import {execFile} from 'child_process';
+import {resolver} from 'resolve-package-json';
+import _ from 'lodash/fp.js';
 
 const getVersionList = name => {
   if (!name) return Promise.reject(new Error('Empty name given as argument'));
@@ -34,6 +34,7 @@ const resolveVersionRange = async pkg => {
     resolver({[packageName]: version}, function (err, result) {
       /* istanbul ignore if*/
       if (err) return reject(err);
+      // eslint-disable-next-line unicorn/prefer-object-has-own -- irrelevant rule not handling nested properties
       if (!_.has(['dependencies', packageName], result))
         return reject(new Error(`Specified version range '${version}' is not resolvable`));
       return resolve(`${packageName}@${result.dependencies[packageName].version}`);
@@ -50,4 +51,4 @@ const getDependencyList = _.pipe(
   _.map(([key, value]) => `${key}@${value}`)
 );
 
-module.exports = {getVersionList, shouldResolve, resolveVersionRange, getDependencyList};
+export {getVersionList, shouldResolve, resolveVersionRange, getDependencyList};

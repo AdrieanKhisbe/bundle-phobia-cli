@@ -1,19 +1,19 @@
-const childProcess = require('child_process');
-const {promisify} = require('util');
-const c = require('chalk');
-const _ = require('lodash/fp');
-const ora = require('ora');
-const pMap = require('p-map');
-const inquirer = require('inquirer');
-const readPkgUp = require('read-pkg-up');
-const {fetchPackageStats, fetchPackageJsonStats} = require('./fetch-package-stats');
-const fakeSpinner = require('./fake-spinner');
-const {
+import childProcess from 'child_process';
+import {promisify} from 'util';
+import c from 'chalk';
+import _ from 'lodash/fp.js';
+import ora from 'ora';
+import pMap from 'p-map';
+import inquirer from 'inquirer';
+import {readPackageUp} from 'read-package-up';
+import {fetchPackageStats, fetchPackageJsonStats} from './fetch-package-stats.js';
+import fakeSpinner from './fake-spinner.js';
+import {
   sizePredicate,
   gzipSizePredicate,
   globalSizePredicate,
   globalGzipSizePredicate
-} = require('./install-predicates');
+} from './install-predicates.js';
 
 const DEFAULT_MAX_SIZE = '100kB';
 const BUNLE_PHOBIA_ARGS = [
@@ -85,7 +85,10 @@ const aggregateStats = statsList => ({
   dependencyCount: _.sumBy('dependencyCount', statsList)
 });
 
-const readCurrentPackage = () => _.get('packageJson', readPkgUp.sync());
+const readCurrentPackage = async () => {
+  const result = await readPackageUp();
+  return result?.packageJson;
+};
 
 const main = async ({
   argv,
@@ -110,7 +113,7 @@ const main = async ({
       throw wrapError;
     }
   };
-  const currentPkg = readPkg();
+  const currentPkg = await readPkg();
   const {packages} = argv;
   if (_.isEmpty(argv.packages)) throw new Error('No packages to install was given');
   const pluralSuffix = _.size(packages) > 1 ? 's' : '';
@@ -166,13 +169,13 @@ const main = async ({
         .join(', ')} despite following warnings:`
     );
 
-    _.filter({canInstall: false}, statuses).forEach(status => {
+    for (const status of _.filter({canInstall: false}, statuses)) {
       spinner.warn(
         `${c.red.yellow(status.package)}: ${status.reason}${
           status.details ? ` (${c.dim(status.details)})` : ''
         }`
       );
-    });
+    }
     if (!globalStatus.canInstall)
       spinner.warn(
         `${c.yellow.bold('global constraint')} is not respected: ${globalStatus.reason} (${c.dim(
@@ -187,13 +190,13 @@ const main = async ({
       )}:`
     );
 
-    _.filter({canInstall: false}, statuses).forEach(status => {
+    for (const status of _.filter({canInstall: false}, statuses)) {
       spinner.warn(
         `${c.red.yellow(status.package)}: ${status.reason}${
           status.details ? ` (${c.dim(status.details)})` : ''
         }`
       );
-    });
+    }
     if (!globalStatus.canInstall)
       spinner.warn(
         `${c.yellow.bold('global constraint')} is not respected: ${globalStatus.reason} (${c.dim(
@@ -216,7 +219,7 @@ const main = async ({
     }
   } else {
     spinner.fail(c.bold('Could not install for following reasons:'));
-    _.forEach(status => {
+    for (const status of statuses) {
       if (status.canInstall)
         spinner.succeed(
           `${c.green.bold(status.package)}: was individually ${c.bold('ok')} to install`
@@ -227,7 +230,7 @@ const main = async ({
             status.details ? ` (${c.dim(status.details)})` : ''
           }`
         );
-    }, statuses);
+    }
     if (globalStatus.canInstall)
       spinner.succeed(`${c.green.bold('global constraint')} is respected`);
     else
@@ -242,7 +245,7 @@ const main = async ({
   spinner.stop();
 };
 
-module.exports = {
+export {
   main,
   readCurrentPackage,
   npmOptionsFromArgv,

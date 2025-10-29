@@ -1,13 +1,13 @@
-const test = require('ava');
-const {
+import test from 'ava';
+import {
   sizePredicate,
   gzipSizePredicate,
   globalSizePredicate,
   globalGzipSizePredicate
-} = require('../../src/install-predicates');
+} from '../../src/install-predicates.js';
 
 const smallStats = {size: 1000, gzip: 100};
-const bigStats = {size: 100000, gzip: 10000};
+const bigStats = {size: 100_000, gzip: 10_000};
 
 test('sizePredicate - can be created with an integer value', t => {
   const predicate = sizePredicate(1234);
@@ -16,7 +16,7 @@ test('sizePredicate - can be created with an integer value', t => {
 
 test('sizePredicate - can be created with an bytes value', t => {
   const predicate = sizePredicate('10kB');
-  t.deepEqual(predicate.threshold, 10240);
+  t.deepEqual(predicate.threshold, 10_240);
 });
 
 test('sizePredicate - detect value violating threshold', t => {
@@ -40,7 +40,7 @@ test('gzipSizePredicate - gzipSizePredicate - can be created with an integer val
 
 test('gzipSizePredicate - can be created with an bytes value', t => {
   const predicate = gzipSizePredicate('10kB');
-  t.deepEqual(predicate.threshold, 10240);
+  t.deepEqual(predicate.threshold, 10_240);
 });
 
 test('gzipSizePredicate - detect value violating threshold', t => {
@@ -64,7 +64,7 @@ test('globalSizePredicate - can be created with an integer value', t => {
 
 test('globalSizePredicate - can be created with an bytes value', t => {
   const predicate = globalSizePredicate('10kB');
-  t.deepEqual(predicate.threshold, 10240);
+  t.deepEqual(predicate.threshold, 10_240);
 });
 
 test('globalSizePredicate - detect value violating threshold', t => {
@@ -88,7 +88,7 @@ test('globalGzipSizePredicate - can be created with an integer value', t => {
 
 test('globalGzipSizePredicate - can be created with an bytes value', t => {
   const predicate = globalGzipSizePredicate('10kB');
-  t.deepEqual(predicate.threshold, 10240);
+  t.deepEqual(predicate.threshold, 10_240);
 });
 
 test('globalGzipSizePredicate - detect value violating threshold', t => {

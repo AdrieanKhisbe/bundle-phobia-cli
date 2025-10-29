@@ -1,4 +1,4 @@
-const bytes = require('bytes');
+import bytes from 'bytes';
 
 const sizePredicate = (threshold, source) => {
   const realThreshold = bytes(threshold.toString());
@@ -76,4 +76,4 @@ const globalGzipSizePredicate = (threshold, source) => {
   return predicate;
 };
 
-module.exports = {sizePredicate, gzipSizePredicate, globalSizePredicate, globalGzipSizePredicate};
+export {sizePredicate, gzipSizePredicate, globalSizePredicate, globalGzipSizePredicate};

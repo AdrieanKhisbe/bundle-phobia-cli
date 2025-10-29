@@ -1,9 +1,15 @@
 #!/usr/bin/env node
 
-const updateNotifier = require('update-notifier');
-const c = require('chalk');
-const Yargs = require('yargs');
-const yargs = require('yargs');
+import updateNotifier from 'update-notifier';
+import c from 'chalk';
+import Yargs from 'yargs';
+// eslint-disable-next-line import/no-unresolved -- yargs/helpers is a valid subpath export
+import {hideBin} from 'yargs/helpers';
+import {createRequire} from 'module';
+
+// TODO: Replace with `import pkg from './package.json' with {type: 'json'};` once ESLint 9+ parser is used
+const require = createRequire(import.meta.url);
+const pkg = require('./package.json');
 
 const STATS_OPTIONS = {
   package: {
@@ -94,7 +100,8 @@ const INSTALL_OPTIONS = {
   }
 };
 
-const yargsParser = Yargs.scriptName('bundle-phobia')
+const yargsParser = Yargs(hideBin(process.argv))
+  .scriptName('bundle-phobia')
   .parserConfiguration({
     'short-option-groups': true,
     'camel-case-expansion': false,
@@ -109,32 +116,29 @@ const yargsParser = Yargs.scriptName('bundle-phobia')
     'install <packages..>',
     'Perform install if specified size constraints are met',
     yargs => yargs.options(INSTALL_OPTIONS),
-    argv =>
-      require('./src/install')
-        .main({argv})
-        .catch(err => {
-          console.log(c.red.bold(`bundle-phobia-install failed: `) + err.message);
-          yargs.exit(1, err);
-        })
+    async argv => {
+      const {main} = await import('./src/install.js');
+      main({argv}).catch(err => {
+        console.log(c.red.bold(`bundle-phobia-install failed: `) + err.message);
+        process.exit(1);
+      });
+    }
   )
   .command(
     '$0 [packages..]',
     'Get the stats of given package from bundlephobia.com',
     yargs => yargs.options(STATS_OPTIONS),
-    argv =>
-      require('./src/core')
-        .main({argv})
-        .catch(err => {
-          console.log(c.red.bold(`bundle-phobia failed: `) + err.message);
-          yargs.exit(1, err);
-        })
+    async argv => {
+      const {main} = await import('./src/core.js');
+      main({argv}).catch(err => {
+        console.log(c.red.bold(`bundle-phobia failed: `) + err.message);
+        process.exit(1);
+      });
+    }
   )
   .showHelpOnFail(false)
   .alias('h', 'help')
   .pkgConf('bundle-phobia');
 
-if (!module.parent) {
-  yargsParser.parse(process.argv.slice(2)).argv;
-  const pkg = require('./package');
-  updateNotifier({pkg}).notify();
-}
+yargsParser.parse();
+updateNotifier({pkg}).notify();

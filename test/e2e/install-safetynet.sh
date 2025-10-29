@@ -24,7 +24,7 @@ set +e
 (cd $sandbox && node ../../../../main install $args > $output_file 2> $output_file.err)
 status_code=$?
 set -e
-head -6 $output_file | sed -E 's/[0-9]+\.[0-9]+KB/XXXKB/g' > $output_file.head
+head -6 $output_file | sed -E 's/[0-9]+\.[0-9]+KB/XXXKB/g' | sed 's/\x1b\[[0-9;]*m//g' > $output_file.head
 
 if [ $status_code -ne 0 ]; then
     echo "❌ Install failed, returned with $status_code exit code"

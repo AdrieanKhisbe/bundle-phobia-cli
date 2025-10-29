@@ -32,4 +32,6 @@ class fakeSpinner {
   }
 }
 
-module.exports = (...args) => new fakeSpinner(...args);
+const createFakeSpinner = (...args) => new fakeSpinner(...args);
+
+export default createFakeSpinner;

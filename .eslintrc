@@ -1,6 +1,20 @@
 {
   "extends": "plugin:@-k/base",
   "plugins": ["@-k"],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "rules": {
+    "import/extensions": ["error", "ignorePackages"],
+    "import/order": "off",
+    "import/dynamic-import-chunkname": "off",
+    "unicorn/consistent-destructuring": "off"
+  },
   "overrides": [
     {
       "files": "test/**/*.test.js",

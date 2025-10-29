@@ -1,6 +1,7 @@
 {
   "name": "bundle-phobia-cli-e2e",
   "version": "0.14.12",
+  "type": "module",
   "dependencies": {
     "bytes": "^3.1.0"
   },

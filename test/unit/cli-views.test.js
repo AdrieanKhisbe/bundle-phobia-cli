@@ -1,14 +1,14 @@
-const test = require('ava');
-const stripAnsi = require('strip-ansi');
-const {
+import test from 'ava';
+import stripAnsi from 'strip-ansi';
+import {
   getView,
   syntheticView,
   jsonView,
   sizeView,
   gzipsizeView,
   dependenciesView
-} = require('../../src/cli-views');
-const {lodashStats} = require('./fixtures');
+} from '../../src/cli-views.js';
+import {lodashStats} from './fixtures.js';
 
 test('syntheticView basic lodash stats', t => {
   const lodashView = stripAnsi(syntheticView(lodashStats));
@@ -16,10 +16,10 @@ test('syntheticView basic lodash stats', t => {
 });
 
 test('sizeView', t => {
-  t.is(sizeView(lodashStats), 70870);
+  t.is(sizeView(lodashStats), 70_870);
 });
 test('gzipsizeView', t => {
-  t.is(gzipsizeView(lodashStats), 24666);
+  t.is(gzipsizeView(lodashStats), 24_666);
 });
 test('dependenciesView', t => {
   t.is(dependenciesView(lodashStats), 0);

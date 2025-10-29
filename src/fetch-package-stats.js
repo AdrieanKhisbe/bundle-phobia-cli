@@ -1,11 +1,10 @@
-const fs = require('fs');
-const path = require('path');
-const _ = require('lodash/fp');
-const nodeFetch = require('node-fetch');
+import fs from 'fs';
+import path from 'path';
+import _ from 'lodash/fp.js';
 
-const {getVersionList, resolveVersionRange, getDependencyList} = require('./npm-utils');
+import {getVersionList, resolveVersionRange, getDependencyList} from './npm-utils.js';
 
-const fetchPackageStats = async (name, {fetch = nodeFetch} = {}) => {
+const fetchPackageStats = async (name, {fetch = globalThis.fetch} = {}) => {
   if (!name) throw new Error('Empty name given as argument');
   const pkg = await resolveVersionRange(name);
   const res = await fetch(`https://bundlephobia.com/api/size?package=${pkg}`, {
@@ -58,7 +57,7 @@ const getPackagesFromPackageJson = async pkg => {
   return getDependencyList(packageContent);
 };
 
-module.exports = {
+export {
   fetchPackageStats,
   fetchPackageJsonStats,
   selectVersions,

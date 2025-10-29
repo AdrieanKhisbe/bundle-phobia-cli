@@ -1,8 +1,8 @@
-const test = require('ava');
-const {main} = require('../../src/install');
-const {fakeStream, fakeSpawn, fakePkg, fakePrompt, stripKb} = require('./utils');
+import test from 'ava';
+import {main} from '../../src/install.js';
+import {fakeStream, fakeSpawn, fakePkg, fakePrompt, stripKb} from './utils.js';
 
-const defaultMaxSize = 10000;
+const defaultMaxSize = 10_000;
 
 test('install just a single package and fail', async t => {
   const stream = fakeStream();

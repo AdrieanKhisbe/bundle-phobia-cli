@@ -1,11 +1,11 @@
-const test = require('ava');
-const yargs = require('yargs-parser');
-const {
+import test from 'ava';
+import yargs from 'yargs-parser';
+import {
   npmOptionsFromArgv,
   getGlobalSizePredicate,
   getSizePredicate,
   readCurrentPackage
-} = require('../../src/install');
+} from '../../src/install.js';
 
 const parse = cmd => yargs(cmd, {configuration: {'camel-case-expansion': false}});
 
@@ -100,8 +100,8 @@ test('getGlobalSizePredicate -returns predicate request by package.json', t => {
   t.deepEqual(predicate.source, 'package-config');
 });
 
-test('readCurrentPackage', t => {
-  const pkg = readCurrentPackage();
+test('readCurrentPackage', async t => {
+  const pkg = await readCurrentPackage();
   t.is(pkg.name, 'bundle-phobia-cli');
   t.is(pkg.description, 'Cli for the node BundlePhobia Service');
 });

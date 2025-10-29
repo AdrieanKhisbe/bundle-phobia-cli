@@ -1,20 +1,26 @@
-const path = require('path');
-const test = require('ava');
-const _ = require('lodash/fp');
-const projectPackage = require('../../package');
-
-const {
+import path, {dirname} from 'path';
+import {fileURLToPath} from 'url';
+import test from 'ava';
+import _ from 'lodash/fp.js';
+import {createRequire} from 'module';
+import {
   fetchPackageStats,
   selectVersions,
   getPackagesFromPackageJson
-} = require('../../src/fetch-package-stats');
-
-const {
+} from '../../src/fetch-package-stats.js';
+import {
   lodashStats,
   errorStats,
   missingVersionErrorStats,
   unexpectedErrorStats
-} = require('./fixtures');
+} from './fixtures.js';
+
+// TODO: Replace with `import pkg from './package.json' with {type: 'json'};` once ESLint 9+ parser is used
+const require = createRequire(import.meta.url);
+const projectPackage = require('../../package.json');
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 // §FIXME : see fixtures, schema updated, have a look into that
 
 const fakeFetch = payload => () =>

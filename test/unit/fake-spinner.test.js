@@ -1,5 +1,5 @@
-const test = require('ava');
-const fakeSpinner = require('../../src/fake-spinner');
+import test from 'ava';
+import fakeSpinner from '../../src/fake-spinner.js';
 
 test('should be instantied with an initial message', t => {
   const spinner = fakeSpinner('test');
